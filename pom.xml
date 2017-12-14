@@ -29,7 +29,7 @@
 	  </license>
   	</licenses>
 	<scm>
-	    <developerConnection>scm:git|git@github.com:plutext/docx4j.git</developerConnection>
+	    <developerConnection>scm:git|git@github.com:illucit/docx4j.git</developerConnection>
     </scm>
 	<inceptionYear>2007</inceptionYear>
 
@@ -660,13 +660,13 @@
 	</dependencies>
 
 
-<distributionManagement>
+ <distributionManagement>
     <repository>
         <id>internal.repo</id>
         <name>illucIT Staging Repository</name>
         <url>file://${project.build.directory}/mvn-repo</url>
     </repository>
-</distributionManagement>
+</distributionManagement> 
 
 
 	<profiles> <!--  use -P eg mvn -Psign-artifacts  -->
@@ -749,6 +749,7 @@
 			</build>
 		</profile>
 		
+		
 
    		<!--  comment this out, until the Windows path issues below are fixed in m2eclipse
    	<profile>
@@ -807,13 +808,13 @@
 
    				-->
    				
-<!-- Uncomment to deploy to GitHub.  MUST Comment out for real release
-<distributionManagement>
+<!-- Uncomment to deploy to GitHub.  MUST Comment out for real release -->
+<!-- <distributionManagement>
     <repository>
         <id>internal.repo</id>
-        <name>Temporary Staging Repository</name>
+        <name>illucIT Staging Repository</name>
         <url>file://${project.build.directory}/mvn-repo</url>
     </repository>
-</distributionManagement>   				
--->
+</distributionManagement>   	 -->			
+
 </project>
