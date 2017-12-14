@@ -3,9 +3,10 @@
   <groupId>org.docx4j</groupId>
   <artifactId>docx4j</artifactId>
   <versioning>
+    <release>3.3.6-fixed</release>
     <versions>
-      <version>3.2.2-SNAPSHOT</version>
+      <version>3.3.6-fixed</version>
     </versions>
-    <lastUpdated>20150724081629</lastUpdated>
+    <lastUpdated>20171214094541</lastUpdated>
   </versioning>
 </metadata>
