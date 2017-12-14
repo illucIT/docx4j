@@ -10,7 +10,7 @@
   
 	<groupId>org.docx4j</groupId>
 	<artifactId>docx4j</artifactId>
-	<version>3.3.6</version>
+	<version>3.3.6-fixed</version>
 	<packaging>jar</packaging>
 	<name>docx4j</name>
 	
@@ -659,15 +659,15 @@
 
 	</dependencies>
 
-<!-- 
+
 <distributionManagement>
     <repository>
         <id>internal.repo</id>
-        <name>Temporary Staging Repository</name>
+        <name>illucIT Staging Repository</name>
         <url>file://${project.build.directory}/mvn-repo</url>
     </repository>
 </distributionManagement>
- -->
+
 
 	<profiles> <!--  use -P eg mvn -Psign-artifacts  -->
 		<profile>
@@ -733,7 +733,7 @@
 			                <branch>refs/heads/mvn-repo</branch>                        <!-- remote branch name -->
 			                <includes><include>**/*</include></includes>
 			                <repositoryName>docx4j</repositoryName>      <!-- github repo name -->
-			                <repositoryOwner>plutext</repositoryOwner>    <!-- github username  -->
+			                <repositoryOwner>illucit</repositoryOwner>    <!-- github username  -->
 			            </configuration>
 			            <executions>
 			              <!-- run site-maven-plugin's 'site' target as part of the build's normal 'deploy' phase -->
