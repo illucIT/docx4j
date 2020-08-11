@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metadata>
+  <groupId>org.docx4j</groupId>
+  <artifactId>docx4j-openxml-objects-sml</artifactId>
+  <versioning>
+    <release>11.1.8-fixed</release>
+    <versions>
+      <version>11.1.8-fixed</version>
+    </versions>
+    <lastUpdated>20200811083057</lastUpdated>
+  </versioning>
+</metadata>
