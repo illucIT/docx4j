@@ -2,18 +2,22 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
+	<!--
   <parent>
     <groupId>org.sonatype.oss</groupId>
     <artifactId>oss-parent</artifactId>
     <version>9</version>
   </parent>
 
+  -->
+
+
 	<groupId>org.docx4j</groupId>
 	<artifactId>docx4j-parent</artifactId>	
 	<version>${revision}</version>
 	
 	<properties>
-		<revision>11.1.9-SNAPSHOT</revision>
+		<revision>11.1.8-fixed</revision>
 		<packaging.type>jar</packaging.type>
 	    <!-- <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding> -->
 	    <!-- github server corresponds to entry in ~/.m2/settings.xml -->
@@ -31,13 +35,14 @@
         <module>docx4j-core</module>
         
         <module>docx4j-JAXB-ReferenceImpl</module>
-        <module>docx4j-core-tests</module> <!--  needs a docx4j-JAXB  -->
+        <!-- <module>docx4j-core-tests</module> --> <!--  needs a docx4j-JAXB  -->
         <module>docx4j-diffx</module>
         <module>docx4j-docx-anon</module>
         
         <module>docx4j-export-fo</module>        
         <module>docx4j-JAXB-MOXy</module>
-        
+
+		<!--
         <module>docx4j-samples-resources</module>
         <module>docx4j-samples-docx4j</module>
         <module>docx4j-samples-docx-diffx</module>
@@ -45,8 +50,9 @@
         <module>docx4j-samples-pptx4j</module>
         <module>docx4j-samples-xlsx4j</module>
         <module>docx4j-samples-glox4j</module>
+        -->
         
-        <module>docx4j-bundle</module>        
+        <!--<module>docx4j-bundle</module>-->
     </modules>
 	
 	<description>
@@ -77,7 +83,7 @@
 	</developers>
   	
 	<scm>
-	    <developerConnection>scm:git|git@github.com:plutext/docx4j.git</developerConnection>
+	    <developerConnection>scm:git|git@github.com:illucit/docx4j.git</developerConnection>
       <tag>VERSION_11_1_7</tag>
   </scm>
 	<inceptionYear>2007</inceptionYear>
@@ -202,7 +208,8 @@
 			<!-- hiccups on org.slf4j since it is a multi-release jar
 				 broken in Java 11, fixed in Java 12
 				 https://bugs.openjdk.java.net/browse/JDK-8222309
-			 -->			 
+			 -->
+			<!--
 			<plugin>
 				<artifactId>maven-javadoc-plugin</artifactId>
 				<version>3.1.0</version> 
@@ -220,6 +227,7 @@
 					</execution>
 				</executions>
 			</plugin>
+			-->
 <!-- 			
 		<plugin>
             <groupId>org.basepom.maven</groupId>
@@ -398,7 +406,7 @@
 			                <branch>refs/heads/mvn-repo</branch>                        <!-- remote branch name -->
 			                <includes><include>**/*</include></includes>
 			                <repositoryName>docx4j</repositoryName>      <!-- github repo name -->
-			                <repositoryOwner>plutext</repositoryOwner>    <!-- github username  -->
+			                <repositoryOwner>illucit</repositoryOwner>    <!-- github username  -->
 			            </configuration>
 			            <executions>
 			              <!-- run site-maven-plugin's 'site' target as part of the build's normal 'deploy' phase -->
@@ -484,13 +492,13 @@
 
    				-->
    				
-<!-- Uncomment to deploy to GitHub.  MUST Comment out for real release
+
 <distributionManagement>
     <repository>
         <id>internal.repo</id>
-        <name>Temporary Staging Repository</name>
+        <name>illucIT Staging Repository</name>
         <url>file://${project.build.directory}/mvn-repo</url>
     </repository>
 </distributionManagement>   				
--->
+
 </project>
