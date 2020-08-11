@@ -41,7 +41,8 @@
         
         <module>docx4j-export-fo</module>        
         <module>docx4j-JAXB-MOXy</module>
-        
+
+		<!--
         <module>docx4j-samples-resources</module>
         <module>docx4j-samples-docx4j</module>
         <module>docx4j-samples-docx-diffx</module>
@@ -49,6 +50,7 @@
         <module>docx4j-samples-pptx4j</module>
         <module>docx4j-samples-xlsx4j</module>
         <module>docx4j-samples-glox4j</module>
+        -->
         
         <module>docx4j-bundle</module>        
     </modules>
