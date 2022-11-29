@@ -2,9 +2,9 @@
 package org.docx4j.com.microsoft.schemas.office.drawing.x2014.chartex;
 
 import javax.xml.namespace.QName;
-import javax.xml.bind.JAXBElement;
-import javax.xml.bind.annotation.XmlElementDecl;
-import javax.xml.bind.annotation.XmlRegistry;
+import jakarta.xml.bind.JAXBElement;
+import jakarta.xml.bind.annotation.XmlElementDecl;
+import jakarta.xml.bind.annotation.XmlRegistry;
 
 
 /**
@@ -904,4 +904,12 @@ public class ObjectFactory {
         return new JAXBElement<CTStringLevel>(_CTNumericDimensionLvl_QNAME, CTStringLevel.class, CTStringDimension.class, value);
     }
 
+    /**
+     * Create an instance of {@link CTAxisId }
+     * 
+     */
+    public CTAxisId createCTAxisId() {
+        return new CTAxisId();
+    }
+    
 }

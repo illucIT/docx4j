@@ -20,7 +20,7 @@
 
 package org.docx4j.openpackaging.parts.PresentationML;
 
-import javax.xml.bind.JAXBException;
+import jakarta.xml.bind.JAXBException;
 
 import org.docx4j.XmlUtils;
 import org.docx4j.jaxb.McIgnorableNamespaceDeclarator;
@@ -73,7 +73,7 @@ public final class SlidePart extends JaxbPmlPart<Sld> {
     protected void setMceIgnorable(McIgnorableNamespaceDeclarator namespacePrefixMapper) {
 		
 		/* Ensure we declare the namespace.  Otherwise Powerpoint 2010 treats the pptx as corrupt.
-		 * 2013 and Mac version might repair it, at leat..
+		 * 2013 and Mac version might repair it, at least..
 		 * 
             <mc:AlternateContent xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006">
               <mc:Choice xmlns:v="urn:schemas-microsoft-com:vml" Requires="v">
@@ -82,7 +82,8 @@ public final class SlidePart extends JaxbPmlPart<Sld> {
 		
 		// Unlike MainDocumentPart, there is no this.getJaxbElement().getIgnorable()
 		
-		namespacePrefixMapper.setMcIgnorable("v");
+		//namespacePrefixMapper.setMcIgnorable("v");  // ineffective unless we also override getMceIgnorable()!
+		this.addMcChoiceNamespace("v");
 	}		
 	
 	
@@ -244,7 +245,7 @@ public final class SlidePart extends JaxbPmlPart<Sld> {
 //				 * See http://old.nabble.com/BinderImpl.associativeUnmarshal-ClassCastException-casting-to-JAXBElement-td32456585.html
 //				 * and  http://java.net/jira/browse/JAXB-874
 //				 * 
-//				 * java.lang.ClassCastException: org.docx4j.wml.PPr cannot be cast to javax.xml.bind.JAXBElement
+//				 * java.lang.ClassCastException: org.docx4j.wml.PPr cannot be cast to jakarta.xml.bind.JAXBElement
 //					at com.sun.xml.internal.bind.v2.runtime.ElementBeanInfoImpl$IntercepterLoader.intercept(Unknown Source)
 //					at com.sun.xml.internal.bind.v2.runtime.unmarshaller.UnmarshallingContext.endElement(Unknown Source)
 //					at com.sun.xml.internal.bind.v2.runtime.unmarshaller.InterningXmlVisitor.endElement(Unknown Source)

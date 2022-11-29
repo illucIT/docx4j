@@ -8,8 +8,8 @@ import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
+import jakarta.xml.bind.JAXBContext;
+import jakarta.xml.bind.JAXBException;
 
 public class MarshalTest {
 
@@ -19,7 +19,7 @@ public class MarshalTest {
 		java.lang.ClassLoader classLoader = NamespacePrefixMapperUtils.class.getClassLoader();
 		JAXBContext testContext = JAXBContext.newInstance("org.docx4j.relationships",classLoader );
 		
-        assertEquals("com.sun.xml.bind.v2.runtime.JAXBContextImpl", testContext.getClass().getName() );
+        assertEquals("org.glassfish.jaxb.runtime.v2.runtime.JAXBContextImpl", testContext.getClass().getName() );
 	}
 	
 	@Test

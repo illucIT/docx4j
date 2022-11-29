@@ -23,7 +23,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import javax.xml.bind.JAXBException;
+import jakarta.xml.bind.JAXBException;
 
 /**
  * Represent a style hierarchy as a tree.
@@ -78,7 +78,6 @@ public class StyleTree {
 	 */
 	public StyleTree(Set<String> stylesInUse, Map<String, Style> allStyles, DocDefaults docDefaults, Style normal) {
 
-		// Set up Table style tree
 		init(stylesInUse, allStyles, docDefaults, normal, null, null);
 
 	}
@@ -107,6 +106,8 @@ public class StyleTree {
 	public void init(Set<String> stylesInUse, Map<String, Style> allStyles, DocDefaults docDefaults, Style normal,
 			Style defaultCharStyle, Style defaultTableStyle) {
 
+//		new Throwable().printStackTrace();
+		
 		// Set up Table style tree
 		if (defaultTableStyle == null) {
 			tableTree.setRootElement(new Node<AugmentedStyle>(tableTree, "table-root", null));

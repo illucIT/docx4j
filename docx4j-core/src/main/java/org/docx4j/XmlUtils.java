@@ -35,15 +35,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
-import javax.xml.bind.Binder;
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBElement;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Marshaller;
-import javax.xml.bind.UnmarshalException;
-import javax.xml.bind.Unmarshaller;
-import javax.xml.bind.util.JAXBResult;
-import javax.xml.bind.util.JAXBSource;
+import jakarta.xml.bind.Binder;
+import jakarta.xml.bind.JAXBContext;
+import jakarta.xml.bind.JAXBElement;
+import jakarta.xml.bind.JAXBException;
+import jakarta.xml.bind.Marshaller;
+import jakarta.xml.bind.UnmarshalException;
+import jakarta.xml.bind.Unmarshaller;
+import jakarta.xml.bind.util.JAXBResult;
+import jakarta.xml.bind.util.JAXBSource;
 import javax.xml.crypto.dsig.CanonicalizationMethod;
 import javax.xml.namespace.NamespaceContext;
 import javax.xml.namespace.QName;
@@ -157,6 +157,13 @@ public class XmlUtils {
 		
 		log.debug( System.getProperty("java.vendor") );
 		log.debug( System.getProperty("java.version") );
+
+		/* OpenJDK 15 still contains com.sun..xerces.internal!
+		 * (Is that true for OpenJ9, GraalVM, Microsoft and Corretto dists as well?)
+		 * Prefer Xerces proper, so our sample docx4j properties file 
+		 * specifies accordingly for SAXParserFactory and DocumentBuilderFactory.
+		 * If you don't have Xerces on your classpath, comment out those property settings.
+		 */
 		
 		// javax.xml.parsers.SAXParserFactory
 		String sp = Docx4jProperties.getProperty("javax.xml.parsers.SAXParserFactory");
@@ -200,12 +207,14 @@ public class XmlUtils {
 			//				"org.apache.xerces.jaxp.SAXParserFactoryImpl");
 			
 			
-			log.warn("default SAXParserFactory property : " + System.getProperty("javax.xml.parsers.SAXParserFactory" )
+			log.info("default SAXParserFactory property : " + System.getProperty("javax.xml.parsers.SAXParserFactory" )
 					+ "\n Please consider using Xerces.");
 		}
 		
-		log.info("actual: " + SAXParserFactory.newInstance().getClass().getName() );
-		
+		log.warn("actual SAXParserFactory: " + SAXParserFactory.newInstance().getClass().getName() );
+		// If the above is in a stack trace, 
+		// check your javax.xml.parsers.SAXParserFactory setting in docx4j.properties
+		// matches your classpath.  For example, you may need to put Xerces on your classpath.		
 		
 		// Note that we don't restore the value to its original setting (unlike TransformerFactory),
 		// since we want to avoid Crimson being used for the life of the application.
@@ -251,13 +260,13 @@ public class XmlUtils {
 			//		    "org.apache.xerces.jaxp.DocumentBuilderFactoryImpl");
 			// which is what we used to do in XmlPart.
 			
-			log.warn("default DocumentBuilderFactory property: " 
+			log.info("default DocumentBuilderFactory property: " 
 					+ System.getProperty("javax.xml.parsers.DocumentBuilderFactory" )
 					+ "\n Please consider using Xerces.");
 		}
 		
 		documentBuilderFactory = DocumentBuilderFactory.newInstance();
-		log.info("actual: " + documentBuilderFactory.getClass().getName());
+		log.warn("actual DocumentBuilderFactory: " + documentBuilderFactory.getClass().getName());
 		documentBuilderFactory.setNamespaceAware(true);
 		// Note that we don't restore the value to its original setting (unlike TransformerFactory).
 		// Maybe we could, if docx4j always used this documentBuilderFactory.
@@ -374,7 +383,7 @@ public class XmlUtils {
 		
 		if (o==null) return null;
 		
-		if (o instanceof javax.xml.bind.JAXBElement) {
+		if (o instanceof jakarta.xml.bind.JAXBElement) {
 			log.debug("Unwrapped " + ((JAXBElement)o).getDeclaredType().getName() );
 			log.debug("name: " + ((JAXBElement)o).getName() );
 			return ((JAXBElement)o).getValue();
@@ -394,7 +403,7 @@ public class XmlUtils {
 //		if (o instanceof x) {
 //			
 //		}
-//		else if (o instanceof javax.xml.bind.JAXBElement) {
+//		else if (o instanceof jakarta.xml.bind.JAXBElement) {
 //			log.debug("Unwrapped " + ((JAXBElement)o).getDeclaredType().getName() );
 //			return ((JAXBElement)o).getValue();
 //		} else {
@@ -403,7 +412,7 @@ public class XmlUtils {
 //	}
 
 	
-	public static String JAXBElementDebug(javax.xml.bind.JAXBElement o)  {
+	public static String JAXBElementDebug(jakarta.xml.bind.JAXBElement o)  {
 				
 		String prefix = null;
 		if (o.getName().getNamespaceURI()!=null) {
@@ -415,10 +424,10 @@ public class XmlUtils {
 		}
 		if (prefix!=null) {
 			return  prefix + ':' + o.getName().getLocalPart() 
-				+ " is a javax.xml.bind.JAXBElement; it has declared type " 
+				+ " is a jakarta.xml.bind.JAXBElement; it has declared type " 
 				+ o.getDeclaredType().getName(); 
 		} else {
-			return  o.getName() + " is a javax.xml.bind.JAXBElement; it has declared type " 
+			return  o.getName() + " is a jakarta.xml.bind.JAXBElement; it has declared type " 
 				+ o.getDeclaredType().getName(); 			
 		}
 		
@@ -680,7 +689,7 @@ public class XmlUtils {
 		u.setEventHandler(new org.docx4j.jaxb.JaxbValidationEventHandler());
 		Object o = u.unmarshal(n,
 				declaredType);
-		if ( o instanceof javax.xml.bind.JAXBElement) {
+		if ( o instanceof jakarta.xml.bind.JAXBElement) {
 			return ((JAXBElement)o).getValue();
 		} else {
 			return o;

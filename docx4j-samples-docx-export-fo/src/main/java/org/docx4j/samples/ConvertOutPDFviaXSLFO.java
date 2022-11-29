@@ -166,6 +166,10 @@ public class ConvertOutPDFviaXSLFO {
 //			fontMapper.put("Arial", font);
 //		}
 //		fontMapper.put("Libian SC Regular", PhysicalFonts.get("SimSun"));
+		
+		// Alternatively, use https://xmlgraphics.apache.org/fop/2.1/fonts.html#font_substitution
+		// Use docx4j property docx4j.fonts.fop.util.FopConfigUtil.substitutions to provide
+		// a file name (on your class path) containing these definitions 
 
 		// Config - step 1
 		// FO exporter setup (required)
@@ -174,6 +178,12 @@ public class ConvertOutPDFviaXSLFO {
     	// Now you can inspect generated font settings in case of any issues
     	System.out.println(XmlUtils.marshaltoString(foSettings.getFopConfig(), Context.getFopConfigContext()));
     	// You can also alter that Fop config object if you wish 
+    	
+    	// Alternatively, in an advanced usage
+//        FOSettings foSettings = Docx4J.createFOSettings();
+//        foSettings.setFopConfig(your settings); // TODO, extend this config object to support all available fop configuration
+//        foSettings.setOpcPackage(wordMLPackage);
+    	
 		if (saveFO) {
 			foSettings.setFoDumpFile(new java.io.File(inputfilepath + ".fo"));
 		}

@@ -15,11 +15,20 @@
 	<description>Our JAXB representation of OpenXML Presentation Markup Language (pml)</description>
 	<build>	
          <plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+                <version>${version.maven-jar-plugin}</version>
+				<configuration>
+					<archive>
+			            <manifestFile>${project.build.outputDirectory}/META-INF/MANIFEST.MF</manifestFile>
+			          </archive>
+				</configuration>
+			</plugin>
             <plugin>
                 <groupId>org.apache.felix</groupId>
                 <artifactId>maven-bundle-plugin</artifactId>
-                <!-- <version>2.5.3</version> -->
-                <version>4.1.0</version>
+                <version>${version.maven-bundle-plugin}</version>
                 <extensions>true</extensions>
                 <configuration>
                     <instructions>
@@ -37,12 +46,12 @@
                             org.slf4j;version="[1.6,2)";resolution:=optional,
                             org.slf4j.impl;version="[1.6,2)";resolution:=optional,
                             
-                            javax.xml.bind,
-                            javax.xml.bind.util,
-                            javax.xml.bind.annotation,
-                            javax.xml.bind.annotation.adapters,
-                            javax.xml.bind.attachment,
-                            javax.xml.bind.helpers,
+                            jakarta.xml.bind,
+                            jakarta.xml.bind.util,
+                            jakarta.xml.bind.annotation,
+                            jakarta.xml.bind.annotation.adapters,
+                            jakarta.xml.bind.attachment,
+                            jakarta.xml.bind.helpers,
                         </Import-Package>
  -->                        
                         <Export-Package>
@@ -50,7 +59,18 @@
                             org.jvnet.jaxb2_commons.ppp
                         </Export-Package>
                     </instructions>
-                </configuration>
+				</configuration>
+				<executions>
+					<execution>
+						<id>add-meta</id>
+						<phase>process-classes</phase> <!-- or prepare-package -->
+						<goals>
+							<goal>manifest</goal>
+						</goals>
+						<!-- writes to bin/META-INF/MANIFEST.MF, where it is picked up by maven-jar-plugin -->
+					</execution>
+				</executions>
+
             </plugin>				
  			
 		</plugins>

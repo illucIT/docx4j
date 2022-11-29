@@ -12,6 +12,8 @@
 
 	<logger name="org.apache.commons" level="WARN" />
 	<logger name="org.apache.fop" level="INFO" />
+	<logger name="org.apache.fontbox" level="INFO" /> <!-- XHTML Import -->
+	<logger name="org.apache.pdfbox" level="INFO" /> <!-- XHTML Import -->
 
 <!--  o.a.x.i.loader.spi.ImageImplRegistry -->
 	<logger name="org.apache.xmlgraphics.image.loader" level="INFO" />
@@ -33,6 +35,8 @@
 
 	<logger name="org.docx4j.convert.in.xhtml.ListHelper" level="WARN" />
 
+	<logger name="org.docx4j.convert.in.xhtml.MHTContentHandler" level="INFO" />
+
 	<logger name="org.docx4j.convert.out" level="WARN" />
 
 	<logger
@@ -50,7 +54,7 @@
 	<!-- PDF output via XSL FO: change this to warn to hide messages -->
 	<logger
 		name="org.docx4j.convert.out.common.writer.AbstractMessageWriter"
-		level="INFO" />
+		level="DEBUG" />
 
 	<logger name="org.docx4j.convert.out.fo" level="WARN" />
 
@@ -87,6 +91,7 @@
 	<logger name="org.docx4j.model.table" level="INFO" />
 
 	<logger name="org.docx4j.openpackaging" level="WARN" />
+	<logger name="org.docx4j.openpackaging.contenttype" level="WARN" />
 	
 	<logger name="org.docx4j.openpackaging.URIHelper" level="WARN" />
 
@@ -156,6 +161,8 @@
 
 	<logger name="com.plutext.merge.BlockRange" level="INFO" />
 
+	<logger name="com.plutext.merge.DocumentBuilder" level="INFO" />
+
 	<logger name="com.plutext.merge.HeaderFooterUtils" level="INFO" />
 
 	<logger name="com.plutext.merge.CustomXmlPartHandler" level="WARN" />
@@ -163,6 +170,9 @@
 	<logger name="com.plutext.merge.RFontsThemeResolver" level="INFO" />
 
 	<logger name="com.plutext.merge.altchunk" level="WARN" />
+
+	<logger name="com.plutext.merge.StyleUtils" level="INFO" />
+	<logger name="com.plutext.merge.TableStyleRespector" level="INFO" />
 
 	<logger name="com.plutext.merge.pptx" level="WARN" />
 

@@ -21,7 +21,7 @@ package org.docx4j.convert.out.fo;
 
 import java.util.List;
 
-import javax.xml.bind.Unmarshaller;
+import jakarta.xml.bind.Unmarshaller;
 
 import org.docx4j.Docx4jProperties;
 import org.docx4j.XmlUtils;

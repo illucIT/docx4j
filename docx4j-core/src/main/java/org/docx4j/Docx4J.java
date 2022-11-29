@@ -36,6 +36,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import org.docx4j.convert.out.Documents4jConversionSettings;
 import org.docx4j.convert.out.FOSettings;
+import org.docx4j.convert.out.FopReflective;
 import org.docx4j.convert.out.HTMLSettings;
 import org.docx4j.convert.out.MicrosoftGraphConversionSettings;
 import org.docx4j.convert.out.common.Exporter;
@@ -736,8 +737,18 @@ public class Docx4J {
 			FOSettings settings = createFOSettings();
 			settings.setOpcPackage(wmlPackage);
 			settings.setApacheFopMime("application/pdf");
-			toFO(settings, outputStream, FLAG_NONE);
-			new EventFinished(startEvent).publish();
+			
+			try {
+
+				FopReflective.invokeFORendererApacheFOP(settings);
+				toFO(settings, outputStream, FLAG_NONE);
+				
+			} catch (Exception e) {
+				log.error(e.getMessage(), e);
+				throw new Docx4JException(e.getMessage(), e);
+			} finally {
+				new EventFinished(startEvent).publish();
+			}
 			
 		} else if (pdfViaMicrosoftGraph()) {
 			
@@ -772,6 +783,7 @@ public class Docx4J {
 
 			throw new Docx4JException("No PDF Converter found; see https://www.docx4java.org/blog/2020/09/office-pptxxlsxdocx-to-pdf-to-in-docx4j-8-2-3/" );
 		}
+		new EventFinished(startEvent).publish();
 		
 	}
 

@@ -34,10 +34,10 @@ import java.io.OutputStream;
 import java.io.StringWriter;
 import java.util.HashMap;
 
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBElement;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Marshaller;
+import jakarta.xml.bind.JAXBContext;
+import jakarta.xml.bind.JAXBElement;
+import jakarta.xml.bind.JAXBException;
+import jakarta.xml.bind.Marshaller;
 
 import org.docx4j.Docx4J;
 import org.docx4j.TextUtils;
@@ -71,6 +71,7 @@ import org.docx4j.openpackaging.parts.ExternalTarget;
 import org.docx4j.openpackaging.parts.Part;
 import org.docx4j.openpackaging.parts.PartName;
 import org.docx4j.openpackaging.parts.Parts;
+import org.docx4j.openpackaging.parts.WordprocessingML.DrawingPropsIdTracker;
 import org.docx4j.openpackaging.parts.relationships.Namespaces;
 import org.docx4j.org.apache.poi.poifs.crypt.Decryptor;
 import org.docx4j.org.apache.poi.poifs.crypt.EncryptionInfo;
@@ -119,6 +120,16 @@ public abstract class OpcPackage extends Base implements PackageIdentifier {
 		return parts;		
 	}
 	
+	private DrawingPropsIdTracker drawingPropsIdTracker = null;
+	
+	public DrawingPropsIdTracker getDrawingPropsIdTracker() {
+		
+		if (drawingPropsIdTracker==null) {
+			drawingPropsIdTracker = new DrawingPropsIdTracker();
+		}
+		return drawingPropsIdTracker;
+	}
+
 	// Currently only external images are stored here
 	protected HashMap<ExternalTarget, Part> externalResources 
 		= new HashMap<ExternalTarget, Part>();
@@ -733,7 +744,7 @@ public abstract class OpcPackage extends Base implements PackageIdentifier {
 		startEvent.publish();
 		
 		if (flags == Docx4J.FLAG_SAVE_FLAT_XML) {
-			JAXBContext jc = Context.jcXmlPackage;
+			
 			FlatOpcXmlCreator opcXmlCreator = new FlatOpcXmlCreator(this);
 			opcXmlCreator.populate();
 			opcXmlCreator.marshal(outStream);

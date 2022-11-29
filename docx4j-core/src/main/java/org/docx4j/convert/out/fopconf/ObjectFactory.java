@@ -1,7 +1,7 @@
 
 package org.docx4j.convert.out.fopconf;
 
-import javax.xml.bind.annotation.XmlRegistry;
+import jakarta.xml.bind.annotation.XmlRegistry;
 
 
 /**

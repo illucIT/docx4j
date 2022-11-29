@@ -27,10 +27,10 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.HashMap;
 
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBElement;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Unmarshaller;
+import jakarta.xml.bind.JAXBContext;
+import jakarta.xml.bind.JAXBElement;
+import jakarta.xml.bind.JAXBException;
+import jakarta.xml.bind.Unmarshaller;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
@@ -130,7 +130,7 @@ public class FlatOpcXmlImporter  {
 		org.docx4j.xmlPackage.Package flatOpcXml = null;
 		try {
 			flatOpcXml = (org.docx4j.xmlPackage.Package)XmlUtils.unwrap(u.unmarshal(xsr));
-		} catch ( javax.xml.bind.UnmarshalException e) {
+		} catch ( jakarta.xml.bind.UnmarshalException e) {
 			if (e.getMessage()!=null
 					&& e.getMessage().contains("http://schemas.microsoft.com/office/word/2003/wordml")) {
 				throw new IllegalArgumentException("Word 2003 XML is not supported. Use a docx or Flat OPC XML instead, or look at the Word2003XmlConverter proof of concept.");	
@@ -307,7 +307,7 @@ public class FlatOpcXmlImporter  {
 					+ " Source is " + rp.getSourceP().getPartName() 
 					+ ", Target is " + r.getTarget() );
 			try {				
-				getPart(pkg, rp, r);
+				getPart(rp, r);
 			} catch (Exception e) {
 				throw new Docx4JException("Failed to add parts from relationships", e);
 			}
@@ -325,13 +325,12 @@ public class FlatOpcXmlImporter  {
 	 * @param zf
 	 * @param source
 	 * @param unusedZipEntries
-	 * @param pkg
 	 * @param r
 	 * @param resolvedPartUri
 	 * @throws Docx4JException
 	 * @throws InvalidFormatException
 	 */
-	private void getPart( OpcPackage pkg, RelationshipsPart rp, Relationship r)
+	private void getPart( RelationshipsPart rp, Relationship r)
 			throws Docx4JException, InvalidFormatException, URISyntaxException {
 		
 		Base source = null;
@@ -440,20 +439,22 @@ public class FlatOpcXmlImporter  {
 		
 		return getRawPart(ctm, pkgPart, rel);
 	}
+
 	/**
-	 * Get a Part (except a relationships part), but not its relationships part
-	 * or related parts.  Useful if you need quick access to just this part.
-	 * This can be called directly from outside the library, in which case 
-	 * the Part will not be owned by a Package until the calling code makes it so.  
-	 * @see  To get a Part and all its related parts, and add all to a package, use
-	 * getPart.
-	 * @param zf
-	 * @param resolvedPartUri
+	 * @param ctm
+	 * @param pkgPart
+	 * @param rel
 	 * @return
-	 * @throws URISyntaxException
-	 * @throws InvalidFormatException
+	 * @throws Docx4JException
+	 * @since 11.4.6
 	 */
-	public static Part getRawPart(ContentTypeManager ctm, org.docx4j.xmlPackage.Part pkgPart, Relationship rel)
+	private Part getRawPart(ContentTypeManager ctm, org.docx4j.xmlPackage.Part pkgPart, Relationship rel)
+			throws Docx4JException {
+		
+		return getRawPart( ctm, pkgPart, rel, this.packageResult);
+	}
+	
+	public static Part getRawPart(ContentTypeManager ctm, org.docx4j.xmlPackage.Part pkgPart, Relationship rel, OpcPackage targetPkg)
 			throws Docx4JException {
 		
 		Part part = null;
@@ -475,6 +476,10 @@ public class FlatOpcXmlImporter  {
 //				 part = ctm.newPartForContentType(contentType, resolvedPartUri,rel);
 				 part = ctm.newPartForContentType(contentType, pkgPart.getName(), rel);
 				 part.setContentType( new ContentType(contentType) );
+				 
+				 if (targetPkg!=null) {
+					 part.setPackage(targetPkg);
+				 }
 				 
 //				 ctm.addOverrideContentType(new java.net.URI(resolvedPartUri), 
 				 ctm.addOverrideContentType(new java.net.URI(pkgPart.getName()), 
@@ -618,7 +623,7 @@ public class FlatOpcXmlImporter  {
 							
 						}
 						
-					} catch (javax.xml.bind.UnmarshalException ue) {
+					} catch (jakarta.xml.bind.UnmarshalException ue) {
 						
 						// No ...
 						CustomXmlDataStorage data = Load.getCustomXmlDataStorageClass().factory();

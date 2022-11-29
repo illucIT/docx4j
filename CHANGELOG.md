@@ -2,6 +2,129 @@ CHANGELOG
 =========
 
 
+Version 11.4.8
+==============
+￼
+Release date
+------------
+￼
+9 Sept 2022
+
+Changes in Version 11.4.8
+-------------------------
+
+Alter convertAltChunks interface:
+- this method now does the conversion in situ (ie rather than cloning the pkg),
+for efficiency (eg where the docx contains many altChunks including in its headers/footers).
+
+- Now supports .mht altChunks (as produced by BIRT) via docx4j-ImportXHTML (v11.4.8)
+
+- This method now does not convert docx altChunks.  Convert docx altChunks has always required the MergeDocx component
+of Docx4j Enterprise; users wishing to convert docx altChunks should use that directly.
+
+Some other minor changes; please see https://github.com/plutext/docx4j/commits/VERSION_11_4_8
+
+
+Version 11.4.7
+==============
+￼
+Release date
+------------
+￼
+21 May 2022
+
+Changes in Version 11.4.7 
+-------------------------
+
+New property docx4j.jaxb.preprocess.always, a list of parts to transform before unmarshalling is first attempted. Useful when you know your input docx always have issues owing to deficiencies in whatever application emitted them. Without this setting, the transformation does not happen until after an error is encountered (which is less efficient and results in log entries).
+
+Set Docx4jUnmarshallerListener when preprocessing (fixes #474). When transforming during unmarshalling, use DOMResult instead of JAXBResult
+
+Set Docx4jUnmarshallerListener via reflection when using binder.  Previously, there was no Docx4jUnmarshallerListener when a binder was used.
+
+Bump MBassador to 1.3.2; see EventMonitoringDemo sample for how to monitor docx4j events 
+
+
+Version 11.4.6
+==============
+￼
+Release date
+------------
+￼
+16 April 2022
+￼
+￼
+Contributors to this release
+----------------------------
+￼
+Jason Harrop
+
+Thor Åge Eldby
+￼
+￼
+Changes in Version 11.4.6 
+-------------------------
+
+This release is primarily to support a docx4j-ImportXHTML 11.4.6 release,
+by adding DrawingPropsIdTracker, which dispenses unique values for 
+wp:docPr/@id (must be unique across all parts in a docx).
+
+Other fixes:
+Issue 501: chartEx adjust object model to match actual Word output (cx:axisId)
+Issue 501: Correct encoding issue when writing version comment for non UTF-8 locale 
+
+
+Version 11.4.5  (jakarta.xml.bind; parity with 8.3.4)
+==============
+￼
+Release date
+------------
+￼
+7 March 2022
+￼
+￼
+Contributors to this release
+----------------------------
+￼
+Jason Harrop
+￼
+￼
+Changes in Version 11.4.5 
+-------------------------
+
+Parity with 8.3.4￼
+
+Uses jakarta.xml.bind, rather than javax.xml.bind (hence the 11.4.x numbering); if you have existing code which imports javax.xml.bind, you'll need to search/replace across your code base, replacing javax.xml.bind  with jakarta.xml.bind
+
+Writes OSGi info to META-INF/MANIFEST.MF
+
+From hereon, changes will generally be made to this branch first.  
+
+
+
+Version 8.3.4  
+==============
+
+Release date
+------------
+
+3 March 2022
+
+
+Contributors to this release
+----------------------------
+
+Jason Harrop
+
+
+Significant Changes in Version 8.3.4
+-------------------------
+
+docx to PDF via XSL FO: Font configuration was ignored in 8.3.3, now fixed.
+
+Use FOP 2.7
+
+
 
 Version 8.3.3  
 ==============
@@ -31,6 +154,30 @@ at https://github.com/plutext/docx4j/blob/master/docx4j-samples-docx-export-fo/s
 Reinstate Panose support, required for best matching font mapper to work correctly.  To use this, you'll first need to delete .docx4j/fop-fonts.cache to force docx4j to re-read the fonts
 
 Bump various deps
+
+
+
+Version 11.3.2  parity with 8.3.2
+==============
+￼
+Release date
+------------
+￼
+4 Dec 2021
+￼
+￼
+Contributors to this release
+----------------------------
+￼
+Jason Harrop
+￼
+￼
+Changes in Version 11.3.2 
+-------------------------
+
+Parity with 8.3.2￼
+
+Repackages fop-events to satisfy JPMS
 
 
 
@@ -123,27 +270,42 @@ Rework FlatOpcXmlCreator to prevent marshaller elevating namespace decs to the p
 Bump commons-compress to 1.20; fop to 2.5
 
 
-Version 8.2.9  namespaces required in documents created using recent Word updates
+
+Version 11.2.9  namespaces required in documents created using recent Word updates; parity with 8.2.9
+==============
+￼
+Release date
+------------
+￼
+18 April 2021
+￼
+￼
+Contributors to this release
+----------------------------
+￼
+Dingfu.Ye (jdkcn)
+Jason Harrop
+￼
+￼
+Changes in Version 11.2.9 
+-------------------------
+￼
+http://schemas.microsoft.com/office/word/2020/wordml/sdtdatahash is new in [MS-DOCX] v15.0 of 22 March. Word writes this namespace prefix to @mc:Ignorable in the MDP, for example, "w14 w15 w16se w16cid w16 w16cex w16sdtdh wp14", so Word requires the namespace to also be declared.
+
+￼
+￼
+Version 11.2.8
 ==============
 
 Release date
 ------------
 
-15 April 2021
+7 January 2021
 
-
-Contributors to this release
-----------------------------
-
-Dingfu.Ye (jdkcn)
-Jason Harrop
-
-
-Changes in Version 8.2.9 
+Changes in Version 11.2.8
 -------------------------
 
-http://schemas.microsoft.com/office/word/2020/wordml/sdtdatahash is new in [MS-DOCX] v15.0 of 22 March. Word writes this namespace prefix to @mc:Ignorable in the MDP, for example, "w14 w15 w16se w16cid w16 w16cex w16sdtdh wp14", so Word requires the namespace to also be declared.
-
+Cumulative update for parity 8.2.8
 
 
 Version 8.2.8   minor release
@@ -163,7 +325,6 @@ Changes in Version 8.2.8
 -------------------------
 
 Microsoft Word: Dedicated part for template command group (wne:tcg), which contains customizations for keyboard shortcuts and toolbars
-
 
 
 Version 8.2.7  for pptx4j users
@@ -218,8 +379,6 @@ XHTML to docx: CSS font-size bug fix
 OpenDoPE image injection: tag width=n|auto to specify max width (eg 10500) or let BPAI work out the scaling (ported from 11.1.8)
 
 
-
-
 Version 11.2.5  
 ==============
 
@@ -240,7 +399,6 @@ which isn't in 8.2.4 (but has now been ported and will be in an 8.2.5 or 8.2.6)
 Limitations:
 - The docx4j-documents4j-* sub-projects don't have a module-info.java until https://github.com/documents4j/documents4j/issues/108 is addressed
 - The docx4j-conversion-via-microsoft-graph sub-project doesn't have a module-info.java
-
 
 
 Version 8.2.4  minor release
@@ -334,6 +492,7 @@ XXE avoid StreamSource in various places
 OpenDoPE XHTML support: where Import XHTML is not on classpath, insert an altChunk (ie rely on Word to process the XHTML)
 
 
+
 Version 11.1.8  
 ==============
 
@@ -371,6 +530,22 @@ and HTML.
 
 For examples, see docx4j-samples-documents4j-local 
 (or -remote).
+
+
+
+Version 11.1.7  
+==============
+
+Release date
+------------
+
+25 May 2020
+
+Changes in Version 11.1.7 
+-------------------------
+
+Incorporates changes from 8.1.4 to 8.1.7
+
 
 
 Version 8.1.7  minor release (to align with 11.1.7)

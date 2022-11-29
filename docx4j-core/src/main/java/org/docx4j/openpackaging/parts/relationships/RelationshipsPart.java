@@ -56,8 +56,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Unmarshaller;
+import jakarta.xml.bind.JAXBException;
+import jakarta.xml.bind.Unmarshaller;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamReader;
 
@@ -455,6 +455,8 @@ public final class RelationshipsPart extends JaxbXmlPart<Relationships> {
 		// TODO - do this in the Part constructor.  It can be too late
 		// leaving it until the Part is added to the Package.
 		part.setPackage( getPackage() );
+		
+		getPackage().getDrawingPropsIdTracker().registerPart(part);
 		
 	}
 
