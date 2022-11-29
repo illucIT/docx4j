@@ -3,10 +3,10 @@
   <groupId>org.docx4j</groupId>
   <artifactId>docx4j-parent</artifactId>
   <versioning>
-    <release>11.1.8-fixed</release>
+    <release>11.4.9-fixed</release>
     <versions>
-      <version>11.1.8-fixed</version>
+      <version>11.4.9-fixed</version>
     </versions>
-    <lastUpdated>20200811092422</lastUpdated>
+    <lastUpdated>20221129161549</lastUpdated>
   </versioning>
 </metadata>
