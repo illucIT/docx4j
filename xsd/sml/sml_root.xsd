@@ -13,13 +13,6 @@
                   
 -->	
 	
-  <!--  remember, use "include" for same namespace;
-                  use "import"  for different one.
-                  
-        Imports should go into a different java package:
-                  
--->	
-	
 <!--
 	
 WHICH VERSION?
