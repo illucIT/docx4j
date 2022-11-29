@@ -2,6 +2,1010 @@ CHANGELOG
 =========
 
 
+
+Version 8.3.3  
+==============
+
+Release date
+------------
+
+24 Feb 2022
+
+
+Contributors to this release
+----------------------------
+
+Jason Harrop
+
+
+Significant Changes in Version 8.3.3
+-------------------------
+
+Reworked FOP configuration:
+- new property docx4j.convert.out.fo.hyphenate must be set to true for hyphenation to occur
+- baseURI can be configured at docx4j.convert.out.fop.FopConfParser.defaultBaseURI; it now defaults to the current directory (".")
+- you can set your own custom resource resolver if necessary 
+You may need to make some minor changes to how it is invoked; see the example
+at https://github.com/plutext/docx4j/blob/master/docx4j-samples-docx-export-fo/src/main/java/org/docx4j/samples/ConvertOutPDFviaXSLFO.java#L170
+
+Reinstate Panose support, required for best matching font mapper to work correctly.  To use this, you'll first need to delete .docx4j/fop-fonts.cache to force docx4j to re-read the fonts
+
+Bump various deps
+
+
+
+Version 8.3.2  
+==============
+
+Release date
+------------
+
+2 Dec 2021
+
+
+Contributors to this release
+----------------------------
+
+Jason Harrop
+Dheeraj3reddy 
+vdkuil 
+
+
+Significant Changes in Version 8.3.2 
+-------------------------
+
+ChartEx (eg the newish statistical, hierarchy and combo charts) changes so Word can open output, fixes #481 
+
+When saving as zip, STORE don't DEFLATE certain binary parts
+
+PDF via FO: bump FOP from 2.5 to 2.6
+
+PDF via documents4j: support pptx to pdf
+
+Address various security alerts
+
+
+Version 8.3.1  
+==============
+
+Release date
+------------
+
+12 July 2021
+
+
+Contributors to this release
+----------------------------
+
+Jason Harrop
+
+
+Changes in Version 8.3.1 
+-------------------------
+
+Fix known regressions in v8.3.0
+
+Concurrency fix in NamespacePrefixMapper (most obvious with MOXy); fixes #464
+
+PDF via FO: Output hyphenate, language and country attributes to support hyphenation in PDF output
+
+Move legacy PDF converter out of docx4j-core, reducing core deps
+
+
+
+Version 8.3.0  new deps:  fontbox and fop-events
+==============
+
+Release date
+------------
+
+31 May 2021
+
+
+Contributors to this release
+----------------------------
+
+Jason Harrop
+mayangsong
+
+
+Changes in Version 8.3.0 
+-------------------------
+
+PDF via FO: Update font discovery to FOP as of 18 Dec 2020
+
+Where bold/italic font variations are not available, use fop's simulate-style to  generate bold and oblique looking glyphs for PDF output.
+
+Support rPr spacing in PDF and HTML output, XHTML import.
+
+Rework FlatOpcXmlCreator to prevent marshaller elevating namespace decs to the package element.  Fixes #444
+
+Bump commons-compress to 1.20; fop to 2.5
+
+
+Version 8.2.9  namespaces required in documents created using recent Word updates
+==============
+
+Release date
+------------
+
+15 April 2021
+
+
+Contributors to this release
+----------------------------
+
+Dingfu.Ye (jdkcn)
+Jason Harrop
+
+
+Changes in Version 8.2.9 
+-------------------------
+
+http://schemas.microsoft.com/office/word/2020/wordml/sdtdatahash is new in [MS-DOCX] v15.0 of 22 March. Word writes this namespace prefix to @mc:Ignorable in the MDP, for example, "w14 w15 w16se w16cid w16 w16cex w16sdtdh wp14", so Word requires the namespace to also be declared.
+
+
+
+Version 8.2.8   minor release
+==============
+
+Release date
+------------
+
+5 January 2021
+
+Contributors to this release
+----------------------------
+
+Jason Harrop
+
+Changes in Version 8.2.8
+-------------------------
+
+Microsoft Word: Dedicated part for template command group (wne:tcg), which contains customizations for keyboard shortcuts and toolbars
+
+
+
+Version 8.2.7  for pptx4j users
+==============
+
+Release date
+------------
+
+14 December 2020
+
+Contributors to this release
+----------------------------
+
+Jason Harrop
+
+Guillermo
+
+Yavuz Tas
+
+
+Changes in Version 8.2.7
+-------------------------
+
+Zip loading optimisation: Avoid using streams where entry size is known
+
+Fix issue in unmarshalString(String str, JAXBContext jc, Class declaredType) introduced by XXE fixes in 8.2.1 mostly affecting pptx
+
+Emojis: specify fallback font in docx4j.properties property docx4j.fonts.RunFontSelector.EmojiFont 
+
+
+
+Version 8.2.6  minor release
+==============
+
+Release date
+------------
+
+7 December 2020
+
+Contributors to this release
+----------------------------
+
+Jason Harrop
+
+Changes in Version 8.2.6
+-------------------------
+
+PDF via FOP with docx embedded fonts: bug fix for case where temp extracted fonts were deleted too early.
+
+XHTML to docx: CSS font-size bug fix
+
+OpenDoPE image injection: tag width=n|auto to specify max width (eg 10500) or let BPAI work out the scaling (ported from 11.1.8)
+
+
+
+
+Version 11.2.5  
+==============
+
+Release date
+------------
+
+18 Nov 2020
+
+Changes in Version 11.2.5
+-------------------------
+
+Cumulative update for parity 8.2.4
+
+Note: this release is labelled 11.2.5, since 11.x
+has since June 2020 contained a feature OpenDoPE image injection: tag width=n|auto 
+which isn't in 8.2.4 (but has now been ported and will be in an 8.2.5 or 8.2.6)
+
+Limitations:
+- The docx4j-documents4j-* sub-projects don't have a module-info.java until https://github.com/documents4j/documents4j/issues/108 is addressed
+- The docx4j-conversion-via-microsoft-graph sub-project doesn't have a module-info.java
+
+
+
+Version 8.2.4  minor release
+==============
+
+Release date
+------------
+
+13 November 2020
+
+Contributors to this release
+----------------------------
+
+Jason Harrop
+
+Significant Changes in Version 8.2.4
+-------------------------
+
+docx4j toc generation: p-level rPr rFont or sz should take priority over doc default setting
+
+xlsx4j: Worksheet retain  xr:uid, so MOXy writes the xr namespace, 
+works around https://stackoverflow.com/questions/64778237/moxy-missing-namespace-for-content-in-xmlanyelementlax-true-object
+
+
+
+Version 8.2.3  
+==============
+
+Release date
+------------
+
+4 September 2020
+
+Contributors to this release
+----------------------------
+
+Jason Harrop
+
+
+Significant Changes in Version 8.2.3
+-------------------------
+
+Support for docx/pptx/slsx conversion to PDF via Microsoft's cloud (Microsoft Graph)
+ 
+
+
+Version 8.2.2  minor release
+==============
+
+Release date
+------------
+
+25 August 2020
+
+
+Contributors to this release
+----------------------------
+
+Jason Harrop
+
+
+Significant Changes in Version 8.2.2
+-------------------------
+
+FieldUpdater support for docvars (docprops are already supported)
+
+Update OSGI stuff for current release. Confirmed working in karaf 4.2.6 with docx4j-JAXB-Internal on Java 8.
+
+
+
+Version 8.2.1  
+==============
+
+Release date
+------------
+
+16 July 2020
+
+
+Contributors to this release
+----------------------------
+
+Jason Harrop
+
+
+Significant Changes in Version 8.2.1
+-------------------------
+
+Traverse into 2010/wordprocessingShape txbxContent
+XXE avoid StreamSource in various places
+OpenDoPE XHTML support: where Import XHTML is not on classpath, insert an altChunk (ie rely on Word to process the XHTML)
+
+
+Version 11.1.8  
+==============
+
+Release date
+------------
+
+10 June 2020
+
+Changes in Version 11.1.8 
+-------------------------
+
+OpenDoPE image injection: tag width=n|auto to specify max width (eg 10500) or let BPAI work out the scaling
+
+
+Version 8.2.0  
+==============
+
+Release date
+------------
+
+2 June 2020
+
+Contributors to this release
+----------------------------
+
+Jason Harrop
+
+Significant Changes in Version 8.2.0
+-------------------------
+
+New sub-projects to facilitate the use of documents4j
+to drive Microsoft Word (running locally or remotely),
+for PDF export, TOC update, and import of RTF, binary .doc
+and HTML.
+
+For examples, see docx4j-samples-documents4j-local 
+(or -remote).
+
+
+Version 8.1.7  minor release (to align with 11.1.7)
+==============
+
+Release date
+------------
+
+25 May 2020
+
+
+Contributors to this release
+----------------------------
+
+Jason Harrop
+
+Significant Changes in Version 8.1.7 
+-------------------------
+
+OpenDoPE: fix handling of count>0 when OpenDoPEHandler.ENABLE_XPATH_CACHE
+
+docx4j-export-fo
+------------
+
+Move to FOP 2.4
+
+Support VertAlign direct rPr formatting 
+
+
+
+Version 8.1.6  minor release
+==============
+
+Release date
+------------
+
+7 April 2020
+
+
+Contributors to this release
+----------------------------
+
+Jason Harrop
+
+Changes in Version 8.1.6 
+-------------------------
+
+Improve efficiency of package clone
+
+pptx4j
+------
+
+SaveSlides provides the ability to save selected slides only; partialClone can use this to make a clone of a PresentationMLPackage, but with just those slides
+
+xlsx4j
+------
+
+xlsx revision namespaces; fixes #389
+
+Support importing flat OPC XML representing a spreadsheet
+
+
+
+Version 8.1.5  namespaces required in documents created using recent Word updates
+==============
+
+Release date
+------------
+
+26 February 2020
+
+
+Contributors to this release
+----------------------------
+
+Jason Harrop
+
+R Cambell
+
+Wussup
+
+Changes in Version 8.1.5 
+-------------------------
+
+Add mappings for w16 and w16cid.  Fixes 381.
+
+JAXB: Remove dep on java-api 2.3.1, since that depends on javax.activation:javax.activation-api.  The 2.3.2 version which we want is jakarta.xml.bind:jakarta.xml.bind-api which depends on jakarta.activation
+
+NamespacePrefixMapperUtils.tryRIforRelationshipsPart: Fix typo
+
+MergeField: support multiple newline characters
+
+For more, please see https://github.com/plutext/docx4j/commits/master
+
+ 
+
+Version 8.1.4 minor release
+==============
+
+Release date
+------------
+
+23 December 2019
+
+
+Contributors to this release
+----------------------------
+
+Jason Harrop
+
+
+Changes in Version 8.1.4 
+-------------------------
+
+Dedicated part CommentsIdsPart for w16cid:commentsIds
+
+Enhance ArrayListWml to handle parent in other methods; make JAXBElements transparent when matching objects 
+
+export-FO: revert white-space-treatment="preserve"; white-space-collapse="false" because it causes unwanted formatting issues
+
+xlsx4j
+------
+
+Enhance ArrayListSml to handle parent in other methods; make JAXBElements transparent when matching objects 
+
+
+
+Version 8.1.3 minor release
+==============
+
+Release date
+------------
+
+29 August 2019
+
+
+Contributors to this release
+----------------------------
+
+Jason Harrop
+
+
+Changes in Version 8.1.3 
+-------------------------
+
+Port changes in 11.1.3 (as to which see below) back to 8.1.x 
+
+
+
+Version 11.1.3 minor release
+==============
+
+Release date
+------------
+
+28 August 2019
+
+Overview 
+--------
+
+11.1.3 is a JPMS modularised release.  
+
+
+Contributors to this release
+----------------------------
+
+Jason Harrop
+
+
+Changes in Version 11.1.3 
+-------------------------
+
+improved diagnostics for XML factories
+
+handle newline chars in createParagraphOfText
+
+OpenDoPE: access resources in org.docx4j.model.datastorage (Widen opens in module-info)
+
+FieldUpdater patch (#343)
+
+pptx4j
+------
+
+Improve API for adding slide notes
+
+Bugfix: HandoutMasterPart part name must start with '/' 
+
+
+
+Version 11.1.2 
+==============
+
+Release date
+------------
+
+5 August 2019
+
+Overview 
+--------
+
+11.1.2 is a JPMS modularised release.  It incorporates changes made in 8.1.1 and 8.1.2 (ie changes since 11.1.0 was released)
+
+
+Contributors to this release
+----------------------------
+
+Jason Harrop
+
+ChilamYan
+
+
+Notable Changes in Version 11.1.2 
+---------------------------------
+
+Widen opens in pptx4j/xlsx4j module-info
+
+Bugfix: synchronize access to namespacePrefixMapper to avoid "namespacePrefixMapper is null" in multithreaded scenarios
+
+Bugfix: specify UTF-8 in MainDocumentPartFilterOutputStream
+
+Support for embedded True Type Fonts. (Up until now, we only supported obfuscated embeddings)
+
+xlsx4j
+------
+
+Bugfix: Correct jcSML spreadsheetDrawing package name
+
+Support mc:alternateContent in Workbook part (ie instead of dropping it)
+
+
+
+Version 8.1.2 minor release 
+=============
+
+Release date
+------------
+
+31 July 2019
+
+
+Contributors to this release
+----------------------------
+	
+Jason Harrop
+
+
+Notable Changes in Version 8.1.2 
+---------------------------------
+
+Bugfix: synchronize access to namespacePrefixMapper to avoid "namespacePrefixMapper is null" in multithreaded scenarios
+
+
+
+Version 8.1.1 minor release 
+=============
+
+Release date
+------------
+
+29 June 2019
+
+
+Contributors to this release
+----------------------------
+
+ChilamYan 
+	
+Jason Harrop
+
+
+Notable Changes in Version 8.1.1 
+---------------------------------
+
+Bugfix: specify UTF-8 in MainDocumentPartFilterOutputStream
+
+Support for embedded True Type Fonts. (Up until now, we only supported obfuscated embeddings)
+
+
+xlsx4j
+------
+
+Bugfix: Correct jcSML spreadsheetDrawing package name
+
+Support mc:alternateContent in Workbook part (ie instead of dropping it)
+
+
+
+Version 11.1.0 
+==============
+
+Release date
+------------
+
+2 June 2019
+
+
+Contributors to this release
+----------------------------
+
+Jason Harrop
+
+
+Notable Changes in Version 11.1.0 
+---------------------------------
+
+11.1.0 is our first JPMS modularised release, so the jars contain module-info.class entries.
+
+The module names correspond to our Maven modules: 
+
+	org.docx4j.openxml_objects 
+	org.docx4j.openxml_objects_pml 
+	org.docx4j.openxml_objects_sml 
+	
+	org.docx4j.core 
+	
+	org.docx4j.JAXB_MOXy 
+	org.docx4j.JAXB_ReferenceImpl 
+
+We require named modules:
+
+    docx4j_xalan_serializer
+    docx4j_xalan_interpretive
+	org.slf4j
+	
+(Other dependencies generally aren't JPMS-ready, so they go on the classpath in the "unnamed" module.)	
+
+11.1.0 is compiled with Java 12, targeting Java 11.
+
+jackson-databind dep bumped to 2.9.9.
+
+In other respects this release is the same as v8.1.0, except that docx4j-export-fo 
+is temporarily omitted since Maven compiler doesn't like FOP 2.3's avalon dependency.  
+When FOP 2.4 is released, we should be able to include it again.
+
+
+
+Version 8.1.0 
+=============
+
+Release date
+------------
+
+21 May 2019
+
+
+Contributors to this release
+----------------------------
+
+Jason Harrop
+
+
+Notable Changes in Version 8.1.0 
+---------------------------------
+
+Update [MS-PPTX] and [MS-ODRAWXML] content models with latest schemas.
+
+Implement child in dml
+
+Re-packaged subset of Guava to shave 2.4MB off deps size 
+
+StyleTree handles default table style (used by MergeDocx)
+
+docx4j
+------
+
+Support adding altChunk at specified index
+
+VariablePrepare: make settings configurable
+
+Move anon out of core to a dedicated Maven module
+
+pptx4j
+------
+
+support mc:AlternateContent in slide shape tree
+
+Implement child in pml
+
+
+
+Version 8.0.0 
+=============
+
+Release date
+------------
+
+21 April 2019
+
+
+Contributors to this release
+----------------------------
+
+Jason Harrop
+
+
+Notable Changes in Version 8.0.0 
+---------------------------------
+
+Minimum supported Java version is 8.0
+
+docx4j 8 should be easier to deploy in complex environments such as OSGi, JBoss EAP etc.
+
+docx4j is now a Maven multi-module project.  To use it via Maven, add just one of docx4j-JAXB-Internal, docx4j-JAXB-MOXy,
+or docx4j-JAXB-ReferenceImpl dependencies. 
+
+Various dependencies were updated (some of which require Java 1.8)
+
+OpenDoPE support for XPath 2.0, 3.0 (requires Saxon)
+
+Uses repackaged and mavenized Xalan; see https://github.com/plutext/xalan-j/tree/Plutext_Java8_Repackaged_Docx4j
+
+
+
+Version 6.1.2 minor release 
+=============
+
+Release date
+------------
+
+27 February 2019
+
+
+Contributors to this release
+----------------------------
+
+Jason Harrop
+
+rmanitz
+
+
+Notable Changes in Version 6.1.2 
+---------------------------------
+
+Fix for #340 Field handling NumberExtractor, handle group separator '.' (eg German) correctly.
+
+New property docx4j.Fields.Numbers.JavaStylePercentHandling which if set to true multiplies the value by hundred.  
+For example, formatting 0.33 with "\\# ##%" would yield 33%.
+
+Fix for #344 (NPE in TraversalUtil in graphicData)
+Fix for #346 (relating to Fields)
+
+xlsx4j
+------
+
+Convenience method to access ThemePart
+
+
+Version 6.1.1 
+=============
+
+Release date
+------------
+
+21 January 2019
+
+
+Contributors to this release
+----------------------------
+
+Jason Harrop
+
+
+Notable Changes in Version 6.1.1 
+---------------------------------
+
+vml and mc lists are now of type ArrayListVml|Mce respecitvely, in which parent object is automatically set correctly
+(as is done for wml objects)
+
+TraversalUtil replaceChildren: support replacing in a bare List object.
+
+OpenDoPE removal handler: new option ALL_BUT_PLACEHOLDERS_CONTENT, 
+Ordinarily, if an SDT contains XML but no real content, that XML is also removed.  
+Choose this option if you want to keep placeholder XML (but remove the SDT).
+
+
+
+Version 6.1.0 
+=============
+
+Release date
+------------
+
+15 December 2018
+
+Contributors to this release
+----------------------------
+
+https://github.com/adolbin
+
+Jason Harrop
+
+https://github.com/Lood
+
+Mioara
+
+https://github.com/P2EQgf
+
+https://github.com/verkhovin
+
+
+
+Notable Changes in Version 6.1.0 
+---------------------------------
+
+IMPORTANT: Force namespaces used in mc:choice to be declared top-level. If 
+they aren't there, Word can't open the docx.
+
+mc:Ignorable: support attribute in footnotes/endnotes, numbering, styles 
+(already supported in main and headers/footers) 
+
+w14 namespace handling improvements: Don't drop these attributes in mc-preprocessor.xslt; 
+Support w14:EG_RPrOpenType elements
+
+PDF Converter now defaults to localhost endpoint to avoid information leakage.
+(controlled by docx4j property com.plutext.converter.URL)
+The localhost endpoint will only work if you download and install the converter there! 
+If you choose to use converter-eval.plutext.com, please only use it for light testing purposes.
+
+BookmarksIntegrity checking now part of docx4j proper; used before ToC updating
+
+AttachTemplate now part of docx4j proper; method cloneAs
+
+OpenDoPE finisher: optional step in which formatting can be applied
+(this is often neater than using conditional content controls just for formatting)
+
+OpenDoPE RemovalHandler: new Quantifier.ALL_BUT_PLACEHOLDERS (ie remove content controls, 
+but keep any placeholders inserted where there is empty content), ability to specify 
+Quantifier via docx4j.properties; also ability to substitute your own RemovalHandler.xslt.
+
+OpenDoPE: simplified component processing model [requires Enterprise]:
+ 1. components don't have to be at the top paragraph level of the content tree,
+ BUT:
+ 2. component processing is now done before condition/repeat processing
+ 3. component processing is not recursive anymore
+ 4. components typically use the "main" answer file
+component processing is OFF by default
+Enable it with property "docx4j.model.datastorage.OpenDoPEHandlerComponents.enabled"
+
+
+Version 6.0.1 
+=============
+
+Release date
+------------
+
+3 August 2018
+
+Contributors to this release
+----------------------------
+
+Jason Harrop
+
+Notable Changes in Version 6.0.1 
+---------------------------------
+
+In many cases v6.0.0 release writes <?xml version="1.0" ?> omitting encoding "UTF-8".
+This release corrects that, and is recommended for this reason.
+
+
+Version 6.0.0 (NOT RECOMMENDED)
+=============
+
+Release date
+------------
+
+22 July 2018
+
+Contributors to this release
+----------------------------
+
+ewanmellor (NationalBI)
+
+Jason Harrop
+
+
+Notable Changes in Version 6.0.0 
+---------------------------------
+
+Docx4j 6.x will be the last series supporting Java 6.  
+(docx4j 7.x, when released, will require Java 7+) 
+
+New dependency commons-compress used for zip/unzip.  Most other
+deps updated to last version supporting Java 6.
+
+Support for Java 9 and 10 (see notes in README for use in Eclipse)
+- Maven profiles for java 9 and 10 
+- Maven pom now specifies source & target 1.6 (previously 1.5)
+
+Preserve mc:AlternateContent in a run. Previously, this would have caused mc-preprocessor 
+to be invoked, selecting one of the pieces of content.
+
+Object model for wps http://schemas.microsoft.com/office/word/2010/wordprocessingShape
+
+Content Control databinding (and OpenDoPE)
+- UpdateXmlFromDocumentSurface: Copy content control content back to the custom XML part, like Microsoft Word does for a content control
+ which has a w:databinding element
+- improvements to migration (from eg VariableReplace)
+- better support for binding standardised Answers format
+- various other improvement
+
+Write docx4j version as XML comment in MainDocument part.
+
+New properties docx4j.openpackaging.parts.MAX_BYTES.unzip.error and docx4j.openpackaging.parts.MAX_BYTES.unmarshal.error which can be 
+set to positive values to have docx4j throw a PartTooLarge exception 
+if a part is larger than the set value. 
+
+
+
+Version 3.3.7  minor release
+=============
+
+Release date
+------------
+
+25 March 2018
+
+Contributors to this release
+----------------------------
+
+Jason Harrop
+
+
+Notable Changes in Version 3.3.7 
+---------------------------------
+
+OpenDoPE: handle w15:databinding; FlatOPC processing fixes; component handling fixes
+
+PDF Converter (commercial, not export-FO) defaults to https (port 443)
+
+IBM JAXB detection improvements
+
+various other fixes
+
+
+
 Version 3.3.6  minor release
 =============
 
