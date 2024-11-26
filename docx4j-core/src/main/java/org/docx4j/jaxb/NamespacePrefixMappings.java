@@ -250,7 +250,12 @@ public class NamespacePrefixMappings implements NamespaceContext, org.docx4j.org
     	
     	if (namespaceUri.equals("http://schemas.microsoft.com/office/word/2023/wordml/word16du")) {
     		return "w16du";
-    	}    	
+    	}
+    	
+    	// since 11.5.1    	
+    	if (namespaceUri.equals("http://schemas.microsoft.com/office/word/2024/wordml/sdtformatlock")) {
+    		return "w16sdtfl";
+    	}
 
     	if (namespaceUri.equals("http://schemas.microsoft.com/office/powerpoint/2010/main")) {
     		return "p14";
@@ -693,6 +698,10 @@ public class NamespacePrefixMappings implements NamespaceContext, org.docx4j.org
 
 		if (prefix.equals("w16du"))
 			return "http://schemas.microsoft.com/office/word/2023/wordml/word16du";
+
+		// since 11.5.1
+		if (prefix.equals("w16sdtfl"))
+			return "http://schemas.microsoft.com/office/word/2024/wordml/sdtformatlock";		
 		
 		if (prefix.equals("p14"))
 			return "http://schemas.microsoft.com/office/powerpoint/2010/main";
