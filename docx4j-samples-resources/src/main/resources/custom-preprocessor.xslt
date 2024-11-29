@@ -243,5 +243,18 @@
   <xsl:template match="w:unhidenWhenUsed" > <!--  BIRT typo -->
 	<w:unhideWhenUsed/>
   </xsl:template>  
+  
+<!-- POI writes 'on' and 'off', no good for docx4j; see https://github.com/plutext/docx4j/issues/585 -->  
+<xsl:template match="@w:val" >
+  	<xsl:choose>
+  		<xsl:when test=".='true' or .='on' or .='1'">
+		  	<xsl:attribute name="w:val">true</xsl:attribute>
+  		</xsl:when>
+  		<xsl:otherwise>
+		  	<xsl:attribute name="w:val">false</xsl:attribute>
+  		</xsl:otherwise>
+  	</xsl:choose>
+  </xsl:template>  
+  
 
 </xsl:stylesheet>
