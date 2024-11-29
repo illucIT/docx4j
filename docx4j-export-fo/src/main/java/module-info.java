@@ -10,7 +10,7 @@ module org.docx4j.export_fo {
 	//requires fop.events;
 	// requires qdox;
 
-	requires fop;
+	requires fop;  // FOP 2.7
 	// deps of org.apache.xmlgraphics:fop-core:jar:2.5
 		requires batik.anim;
 		requires batik.css;
@@ -36,6 +36,24 @@ module org.docx4j.export_fo {
 			
 	// necessary for FOP 2.9 but not 2.9 or earlier
 //	requires fop.core; 
+		
+// FOP 2.10
+//		requires org.apache.xmlgraphics.fop.core;
+//		requires org.apache.xmlgraphics.fop.events;
+//		requires org.apache.xmlgraphics.fop.util;
+//		
+//		// deps of org.apache.xmlgraphics:fop-core:jar:2.5
+//			requires org.apache.xmlgraphics.batik.anim;
+//			requires org.apache.xmlgraphics.batik.css;
+//			requires org.apache.xmlgraphics.batik.dom;
+//			requires org.apache.xmlgraphics.batik.ext;
+//			requires org.apache.xmlgraphics.batik.parser;
+////			requires org.apache.xmlgraphics.batik.shared.resources;
+////			requires org.apache.xmlgraphics.batik.svg.dom;
+//			requires org.apache.xmlgraphics.batik.util;
+//			requires org.apache.xmlgraphics.batik.constants;
+//			requires org.apache.xmlgraphics.batik.i18n;
+		
 
 	
 	exports org.docx4j.convert.out.fo;
