@@ -2,6 +2,45 @@ CHANGELOG
 =========
 
 
+Version 11.5.1  (recommended update on account of w16sdtfl)
+===============
+
+Release date
+------------
+
+28 Nov 2024
+
+
+Contributors to this release
+----------------------------
+
+arunvc (#596 - handle whitespace in font name)
+
+balajiasokkumar  (#601 - w16sdtfl)
+
+devindan (#591 - Chinese numbering)
+
+Jason Harrop
+
+Changes in Version 11.5.1
+--------------------------
+
+Add xmlns:w16sdtfl="http://schemas.microsoft.com/office/word/2024/wordml/sdtformatlock".  w16sdtfl has started to show up in Word releases, despite not yet being specified in [MS-DOCX].  Word writes the w16sdtfl namespace prefix to @mc:Ignorable in the MDP, so Word requires the namespace to also be declared.
+
+AcceptChanges: Mimic Word's table deletion behaviour
+
+Numbering - fix NumStyleLink handling
+Take NDP into account in applying indent
+
+Avoid "Premature end of file" when using Binder with MOXy JAXB (and docx has no AlternateContent).
+
+Bump commons-compress from 1.26.1 to 1.27.1
+
+new interface PackageTransformer
+
+Fix Chart*Parts constructor to be consistent with other Parts
+
+
 Version 11.5.0  (Jakarta XML Binding 4.0)
 ===============
 

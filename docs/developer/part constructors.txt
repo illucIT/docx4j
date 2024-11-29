@@ -1,0 +1,520 @@
+List of public constructors
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+<dependency>
+    <groupId>io.github.classgraph</groupId>
+    <artifactId>classgraph</artifactId>
+    <version>LATEST</version>
+</dependency>
+
+import java.util.Arrays;
+
+import io.github.classgraph.ClassGraph;
+import io.github.classgraph.ClassInfo;
+import io.github.classgraph.MethodInfo;
+import io.github.classgraph.MethodInfoList;
+import io.github.classgraph.MethodParameterInfo;
+import io.github.classgraph.ScanResult;
+
+public class ListClasses {
+
+	public static void main(String[] args) {
+
+		try (ScanResult scanResult =                // Assign scanResult in try-with-resources
+		        new ClassGraph()                    // Create a new ClassGraph instance
+		            .verbose()                      // If you want to enable logging to stderr
+		            .enableAllInfo()                // Scan classes, methods, fields, annotations
+		            .acceptPackages("org.docx4j.openpackaging.parts")      // Scan com.xyz and subpackages
+		            .scan()) {                      // Perform the scan and return a ScanResult
+
+		    for( ClassInfo o : scanResult.getAllClasses()) {
+
+		    	System.out.println("\n" + o.getName());
+
+		    	for (MethodInfo m :  o.getDeclaredConstructorInfo() ) {
+
+		    		MethodParameterInfo[] infos = m.getParameterInfo();
+		    		System.out.println(Arrays.toString(infos));
+		    	}
+		    }
+		}
+	}
+
+}
+
+
+
+
+abstract org.docx4j.openpackaging.parts.AbstractFontPart
+[org.docx4j.openpackaging.parts.PartName _unnamed_param]
+
+org.docx4j.openpackaging.parts.ActiveXControlXmlPart
+[org.docx4j.openpackaging.parts.PartName _unnamed_param]
+[]
+
+org.docx4j.openpackaging.parts.CustomXmlDataStoragePart
+[org.docx4j.openpackaging.parts.PartName _unnamed_param]
+[]
+
+org.docx4j.openpackaging.parts.CustomXmlDataStoragePropertiesPart
+[org.docx4j.openpackaging.parts.PartName _unnamed_param]
+[]
+
+interface org.docx4j.openpackaging.parts.CustomXmlPart
+
+org.docx4j.openpackaging.parts.DefaultXmlPart extends XmlPart
+[org.docx4j.openpackaging.parts.PartName _unnamed_param]
+MISSING
+
+org.docx4j.openpackaging.parts.DocPropsCorePart
+[org.docx4j.openpackaging.parts.PartName _unnamed_param]
+[]
+
+org.docx4j.openpackaging.parts.DocPropsCoverPagePart
+[org.docx4j.openpackaging.parts.PartName _unnamed_param]
+MISSING
+
+org.docx4j.openpackaging.parts.DocPropsCustomPart
+[org.docx4j.openpackaging.parts.PartName _unnamed_param]
+[]
+
+org.docx4j.openpackaging.parts.DocPropsExtendedPart
+[org.docx4j.openpackaging.parts.PartName _unnamed_param]
+[]
+
+org.docx4j.openpackaging.parts.DrawingML.Chart
+[org.docx4j.openpackaging.parts.PartName _unnamed_param]
+[]
+
+org.docx4j.openpackaging.parts.DrawingML.ChartColorStylePart
+[org.docx4j.openpackaging.parts.PartName _unnamed_param]
+[]
+
+org.docx4j.openpackaging.parts.DrawingML.ChartExSpacePart
+[org.docx4j.openpackaging.parts.PartName _unnamed_param]
+[]
+
+org.docx4j.openpackaging.parts.DrawingML.ChartShapePart
+[org.docx4j.openpackaging.parts.PartName _unnamed_param]
+[]
+
+org.docx4j.openpackaging.parts.DrawingML.ChartStylePart
+[org.docx4j.openpackaging.parts.PartName _unnamed_param]
+[]
+
+
+org.docx4j.openpackaging.parts.DrawingML.DiagramColorsPart
+[org.docx4j.openpackaging.parts.PartName _unnamed_param]
+[]
+
+org.docx4j.openpackaging.parts.DrawingML.DiagramDataPart
+[org.docx4j.openpackaging.parts.PartName _unnamed_param]
+[]
+
+
+org.docx4j.openpackaging.parts.DrawingML.DiagramDrawingPart
+[org.docx4j.openpackaging.parts.PartName _unnamed_param]
+[]
+
+org.docx4j.openpackaging.parts.DrawingML.DiagramLayoutHeaderPart
+[org.docx4j.openpackaging.parts.PartName _unnamed_param]
+[]
+
+org.docx4j.openpackaging.parts.DrawingML.DiagramLayoutPart
+[org.docx4j.openpackaging.parts.PartName _unnamed_param]
+[]
+
+org.docx4j.openpackaging.parts.DrawingML.DiagramStylePart
+[org.docx4j.openpackaging.parts.PartName _unnamed_param]
+[]
+
+org.docx4j.openpackaging.parts.DrawingML.Drawing
+[org.docx4j.openpackaging.parts.PartName _unnamed_param]
+[]
+
+org.docx4j.openpackaging.parts.DrawingML.JaxbDmlPart
+[org.docx4j.openpackaging.parts.PartName _unnamed_param]
+[]
+
+org.docx4j.openpackaging.parts.DrawingML.ThemeOverridePart
+[org.docx4j.openpackaging.parts.PartName _unnamed_param]
+[]
+
+
+org.docx4j.openpackaging.parts.InkmlPart
+[org.docx4j.openpackaging.parts.PartName _unnamed_param]
+[]
+
+abstract org.docx4j.openpackaging.parts.JaxbXmlPart
+[org.docx4j.openpackaging.parts.PartName _unnamed_param]
+[org.docx4j.openpackaging.parts.PartName _unnamed_param, jakarta.xml.bind.JAXBContext _unnamed_param]
+
+
+abstract org.docx4j.openpackaging.parts.JaxbXmlPartAltChunkHost
+[org.docx4j.openpackaging.parts.PartName _unnamed_param]
+MISSING
+
+abstract org.docx4j.openpackaging.parts.JaxbXmlPartXPathAware
+[org.docx4j.openpackaging.parts.PartName _unnamed_param]
+
+abstract org.docx4j.openpackaging.parts.Part
+[]
+
+
+
+org.docx4j.openpackaging.parts.PresentationML.CommentAuthorsPart
+[org.docx4j.openpackaging.parts.PartName _unnamed_param]
+[]
+
+org.docx4j.openpackaging.parts.PresentationML.CommentsPart
+[org.docx4j.openpackaging.parts.PartName _unnamed_param]
+[]
+
+org.docx4j.openpackaging.parts.PresentationML.FontDataPart
+[org.docx4j.openpackaging.parts.PartName _unnamed_param]
+[]
+
+org.docx4j.openpackaging.parts.PresentationML.HandoutMasterPart
+[org.docx4j.openpackaging.parts.PartName _unnamed_param]
+[]
+
+org.docx4j.openpackaging.parts.PresentationML.JaxbPmlPart
+[org.docx4j.openpackaging.parts.PartName _unnamed_param]
+[]
+
+org.docx4j.openpackaging.parts.PresentationML.MainPresentationPart
+[org.docx4j.openpackaging.parts.PartName _unnamed_param]
+[]
+
+org.docx4j.openpackaging.parts.PresentationML.NotesMasterPart
+[org.docx4j.openpackaging.parts.PartName _unnamed_param]
+[]
+
+org.docx4j.openpackaging.parts.PresentationML.NotesSlidePart
+[org.docx4j.openpackaging.parts.PartName _unnamed_param]
+[]
+
+org.docx4j.openpackaging.parts.PresentationML.PresentationPropertiesPart
+[org.docx4j.openpackaging.parts.PartName _unnamed_param]
+[]
+
+org.docx4j.openpackaging.parts.PresentationML.SlideLayoutPart
+[org.docx4j.openpackaging.parts.PartName _unnamed_param]
+[]
+
+org.docx4j.openpackaging.parts.PresentationML.SlideMasterPart
+[org.docx4j.openpackaging.parts.PartName _unnamed_param]
+[]
+
+org.docx4j.openpackaging.parts.PresentationML.SlidePart
+[org.docx4j.openpackaging.parts.PartName _unnamed_param]
+[]
+
+org.docx4j.openpackaging.parts.PresentationML.TableStylesPart
+[org.docx4j.openpackaging.parts.PartName _unnamed_param]
+[]
+
+org.docx4j.openpackaging.parts.PresentationML.TagsPart
+[org.docx4j.openpackaging.parts.PartName _unnamed_param]
+[]
+
+org.docx4j.openpackaging.parts.PresentationML.ViewPropertiesPart
+[org.docx4j.openpackaging.parts.PartName _unnamed_param]
+[]
+
+
+org.docx4j.openpackaging.parts.SpreadsheetML.CalcChain
+[org.docx4j.openpackaging.parts.PartName _unnamed_param]
+[]
+
+org.docx4j.openpackaging.parts.SpreadsheetML.ChartsheetPart
+[org.docx4j.openpackaging.parts.PartName _unnamed_param]
+[]
+
+org.docx4j.openpackaging.parts.SpreadsheetML.CommentsPart
+[org.docx4j.openpackaging.parts.PartName _unnamed_param]
+[]
+
+org.docx4j.openpackaging.parts.SpreadsheetML.ConnectionsPart
+[org.docx4j.openpackaging.parts.PartName _unnamed_param]
+[]
+
+org.docx4j.openpackaging.parts.SpreadsheetML.ExternalLinkPart
+[org.docx4j.openpackaging.parts.PartName _unnamed_param]
+[]
+
+org.docx4j.openpackaging.parts.SpreadsheetML.JaxbSmlPart
+[org.docx4j.openpackaging.parts.PartName _unnamed_param]
+[]
+
+org.docx4j.openpackaging.parts.SpreadsheetML.PivotCacheDefinition
+[org.docx4j.openpackaging.parts.PartName _unnamed_param]
+[]
+
+org.docx4j.openpackaging.parts.SpreadsheetML.PivotCacheRecords
+[org.docx4j.openpackaging.parts.PartName _unnamed_param]
+[]
+
+org.docx4j.openpackaging.parts.SpreadsheetML.PivotTable
+[org.docx4j.openpackaging.parts.PartName _unnamed_param]
+[]
+
+org.docx4j.openpackaging.parts.SpreadsheetML.PrinterSettings
+[org.docx4j.openpackaging.parts.PartName _unnamed_param]
+[]
+
+org.docx4j.openpackaging.parts.SpreadsheetML.QueryTablePart
+[org.docx4j.openpackaging.parts.PartName _unnamed_param]
+[]
+
+org.docx4j.openpackaging.parts.SpreadsheetML.SharedStrings
+[org.docx4j.openpackaging.parts.PartName _unnamed_param]
+[]
+
+org.docx4j.openpackaging.parts.SpreadsheetML.Styles
+[org.docx4j.openpackaging.parts.PartName _unnamed_param]
+[]
+
+org.docx4j.openpackaging.parts.SpreadsheetML.TablePart
+[org.docx4j.openpackaging.parts.PartName _unnamed_param]
+[]
+
+org.docx4j.openpackaging.parts.SpreadsheetML.WorkbookPart
+[org.docx4j.openpackaging.parts.PartName _unnamed_param]
+[]
+
+org.docx4j.openpackaging.parts.SpreadsheetML.WorksheetPart
+[org.docx4j.openpackaging.parts.PartName _unnamed_param]
+[]
+
+
+org.docx4j.openpackaging.parts.ThemePart
+[org.docx4j.openpackaging.parts.PartName _unnamed_param]
+[]
+
+org.docx4j.openpackaging.parts.TrueTypeFontPart
+[org.docx4j.openpackaging.parts.PartName _unnamed_param]
+MISSING
+
+org.docx4j.openpackaging.parts.VMLBinaryPart
+[org.docx4j.openpackaging.parts.PartName _unnamed_param]
+[]
+
+org.docx4j.openpackaging.parts.VMLPart
+[org.docx4j.openpackaging.parts.PartName _unnamed_param]
+[]
+
+
+org.docx4j.openpackaging.parts.WordprocessingML.AlternativeFormatInputPart
+[org.docx4j.openpackaging.parts.PartName _unnamed_param]
+[org.docx4j.openpackaging.parts.WordprocessingML.AltChunkType _unnamed_param]
+MISSING
+
+org.docx4j.openpackaging.parts.WordprocessingML.BibliographyPart
+[]
+[org.docx4j.openpackaging.parts.PartName _unnamed_param]
+[org.docx4j.openpackaging.parts.PartName _unnamed_param, jakarta.xml.bind.JAXBContext _unnamed_param]
+
+org.docx4j.openpackaging.parts.WordprocessingML.BinaryPart
+[org.docx4j.openpackaging.parts.PartName _unnamed_param]
+[org.docx4j.openpackaging.parts.ExternalTarget _unnamed_param]
+MISSING
+
+org.docx4j.openpackaging.parts.WordprocessingML.BinaryPartAbstractImage
+[org.docx4j.openpackaging.parts.PartName _unnamed_param]
+[org.docx4j.openpackaging.parts.ExternalTarget _unnamed_param]
+MISSING
+
+org.docx4j.openpackaging.parts.WordprocessingML.ChartColorStylePart
+[org.docx4j.openpackaging.parts.PartName _unnamed_param]
+[]
+
+org.docx4j.openpackaging.parts.WordprocessingML.ChartExSpacePart
+[org.docx4j.openpackaging.parts.PartName _unnamed_param]
+[]
+
+org.docx4j.openpackaging.parts.WordprocessingML.ChartStylePart
+[org.docx4j.openpackaging.parts.PartName _unnamed_param]
+[]
+
+org.docx4j.openpackaging.parts.WordprocessingML.CommentsExtendedPart
+[org.docx4j.openpackaging.parts.PartName _unnamed_param]
+[]
+
+org.docx4j.openpackaging.parts.WordprocessingML.CommentsIdsPart
+[org.docx4j.openpackaging.parts.PartName _unnamed_param]
+[]
+
+org.docx4j.openpackaging.parts.WordprocessingML.CommentsPart
+[org.docx4j.openpackaging.parts.PartName _unnamed_param]
+[]
+
+abstract org.docx4j.openpackaging.parts.WordprocessingML.DocumentPart
+[org.docx4j.openpackaging.parts.PartName _unnamed_param]
+
+org.docx4j.openpackaging.parts.WordprocessingML.DocumentSettingsPart
+[org.docx4j.openpackaging.parts.PartName _unnamed_param]
+[]
+
+
+org.docx4j.openpackaging.parts.WordprocessingML.EmbeddedPackagePart
+[org.docx4j.openpackaging.parts.PartName _unnamed_param]
+[]
+
+org.docx4j.openpackaging.parts.WordprocessingML.EndnotesPart
+[org.docx4j.openpackaging.parts.PartName _unnamed_param]
+[]
+
+org.docx4j.openpackaging.parts.WordprocessingML.FontTablePart
+[org.docx4j.openpackaging.parts.PartName _unnamed_param]
+[]
+
+org.docx4j.openpackaging.parts.WordprocessingML.FooterPart
+[org.docx4j.openpackaging.parts.PartName _unnamed_param]
+[]
+
+org.docx4j.openpackaging.parts.WordprocessingML.FootnotesPart
+[org.docx4j.openpackaging.parts.PartName _unnamed_param]
+[]
+
+org.docx4j.openpackaging.parts.WordprocessingML.GlossaryDocumentPart
+[org.docx4j.openpackaging.parts.PartName _unnamed_param]
+[]
+
+org.docx4j.openpackaging.parts.WordprocessingML.HeaderPart
+[org.docx4j.openpackaging.parts.PartName _unnamed_param]
+[]
+
+    org.docx4j.openpackaging.parts.WordprocessingML.ImageBmpPart
+    [org.docx4j.openpackaging.parts.PartName _unnamed_param]
+    [org.docx4j.openpackaging.parts.ExternalTarget _unnamed_param]
+
+    org.docx4j.openpackaging.parts.WordprocessingML.ImageBrokenPart
+    [org.docx4j.openpackaging.parts.PartName _unnamed_param]
+    [org.docx4j.openpackaging.parts.ExternalTarget _unnamed_param]
+
+    org.docx4j.openpackaging.parts.WordprocessingML.ImageEpsPart
+    [org.docx4j.openpackaging.parts.PartName _unnamed_param]
+    [org.docx4j.openpackaging.parts.ExternalTarget _unnamed_param]
+
+    org.docx4j.openpackaging.parts.WordprocessingML.ImageGifPart
+    [org.docx4j.openpackaging.parts.PartName _unnamed_param]
+    [org.docx4j.openpackaging.parts.ExternalTarget _unnamed_param]
+
+    org.docx4j.openpackaging.parts.WordprocessingML.ImageJpegPart
+    [org.docx4j.openpackaging.parts.PartName _unnamed_param]
+    [org.docx4j.openpackaging.parts.ExternalTarget _unnamed_param]
+
+    org.docx4j.openpackaging.parts.WordprocessingML.ImagePngPart
+    [org.docx4j.openpackaging.parts.PartName _unnamed_param]
+    [org.docx4j.openpackaging.parts.ExternalTarget _unnamed_param]
+
+    org.docx4j.openpackaging.parts.WordprocessingML.ImageTiffPart
+    [org.docx4j.openpackaging.parts.PartName _unnamed_param]
+    [org.docx4j.openpackaging.parts.ExternalTarget _unnamed_param]
+MISSING
+
+org.docx4j.openpackaging.parts.WordprocessingML.KeyMapCustomizationsPart
+[org.docx4j.openpackaging.parts.PartName _unnamed_param]
+[]
+
+org.docx4j.openpackaging.parts.WordprocessingML.MainDocumentPart
+[org.docx4j.openpackaging.parts.PartName _unnamed_param]
+[]
+
+
+org.docx4j.openpackaging.parts.WordprocessingML.MetafileEmfPart
+[org.docx4j.openpackaging.parts.PartName _unnamed_param]
+[org.docx4j.openpackaging.parts.ExternalTarget _unnamed_param]
+MISSING
+
+abstract org.docx4j.openpackaging.parts.WordprocessingML.MetafilePart
+[org.docx4j.openpackaging.parts.PartName _unnamed_param]
+[org.docx4j.openpackaging.parts.ExternalTarget _unnamed_param]
+
+org.docx4j.openpackaging.parts.WordprocessingML.MetafileWmfPart
+[org.docx4j.openpackaging.parts.PartName _unnamed_param]
+[org.docx4j.openpackaging.parts.ExternalTarget _unnamed_param]
+MISSING
+
+org.docx4j.openpackaging.parts.WordprocessingML.NumberingDefinitionsPart
+[org.docx4j.openpackaging.parts.PartName _unnamed_param]
+[]
+
+org.docx4j.openpackaging.parts.WordprocessingML.ObfuscatedFontPart
+[org.docx4j.openpackaging.parts.PartName _unnamed_param]
+MISSING
+
+org.docx4j.openpackaging.parts.WordprocessingML.OleObjectBinaryPart
+[org.docx4j.openpackaging.parts.PartName _unnamed_param]
+[]
+
+org.docx4j.openpackaging.parts.WordprocessingML.PeoplePart
+[org.docx4j.openpackaging.parts.PartName _unnamed_param]
+[]
+
+
+org.docx4j.openpackaging.parts.WordprocessingML.StyleDefinitionsPart
+[org.docx4j.openpackaging.parts.PartName _unnamed_param]
+[]
+
+org.docx4j.openpackaging.parts.WordprocessingML.VbaDataPart
+[org.docx4j.openpackaging.parts.PartName _unnamed_param]
+[]
+
+org.docx4j.openpackaging.parts.WordprocessingML.VbaProjectBinaryPart
+[org.docx4j.openpackaging.parts.PartName _unnamed_param]
+[]
+
+org.docx4j.openpackaging.parts.WordprocessingML.VbaProjectSignatureBin
+[org.docx4j.openpackaging.parts.PartName _unnamed_param]
+[]
+
+org.docx4j.openpackaging.parts.WordprocessingML.WebSettingsPart
+[org.docx4j.openpackaging.parts.PartName _unnamed_param]
+[]
+
+org.docx4j.openpackaging.parts.XmlPart
+[org.docx4j.openpackaging.parts.PartName _unnamed_param]
+[]
+
+    org.docx4j.openpackaging.parts.opendope.ComponentsPart
+    [org.docx4j.openpackaging.parts.PartName _unnamed_param]
+    [org.docx4j.openpackaging.parts.PartName _unnamed_param, jakarta.xml.bind.JAXBContext _unnamed_param]
+
+    org.docx4j.openpackaging.parts.opendope.ConditionsPart
+    [org.docx4j.openpackaging.parts.PartName _unnamed_param]
+    [org.docx4j.openpackaging.parts.PartName _unnamed_param, jakarta.xml.bind.JAXBContext _unnamed_param]
+
+    org.docx4j.openpackaging.parts.opendope.JaxbCustomXmlDataStoragePart
+    [org.docx4j.openpackaging.parts.PartName _unnamed_param]
+    [org.docx4j.openpackaging.parts.PartName _unnamed_param, jakarta.xml.bind.JAXBContext _unnamed_param]
+
+    org.docx4j.openpackaging.parts.opendope.QuestionsPart
+    [org.docx4j.openpackaging.parts.PartName _unnamed_param]
+    [org.docx4j.openpackaging.parts.PartName _unnamed_param, jakarta.xml.bind.JAXBContext _unnamed_param]
+
+    org.docx4j.openpackaging.parts.opendope.StandardisedAnswersPart
+    [org.docx4j.openpackaging.parts.PartName _unnamed_param]
+    [org.docx4j.openpackaging.parts.PartName _unnamed_param, jakarta.xml.bind.JAXBContext _unnamed_param]
+
+    org.docx4j.openpackaging.parts.opendope.XPathsPart
+    [org.docx4j.openpackaging.parts.PartName _unnamed_param]
+    [org.docx4j.openpackaging.parts.PartName _unnamed_param, jakarta.xml.bind.JAXBContext _unnamed_param]
+MISSING
+
+
+
+org.docx4j.openpackaging.parts.relationships.RelationshipsPart
+[org.docx4j.openpackaging.Base _unnamed_param]
+[]
+[org.docx4j.openpackaging.parts.PartName _unnamed_param]
+
+
+org.docx4j.openpackaging.parts.webextensions.TaskpanesPart
+[org.docx4j.openpackaging.parts.PartName _unnamed_param]
+[]
+
+org.docx4j.openpackaging.parts.webextensions.WebExtensionPart
+[org.docx4j.openpackaging.parts.PartName _unnamed_param]
+[]

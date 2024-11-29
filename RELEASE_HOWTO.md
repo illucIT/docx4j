@@ -195,7 +195,7 @@ or to manually close then release :-)
 
 If the remote operation is skipped, it might be because your last module had skip in it? (eg docx4j-ImportXHTML)
 
-This new release process does not add a tag; easiest to do that in SmartGit.
+This new release process does not add a tag; easiest to do that in SmartGit: Branch > Add Tag...
 
 Repeat above for -ImportXHTML 
 
@@ -208,7 +208,7 @@ then checkout -b an incremented version number,
 and in that branch do -SNAPSHOT.
 
 Here, also do:  git push -u origin [the incremented version number]  <--------- set up to track remote branch
-(can do that in SmartGit)
+(can do that in SmartGit: Remote > Push To..)
 
 Switch branch if necessary, eg:
 
