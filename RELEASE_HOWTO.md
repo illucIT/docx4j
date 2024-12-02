@@ -95,40 +95,6 @@ Use eclipse/java-2022-06
 
 -------------
 
-Start up the Git Bash session and go to your project directory.
-
-Windows users, you need to start up an SSH agent to provide your passkey when needed by the release process.
-
-To do this, in your Git Shell type :
-
-    eval `ssh-agent`  //pay attention to the back tick quotes here
-    
-which should return a piece of text like Agent pid xyz. This command starts the agent and sets up a couple of 
-environment variables relating to the SSH agent. 
-
-If you type env | grep SSH you will see the environment variables :
-
-   1$ env | grep SSH
-   2SSH_AGENT_PID=1234
-   3SSH_AUTH_SOCK=/tmp/ssh-abcdef1234/agent.5678
-
-Windows users will need to manually create the directory c:/tmp/ssh-abcdef1234/agent.5678 otherwise you
-get and error saying could not open a connection to your authentication agent.
-
-Create the new directory and then add your key to the agent using the following syntax which assumes your 
-Github RSA key is in the c:\.ssh\ directory. If it isn’t then just substitute the directory for your key.
-
-$ ssh-add ~/.ssh/id_rsa
-Enter passphrase for /c/Users/jharrop/.ssh/id_rsa: [the github 2 one]
-
---------------
-
-Linux
-
-eval "$(ssh-agent -s)"
-
-ssh-add ~/.ssh/id_rsa
-Enter passphrase for ... .ssh/id_rsa: [the github 2 one]
 
 ---------------
 
@@ -282,4 +248,44 @@ The infernal:-
 grep -rli '<nature>org.fusesource.ide.project.RiderProjectNature</nature>' * | xargs -i@ sed -i 's/<nature>org.fusesource.ide.project.RiderProjectNature<\/nature>//g' @
 
 
+
+-------
+
+
+Historically (ie with the old maven-deploy-plugin), you needed an SSH agent.  With nexus-staging-maven-plugin, this is no longer necessary
+
+Start up the Git Bash session and go to your project directory.
+
+Windows users, you need to start up an SSH agent to provide your passkey when needed by the release process.
+
+To do this, in your Git Shell type :
+
+    eval `ssh-agent`  //pay attention to the back tick quotes here
+
+which should return a piece of text like Agent pid xyz. This command starts the agent and sets up a couple of
+environment variables relating to the SSH agent.
+
+If you type env | grep SSH you will see the environment variables :
+
+   1$ env | grep SSH
+   2SSH_AGENT_PID=1234
+   3SSH_AUTH_SOCK=/tmp/ssh-abcdef1234/agent.5678
+
+Windows users will need to manually create the directory c:/tmp/ssh-abcdef1234/agent.5678 otherwise you
+get and error saying could not open a connection to your authentication agent.
+
+Create the new directory and then add your key to the agent using the following syntax which assumes your
+Github RSA key is in the c:\.ssh\ directory. If it isn’t then just substitute the directory for your key.
+
+$ ssh-add ~/.ssh/id_rsa
+Enter passphrase for /c/Users/jharrop/.ssh/id_rsa: [the github 2 one]
+
+--------------
+
+Linux
+
+eval "$(ssh-agent -s)"
+
+ssh-add ~/.ssh/id_rsa
+Enter passphrase for ... .ssh/id_rsa: [the github 2 one]
 
