@@ -32,6 +32,7 @@ import org.docx4j.TraversalUtil.Callback;
 import org.docx4j.openpackaging.packages.WordprocessingMLPackage;
 import org.docx4j.openpackaging.parts.WordprocessingML.MainDocumentPart;
 import org.docx4j.wml.Body;
+import org.docx4j.wml.P;
 
 
 /**
@@ -77,15 +78,19 @@ public class OpenMainDocumentAndTraverse extends AbstractSample {
 			getInputFilePath(args);
 		} catch (IllegalArgumentException e) {
 			inputfilepath = System.getProperty("user.dir")
-					+ "/sample-docs/sample-docx.docx";
+					+ "/hello.docx";
 		}
 
 		WordprocessingMLPackage wordMLPackage = WordprocessingMLPackage
 				.load(new java.io.File(inputfilepath));
 		MainDocumentPart documentPart = wordMLPackage.getMainDocumentPart();
 
+//		P p = (P)documentPart.getContent().get(1);
+//		p.getPPr().getRPr().getRPrChange()
+		
+		
 		// Uncomment to see the raw XML
-		//System.out.println(XmlUtils.marshaltoString(documentPart.getJaxbElement(), true, true));
+		System.out.println(XmlUtils.marshaltoString(documentPart.getJaxbElement(), true, true));
 
 		org.docx4j.wml.Document wmlDocumentEl = (org.docx4j.wml.Document) documentPart
 				.getJaxbElement();
