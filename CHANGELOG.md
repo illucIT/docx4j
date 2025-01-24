@@ -2,6 +2,27 @@ CHANGELOG
 =========
 
 
+Version 11.5.2   (fixes regression in 11.5.1) 
+===============
+
+Release date
+------------
+
+24 January 2025
+
+Contributors to this release
+----------------------------
+
+Jason Harrop
+
+Changes in Version 11.5.2
+--------------------------
+
+Fixes a StackOverflow error caused by PropertyResolver constructor indirectly calling itself, triggered by documents in which the Normal style's hierarchy includes numbering.
+
+Fix for #603: getRPrChange in org.docx4j.wml.ParaRPr
+
+
 Version 11.5.1  (recommended update on account of w16sdtfl)
 ===============
 

@@ -186,7 +186,7 @@ $ sudo archlinux-java set java-8-openjdk
 
 or 
 
-$ sudo archlinux-java set java-14-adoptopenjdk
+$ sudo archlinux-java set java-17-openjdk
 
 
 Update pom.xml to incremented-SNAPSHOT
