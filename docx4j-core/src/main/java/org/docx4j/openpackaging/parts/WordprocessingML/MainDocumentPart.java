@@ -156,14 +156,31 @@ public class MainDocumentPart extends DocumentPart<org.docx4j.wml.Document> impl
     	return this.getJaxbElement().getContent();
     }	
 	
-    private PropertyResolver propertyResolver;
+	private PropertyResolver propertyResolver;
+
+	/**
+	 * get the PropertyResolver, creating if necessary
+	 */
 	public PropertyResolver getPropertyResolver() {
-		if (propertyResolver==null) {
+		return getPropertyResolver(true);
+	}
+
+	/**
+	 * get the PropertyResolver
+	 * 
+	 * @param create whether to create if null
+	 * @return
+	 * @since 11.5.2
+	 */
+	public PropertyResolver getPropertyResolver(boolean create) {
+		// create=false is only really necessary where a StackOverflow is a possibility;
+		// eg getPropertyResolver() being invoked from PropertyResolver's constructor.
+		if (create && propertyResolver == null) {
 			try {
-				propertyResolver = new PropertyResolver( (WordprocessingMLPackage)this.pack);
+				propertyResolver = new PropertyResolver((WordprocessingMLPackage) this.pack);
 			} catch (Docx4JException e) {
 				e.printStackTrace();
-			}			
+			}
 		}
 		return propertyResolver;
 	}
