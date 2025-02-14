@@ -392,7 +392,10 @@ public class XsltFOFunctions {
 			Element foListBlock = null;
 			boolean indentHandledByNumbering = false;
 			// Is it a list item?
-			if (pPr!=null 
+			if (sdt) { 
+				// Don't convert an SDT into an extra fo:list-block!
+				document.appendChild(foBlockElement);
+			} else if (pPr!=null 
 					&& pPr.getNumPr()!=null 
 					&& pPr.getNumPr().getNumId()!=null
 					&& pPr.getNumPr().getNumId().getVal().longValue()!=0 //zero means no numbering
