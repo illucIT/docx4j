@@ -37,6 +37,8 @@ module org.docx4j.core {
 	requires org.apache.fontbox;
 	requires qdox;
 	requires jakarta.xml.bind;
+	
+	requires org.apache.pdfbox.io;
     
     exports org.docx4j;
     exports org.docx4j.convert.in;

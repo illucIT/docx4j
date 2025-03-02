@@ -22,6 +22,7 @@
 package org.docx4j.fonts.fop.render.ps;
 
 import java.io.ByteArrayOutputStream;
+import java.lang.reflect.Field;
 import java.util.List;
 
 import org.apache.fontbox.cff.CharStringCommand;
@@ -56,9 +57,25 @@ public class Type1CharStringFormatter {
     }
 
     private void writeCommand(CharStringCommand command) {
-        int[] value = command.getKey().getValue();
+        int[] value = getValue(command);
         for (int aValue : value) {
             output.write(aValue);
+        }
+    }
+
+    private int[] getValue(CharStringCommand command) {
+        CharStringCommand.Type1KeyWord keyWord = command.getType1KeyWord();
+        if (keyWord == null) {
+            return new int[0];
+        }
+        CharStringCommand.Key key = CharStringCommand.Key.valueOf(keyWord.name());
+        try {
+            Field f = key.getClass().getDeclaredField("hashValue");
+            f.setAccessible(true);
+            int value = (int) f.get(key);
+            return new int[] {value};
+        } catch (IllegalAccessException | NoSuchFieldException e) {
+            throw new RuntimeException(e);
         }
     }
 

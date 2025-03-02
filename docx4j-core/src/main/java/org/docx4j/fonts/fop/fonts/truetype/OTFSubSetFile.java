@@ -28,6 +28,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -44,6 +45,7 @@ import org.slf4j.LoggerFactory;
 import org.apache.fontbox.cff.CFFStandardString;
 import org.apache.fontbox.cff.CFFType1Font;
 import org.apache.fontbox.cff.CharStringCommand;
+import org.apache.fontbox.cff.Type1CharString;
 import org.apache.fontbox.cff.Type2CharString;
 import org.docx4j.fonts.fop.fonts.MultiByteFont;
 import org.docx4j.fonts.fop.fonts.cff.CFFDataReader;
@@ -157,10 +159,10 @@ public class OTFSubSetFile extends OTFSubSetWriter {
             for (int gid : subsetGlyphs.keySet()) {
                 Type2CharString type2CharString = cffType1Font.getType2CharString(gid);
                 List<Number> stack = new ArrayList<Number>();
-                for (Object obj : type2CharString.getType1Sequence()) {
-                    if (obj instanceof CharStringCommand) {
-                        String name = CharStringCommand.TYPE1_VOCABULARY.get(((CharStringCommand) obj).getKey());
-                        if (ACCENT_CMD.equals(name)) {
+                List type1Sequence = getType1Sequence(type2CharString);
+                for (Object obj : type1Sequence) {
+                	if (obj instanceof CharStringCommand) {
+                        if (ACCENT_CMD.equals(obj.toString())) {
                             int first = stack.get(3).intValue();
                             int second = stack.get(4).intValue();
                             mbFont.mapChar(AdobeStandardEncoding.getUnicodeFromCodePoint(first));
@@ -175,6 +177,16 @@ public class OTFSubSetFile extends OTFSubSetWriter {
         }
     }
 
+    private List<Object> getType1Sequence(Type1CharString type1CharString) {
+        try {
+            Field f = Type1CharString.class.getDeclaredField("type1Sequence");
+            f.setAccessible(true);
+            return (List<Object>) f.get(type1CharString);
+        } catch (IllegalAccessException | NoSuchFieldException e) {
+            throw new RuntimeException(e);
+        }
+    }
+    
     private Map<Integer, Integer> sortByValue(Map<Integer, Integer> map) {
         List<Entry<Integer, Integer>> list = new ArrayList<Entry<Integer, Integer>>(map.entrySet());
         Collections.sort(list, new Comparator<Entry<Integer, Integer>>() {

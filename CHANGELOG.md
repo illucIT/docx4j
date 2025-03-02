@@ -2,6 +2,26 @@ CHANGELOG
 =========
 
 
+Version 11.5.3   (NOT YET RELEASED)
+===============
+
+Release date
+------------
+
+xx March 2025
+
+Contributors to this release
+----------------------------
+
+Jason Harrop
+
+Changes in Version 11.5.3
+--------------------------
+
+Uses FOP 2.11 (NOT YET RELEASED)  and FontBox 3
+
+
+
 Version 11.5.2   (fixes regression in 11.5.1) 
 ===============
 
