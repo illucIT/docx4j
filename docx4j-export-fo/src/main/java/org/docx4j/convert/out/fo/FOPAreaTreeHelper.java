@@ -244,8 +244,11 @@ public class FOPAreaTreeHelper {
         // Since hfPkg is already a clone, we don't need PP_COMMON_DEEP_COPY
         // Plus it invokes setFontMapper, which does processEmbeddings again, and those fonts aren't much use to us here
         foSettingsHere.getFeatures().remove(ConversionFeatures.PP_COMMON_DEEP_COPY);
+        foSettingsHere.getFeatures().remove(ConversionFeatures.PP_COMMON_CONTAINERIZATION);
+        
         
         if (log.isDebugEnabled()) {
+            log.debug("AreaTree: " + foSettingsHere.getFeatures());
         	foSettingsHere.setFoDumpFile(new java.io.File(System.getProperty("user.dir") + "/hf.fo"));
         }
 
