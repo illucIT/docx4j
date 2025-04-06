@@ -1,5 +1,5 @@
 /*
- *  Copyright 2007-2008, Plutext Pty Ltd.
+ *  Copyright 2025, Plutext Pty Ltd.
  *   
  *  This file is part of docx4j.
 
@@ -70,8 +70,6 @@ public class ContentControlsViaStAX extends AbstractSample {
 
 	public static void main(String[] args) throws Exception {
 		
-//		System.setProperty("javax.xml.stream.XMLEventFactory", "org.apache.xerces.stax.XMLEventFactoryImpl");
-
 		String inputfilepath = System.getProperty("user.dir") + "/sample-docs/databinding/invoice.docx";
 
 		// You'll want
@@ -88,7 +86,7 @@ public class ContentControlsViaStAX extends AbstractSample {
 		documentPart.pipe(new MyStaXHandler(), null);  // no real need for a filter here, see https://docs.oracle.com/cd/E19575-01/819-3669/bnbgh/index.html
 
 		// prove we changed it
-		System.out.println(XmlUtils.marshaltoString(documentPart.getJaxbElement(), true, true));
+		// System.out.println(XmlUtils.marshaltoString(documentPart.getJaxbElement(), true, true));  // this would unmarshall the whole part
 		
 		Docx4J.save(wordMLPackage, new File("out.docx"), 0);
 		
