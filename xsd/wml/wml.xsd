@@ -13628,14 +13628,17 @@ PRINCIPLES:
 							Definition</xsd:documentation>
 					</xsd:annotation>
 					<xsd:complexType>
-						<xsd:sequence>
+						<!-- 2025 recent versions of Word use mc:AlternateContent here,
+						     but since numPicBullet is so little used, this will suffice -->
+						<xsd:choice minOccurs="1" maxOccurs="1">
 							<xsd:element name="pict" type="CT_Picture">
 								<xsd:annotation>
 									<xsd:documentation>Picture Numbering Symbol
 										Properties</xsd:documentation>
 								</xsd:annotation>
 							</xsd:element>
-						</xsd:sequence>
+							<xsd:element name="drawing" type="CT_Drawing" /> <!-- added in 2025 04 -->
+						</xsd:choice>
 						<xsd:attribute name="numPicBulletId"
 							type="ST_DecimalNumber" use="required">
 							<xsd:annotation>

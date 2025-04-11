@@ -1,5 +1,5 @@
 /*
- *  Copyright 2007-2013, Plutext Pty Ltd.
+ *  Copyright 2007-2025, Plutext Pty Ltd.
  *   
  *  This file is part of docx4j.
 
@@ -17,9 +17,7 @@
     limitations under the License.
 
  */
-
-
-package org.docx4j.wml; 
+package org.docx4j.wml;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
@@ -36,156 +34,156 @@ import jakarta.xml.bind.annotation.XmlType;
 
 import org.jvnet.jaxb2_commons.ppp.Child;
 
-
 /**
  * <p>Java class for anonymous complex type.
  * 
  * <p>The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
- * &lt;complexType>
- *   &lt;complexContent>
- *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
- *       &lt;sequence>
- *         &lt;element name="numPicBullet" maxOccurs="unbounded" minOccurs="0">
- *           &lt;complexType>
- *             &lt;complexContent>
- *               &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
- *                 &lt;sequence>
- *                   &lt;element name="pict" type="{http://schemas.openxmlformats.org/wordprocessingml/2006/main}CT_Picture"/>
- *                 &lt;/sequence>
- *                 &lt;attribute name="numPicBulletId" use="required" type="{http://schemas.openxmlformats.org/wordprocessingml/2006/main}ST_DecimalNumber" />
- *               &lt;/restriction>
- *             &lt;/complexContent>
- *           &lt;/complexType>
- *         &lt;/element>
- *         &lt;element name="abstractNum" maxOccurs="unbounded" minOccurs="0">
- *           &lt;complexType>
- *             &lt;complexContent>
- *               &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
- *                 &lt;sequence>
- *                   &lt;element name="nsid" type="{http://schemas.openxmlformats.org/wordprocessingml/2006/main}CT_LongHexNumber" minOccurs="0"/>
- *                   &lt;element name="multiLevelType" minOccurs="0">
- *                     &lt;complexType>
- *                       &lt;complexContent>
- *                         &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
- *                           &lt;attribute name="val" use="required">
- *                             &lt;simpleType>
- *                               &lt;restriction base="{http://www.w3.org/2001/XMLSchema}string">
- *                                 &lt;enumeration value="singleLevel"/>
- *                                 &lt;enumeration value="multilevel"/>
- *                                 &lt;enumeration value="hybridMultilevel"/>
- *                               &lt;/restriction>
- *                             &lt;/simpleType>
- *                           &lt;/attribute>
- *                         &lt;/restriction>
- *                       &lt;/complexContent>
- *                     &lt;/complexType>
- *                   &lt;/element>
- *                   &lt;element name="tmpl" type="{http://schemas.openxmlformats.org/wordprocessingml/2006/main}CT_LongHexNumber" minOccurs="0"/>
- *                   &lt;element name="name" minOccurs="0">
- *                     &lt;complexType>
- *                       &lt;complexContent>
- *                         &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
- *                           &lt;attribute name="val" type="{http://www.w3.org/2001/XMLSchema}string" />
- *                         &lt;/restriction>
- *                       &lt;/complexContent>
- *                     &lt;/complexType>
- *                   &lt;/element>
- *                   &lt;element name="styleLink" minOccurs="0">
- *                     &lt;complexType>
- *                       &lt;complexContent>
- *                         &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
- *                           &lt;attribute name="val" type="{http://www.w3.org/2001/XMLSchema}string" />
- *                         &lt;/restriction>
- *                       &lt;/complexContent>
- *                     &lt;/complexType>
- *                   &lt;/element>
- *                   &lt;element name="numStyleLink" minOccurs="0">
- *                     &lt;complexType>
- *                       &lt;complexContent>
- *                         &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
- *                           &lt;attribute name="val" type="{http://www.w3.org/2001/XMLSchema}string" />
- *                         &lt;/restriction>
- *                       &lt;/complexContent>
- *                     &lt;/complexType>
- *                   &lt;/element>
- *                   &lt;element name="lvl" type="{http://schemas.openxmlformats.org/wordprocessingml/2006/main}CT_Lvl" maxOccurs="9" minOccurs="0"/>
- *                 &lt;/sequence>
- *                 &lt;attribute name="abstractNumId" use="required" type="{http://schemas.openxmlformats.org/wordprocessingml/2006/main}ST_DecimalNumber" />
- *               &lt;/restriction>
- *             &lt;/complexContent>
- *           &lt;/complexType>
- *         &lt;/element>
- *         &lt;element name="num" maxOccurs="unbounded" minOccurs="0">
- *           &lt;complexType>
- *             &lt;complexContent>
- *               &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
- *                 &lt;sequence>
- *                   &lt;element name="abstractNumId">
- *                     &lt;complexType>
- *                       &lt;complexContent>
- *                         &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
- *                           &lt;attribute name="val" use="required">
- *                             &lt;simpleType>
- *                               &lt;restriction base="{http://www.w3.org/2001/XMLSchema}integer">
- *                               &lt;/restriction>
- *                             &lt;/simpleType>
- *                           &lt;/attribute>
- *                         &lt;/restriction>
- *                       &lt;/complexContent>
- *                     &lt;/complexType>
- *                   &lt;/element>
- *                   &lt;element name="lvlOverride" maxOccurs="9" minOccurs="0">
- *                     &lt;complexType>
- *                       &lt;complexContent>
- *                         &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
- *                           &lt;sequence>
- *                             &lt;element name="startOverride" minOccurs="0">
- *                               &lt;complexType>
- *                                 &lt;complexContent>
- *                                   &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
- *                                     &lt;attribute name="val" use="required">
- *                                       &lt;simpleType>
- *                                         &lt;restriction base="{http://www.w3.org/2001/XMLSchema}integer">
- *                                         &lt;/restriction>
- *                                       &lt;/simpleType>
- *                                     &lt;/attribute>
- *                                   &lt;/restriction>
- *                                 &lt;/complexContent>
- *                               &lt;/complexType>
- *                             &lt;/element>
- *                             &lt;element name="lvl" type="{http://schemas.openxmlformats.org/wordprocessingml/2006/main}CT_Lvl" minOccurs="0"/>
- *                           &lt;/sequence>
- *                           &lt;attribute name="ilvl" use="required" type="{http://schemas.openxmlformats.org/wordprocessingml/2006/main}ST_DecimalNumber" />
- *                         &lt;/restriction>
- *                       &lt;/complexContent>
- *                     &lt;/complexType>
- *                   &lt;/element>
- *                 &lt;/sequence>
- *                 &lt;attribute name="numId" use="required" type="{http://schemas.openxmlformats.org/wordprocessingml/2006/main}ST_DecimalNumber" />
- *               &lt;/restriction>
- *             &lt;/complexContent>
- *           &lt;/complexType>
- *         &lt;/element>
- *         &lt;element name="numIdMacAtCleanup" minOccurs="0">
- *           &lt;complexType>
- *             &lt;complexContent>
- *               &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
- *                 &lt;attribute name="val" use="required">
- *                   &lt;simpleType>
- *                     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}integer">
- *                     &lt;/restriction>
- *                   &lt;/simpleType>
- *                 &lt;/attribute>
- *               &lt;/restriction>
- *             &lt;/complexContent>
- *           &lt;/complexType>
- *         &lt;/element>
- *       &lt;/sequence>
- *     &lt;/restriction>
- *   &lt;/complexContent>
- * &lt;/complexType>
+ * &lt;complexType&gt;
+ *   &lt;complexContent&gt;
+ *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType"&gt;
+ *       &lt;sequence&gt;
+ *         &lt;element name="numPicBullet" maxOccurs="unbounded" minOccurs="0"&gt;
+ *           &lt;complexType&gt;
+ *             &lt;complexContent&gt;
+ *               &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType"&gt;
+ *                 &lt;choice&gt;
+ *                   &lt;element name="pict" type="{http://schemas.openxmlformats.org/wordprocessingml/2006/main}CT_Picture"/&gt;
+ *                   &lt;element name="drawing" type="{http://schemas.openxmlformats.org/wordprocessingml/2006/main}CT_Drawing"/&gt;
+ *                 &lt;/choice&gt;
+ *                 &lt;attribute name="numPicBulletId" use="required" type="{http://schemas.openxmlformats.org/wordprocessingml/2006/main}ST_DecimalNumber" /&gt;
+ *               &lt;/restriction&gt;
+ *             &lt;/complexContent&gt;
+ *           &lt;/complexType&gt;
+ *         &lt;/element&gt;
+ *         &lt;element name="abstractNum" maxOccurs="unbounded" minOccurs="0"&gt;
+ *           &lt;complexType&gt;
+ *             &lt;complexContent&gt;
+ *               &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType"&gt;
+ *                 &lt;sequence&gt;
+ *                   &lt;element name="nsid" type="{http://schemas.openxmlformats.org/wordprocessingml/2006/main}CT_LongHexNumber" minOccurs="0"/&gt;
+ *                   &lt;element name="multiLevelType" minOccurs="0"&gt;
+ *                     &lt;complexType&gt;
+ *                       &lt;complexContent&gt;
+ *                         &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType"&gt;
+ *                           &lt;attribute name="val" use="required"&gt;
+ *                             &lt;simpleType&gt;
+ *                               &lt;restriction base="{http://www.w3.org/2001/XMLSchema}string"&gt;
+ *                                 &lt;enumeration value="singleLevel"/&gt;
+ *                                 &lt;enumeration value="multilevel"/&gt;
+ *                                 &lt;enumeration value="hybridMultilevel"/&gt;
+ *                               &lt;/restriction&gt;
+ *                             &lt;/simpleType&gt;
+ *                           &lt;/attribute&gt;
+ *                         &lt;/restriction&gt;
+ *                       &lt;/complexContent&gt;
+ *                     &lt;/complexType&gt;
+ *                   &lt;/element&gt;
+ *                   &lt;element name="tmpl" type="{http://schemas.openxmlformats.org/wordprocessingml/2006/main}CT_LongHexNumber" minOccurs="0"/&gt;
+ *                   &lt;element name="name" minOccurs="0"&gt;
+ *                     &lt;complexType&gt;
+ *                       &lt;complexContent&gt;
+ *                         &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType"&gt;
+ *                           &lt;attribute name="val" type="{http://www.w3.org/2001/XMLSchema}string" /&gt;
+ *                         &lt;/restriction&gt;
+ *                       &lt;/complexContent&gt;
+ *                     &lt;/complexType&gt;
+ *                   &lt;/element&gt;
+ *                   &lt;element name="styleLink" minOccurs="0"&gt;
+ *                     &lt;complexType&gt;
+ *                       &lt;complexContent&gt;
+ *                         &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType"&gt;
+ *                           &lt;attribute name="val" type="{http://www.w3.org/2001/XMLSchema}string" /&gt;
+ *                         &lt;/restriction&gt;
+ *                       &lt;/complexContent&gt;
+ *                     &lt;/complexType&gt;
+ *                   &lt;/element&gt;
+ *                   &lt;element name="numStyleLink" minOccurs="0"&gt;
+ *                     &lt;complexType&gt;
+ *                       &lt;complexContent&gt;
+ *                         &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType"&gt;
+ *                           &lt;attribute name="val" type="{http://www.w3.org/2001/XMLSchema}string" /&gt;
+ *                         &lt;/restriction&gt;
+ *                       &lt;/complexContent&gt;
+ *                     &lt;/complexType&gt;
+ *                   &lt;/element&gt;
+ *                   &lt;element name="lvl" type="{http://schemas.openxmlformats.org/wordprocessingml/2006/main}CT_Lvl" maxOccurs="9" minOccurs="0"/&gt;
+ *                 &lt;/sequence&gt;
+ *                 &lt;attribute name="abstractNumId" use="required" type="{http://schemas.openxmlformats.org/wordprocessingml/2006/main}ST_DecimalNumber" /&gt;
+ *               &lt;/restriction&gt;
+ *             &lt;/complexContent&gt;
+ *           &lt;/complexType&gt;
+ *         &lt;/element&gt;
+ *         &lt;element name="num" maxOccurs="unbounded" minOccurs="0"&gt;
+ *           &lt;complexType&gt;
+ *             &lt;complexContent&gt;
+ *               &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType"&gt;
+ *                 &lt;sequence&gt;
+ *                   &lt;element name="abstractNumId"&gt;
+ *                     &lt;complexType&gt;
+ *                       &lt;complexContent&gt;
+ *                         &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType"&gt;
+ *                           &lt;attribute name="val" use="required"&gt;
+ *                             &lt;simpleType&gt;
+ *                               &lt;restriction base="{http://www.w3.org/2001/XMLSchema}integer"&gt;
+ *                               &lt;/restriction&gt;
+ *                             &lt;/simpleType&gt;
+ *                           &lt;/attribute&gt;
+ *                         &lt;/restriction&gt;
+ *                       &lt;/complexContent&gt;
+ *                     &lt;/complexType&gt;
+ *                   &lt;/element&gt;
+ *                   &lt;element name="lvlOverride" maxOccurs="9" minOccurs="0"&gt;
+ *                     &lt;complexType&gt;
+ *                       &lt;complexContent&gt;
+ *                         &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType"&gt;
+ *                           &lt;sequence&gt;
+ *                             &lt;element name="startOverride" minOccurs="0"&gt;
+ *                               &lt;complexType&gt;
+ *                                 &lt;complexContent&gt;
+ *                                   &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType"&gt;
+ *                                     &lt;attribute name="val" use="required"&gt;
+ *                                       &lt;simpleType&gt;
+ *                                         &lt;restriction base="{http://www.w3.org/2001/XMLSchema}integer"&gt;
+ *                                         &lt;/restriction&gt;
+ *                                       &lt;/simpleType&gt;
+ *                                     &lt;/attribute&gt;
+ *                                   &lt;/restriction&gt;
+ *                                 &lt;/complexContent&gt;
+ *                               &lt;/complexType&gt;
+ *                             &lt;/element&gt;
+ *                             &lt;element name="lvl" type="{http://schemas.openxmlformats.org/wordprocessingml/2006/main}CT_Lvl" minOccurs="0"/&gt;
+ *                           &lt;/sequence&gt;
+ *                           &lt;attribute name="ilvl" use="required" type="{http://schemas.openxmlformats.org/wordprocessingml/2006/main}ST_DecimalNumber" /&gt;
+ *                         &lt;/restriction&gt;
+ *                       &lt;/complexContent&gt;
+ *                     &lt;/complexType&gt;
+ *                   &lt;/element&gt;
+ *                 &lt;/sequence&gt;
+ *                 &lt;attribute name="numId" use="required" type="{http://schemas.openxmlformats.org/wordprocessingml/2006/main}ST_DecimalNumber" /&gt;
+ *               &lt;/restriction&gt;
+ *             &lt;/complexContent&gt;
+ *           &lt;/complexType&gt;
+ *         &lt;/element&gt;
+ *         &lt;element name="numIdMacAtCleanup" minOccurs="0"&gt;
+ *           &lt;complexType&gt;
+ *             &lt;complexContent&gt;
+ *               &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType"&gt;
+ *                 &lt;attribute name="val" use="required"&gt;
+ *                   &lt;simpleType&gt;
+ *                     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}integer"&gt;
+ *                     &lt;/restriction&gt;
+ *                   &lt;/simpleType&gt;
+ *                 &lt;/attribute&gt;
+ *               &lt;/restriction&gt;
+ *             &lt;/complexContent&gt;
+ *           &lt;/complexType&gt;
+ *         &lt;/element&gt;
+ *       &lt;/sequence&gt;
+ *     &lt;/restriction&gt;
+ *   &lt;/complexContent&gt;
+ * &lt;/complexType&gt;
  * </pre>
  * 
  * 
@@ -203,20 +201,20 @@ public class Numbering implements Child
     @XmlAttribute(name = "Ignorable", namespace = "http://schemas.openxmlformats.org/markup-compatibility/2006")
     protected String ignorable;
 
-    protected List<Numbering.NumPicBullet> numPicBullet = new ArrayListWml<Numbering.NumPicBullet>(this);
-    protected List<Numbering.AbstractNum> abstractNum = new ArrayListWml<Numbering.AbstractNum>(this);
-    protected List<Numbering.Num> num  = new ArrayListWml<Numbering.Num>(this);
+    protected List<Numbering.NumPicBullet> numPicBullet;
+    protected List<Numbering.AbstractNum> abstractNum;
+    protected List<Numbering.Num> num;
     protected Numbering.NumIdMacAtCleanup numIdMacAtCleanup;
     @XmlTransient
     private Object parent;
-
+    
     /**
      * Gets the value of the numPicBullet property.
      * 
      * <p>
      * This accessor method returns a reference to the live list,
      * not a snapshot. Therefore any modification you make to the
-     * returned list will be present inside the JAXB object.
+     * returned list will be present inside the Jakarta XML Binding object.
      * This is why there is not a <CODE>set</CODE> method for the numPicBullet property.
      * 
      * <p>
@@ -234,7 +232,7 @@ public class Numbering implements Child
      */
     public List<Numbering.NumPicBullet> getNumPicBullet() {
         if (numPicBullet == null) {
-            numPicBullet = new ArrayListWml<Numbering.NumPicBullet>(this);
+            numPicBullet = new ArrayList<Numbering.NumPicBullet>();
         }
         return this.numPicBullet;
     }
@@ -245,7 +243,7 @@ public class Numbering implements Child
      * <p>
      * This accessor method returns a reference to the live list,
      * not a snapshot. Therefore any modification you make to the
-     * returned list will be present inside the JAXB object.
+     * returned list will be present inside the Jakarta XML Binding object.
      * This is why there is not a <CODE>set</CODE> method for the abstractNum property.
      * 
      * <p>
@@ -263,7 +261,7 @@ public class Numbering implements Child
      */
     public List<Numbering.AbstractNum> getAbstractNum() {
         if (abstractNum == null) {
-            abstractNum = new ArrayListWml<Numbering.AbstractNum>(this);
+            abstractNum = new ArrayList<Numbering.AbstractNum>();
         }
         return this.abstractNum;
     }
@@ -274,7 +272,7 @@ public class Numbering implements Child
      * <p>
      * This accessor method returns a reference to the live list,
      * not a snapshot. Therefore any modification you make to the
-     * returned list will be present inside the JAXB object.
+     * returned list will be present inside the Jakarta XML Binding object.
      * This is why there is not a <CODE>set</CODE> method for the num property.
      * 
      * <p>
@@ -292,7 +290,7 @@ public class Numbering implements Child
      */
     public List<Numbering.Num> getNum() {
         if (num == null) {
-            num = new ArrayListWml<Numbering.Num>(this);
+            num = new ArrayList<Numbering.Num>();
         }
         return this.num;
     }
@@ -371,69 +369,69 @@ public class Numbering implements Child
         setParent(parent);
     }
 
-
+  
     /**
      * <p>Java class for anonymous complex type.
      * 
      * <p>The following schema fragment specifies the expected content contained within this class.
      * 
      * <pre>
-     * &lt;complexType>
-     *   &lt;complexContent>
-     *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
-     *       &lt;sequence>
-     *         &lt;element name="nsid" type="{http://schemas.openxmlformats.org/wordprocessingml/2006/main}CT_LongHexNumber" minOccurs="0"/>
-     *         &lt;element name="multiLevelType" minOccurs="0">
-     *           &lt;complexType>
-     *             &lt;complexContent>
-     *               &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
-     *                 &lt;attribute name="val" use="required">
-     *                   &lt;simpleType>
-     *                     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}string">
-     *                       &lt;enumeration value="singleLevel"/>
-     *                       &lt;enumeration value="multilevel"/>
-     *                       &lt;enumeration value="hybridMultilevel"/>
-     *                     &lt;/restriction>
-     *                   &lt;/simpleType>
-     *                 &lt;/attribute>
-     *               &lt;/restriction>
-     *             &lt;/complexContent>
-     *           &lt;/complexType>
-     *         &lt;/element>
-     *         &lt;element name="tmpl" type="{http://schemas.openxmlformats.org/wordprocessingml/2006/main}CT_LongHexNumber" minOccurs="0"/>
-     *         &lt;element name="name" minOccurs="0">
-     *           &lt;complexType>
-     *             &lt;complexContent>
-     *               &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
-     *                 &lt;attribute name="val" type="{http://www.w3.org/2001/XMLSchema}string" />
-     *               &lt;/restriction>
-     *             &lt;/complexContent>
-     *           &lt;/complexType>
-     *         &lt;/element>
-     *         &lt;element name="styleLink" minOccurs="0">
-     *           &lt;complexType>
-     *             &lt;complexContent>
-     *               &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
-     *                 &lt;attribute name="val" type="{http://www.w3.org/2001/XMLSchema}string" />
-     *               &lt;/restriction>
-     *             &lt;/complexContent>
-     *           &lt;/complexType>
-     *         &lt;/element>
-     *         &lt;element name="numStyleLink" minOccurs="0">
-     *           &lt;complexType>
-     *             &lt;complexContent>
-     *               &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
-     *                 &lt;attribute name="val" type="{http://www.w3.org/2001/XMLSchema}string" />
-     *               &lt;/restriction>
-     *             &lt;/complexContent>
-     *           &lt;/complexType>
-     *         &lt;/element>
-     *         &lt;element name="lvl" type="{http://schemas.openxmlformats.org/wordprocessingml/2006/main}CT_Lvl" maxOccurs="9" minOccurs="0"/>
-     *       &lt;/sequence>
-     *       &lt;attribute name="abstractNumId" use="required" type="{http://schemas.openxmlformats.org/wordprocessingml/2006/main}ST_DecimalNumber" />
-     *     &lt;/restriction>
-     *   &lt;/complexContent>
-     * &lt;/complexType>
+     * &lt;complexType&gt;
+     *   &lt;complexContent&gt;
+     *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType"&gt;
+     *       &lt;sequence&gt;
+     *         &lt;element name="nsid" type="{http://schemas.openxmlformats.org/wordprocessingml/2006/main}CT_LongHexNumber" minOccurs="0"/&gt;
+     *         &lt;element name="multiLevelType" minOccurs="0"&gt;
+     *           &lt;complexType&gt;
+     *             &lt;complexContent&gt;
+     *               &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType"&gt;
+     *                 &lt;attribute name="val" use="required"&gt;
+     *                   &lt;simpleType&gt;
+     *                     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}string"&gt;
+     *                       &lt;enumeration value="singleLevel"/&gt;
+     *                       &lt;enumeration value="multilevel"/&gt;
+     *                       &lt;enumeration value="hybridMultilevel"/&gt;
+     *                     &lt;/restriction&gt;
+     *                   &lt;/simpleType&gt;
+     *                 &lt;/attribute&gt;
+     *               &lt;/restriction&gt;
+     *             &lt;/complexContent&gt;
+     *           &lt;/complexType&gt;
+     *         &lt;/element&gt;
+     *         &lt;element name="tmpl" type="{http://schemas.openxmlformats.org/wordprocessingml/2006/main}CT_LongHexNumber" minOccurs="0"/&gt;
+     *         &lt;element name="name" minOccurs="0"&gt;
+     *           &lt;complexType&gt;
+     *             &lt;complexContent&gt;
+     *               &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType"&gt;
+     *                 &lt;attribute name="val" type="{http://www.w3.org/2001/XMLSchema}string" /&gt;
+     *               &lt;/restriction&gt;
+     *             &lt;/complexContent&gt;
+     *           &lt;/complexType&gt;
+     *         &lt;/element&gt;
+     *         &lt;element name="styleLink" minOccurs="0"&gt;
+     *           &lt;complexType&gt;
+     *             &lt;complexContent&gt;
+     *               &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType"&gt;
+     *                 &lt;attribute name="val" type="{http://www.w3.org/2001/XMLSchema}string" /&gt;
+     *               &lt;/restriction&gt;
+     *             &lt;/complexContent&gt;
+     *           &lt;/complexType&gt;
+     *         &lt;/element&gt;
+     *         &lt;element name="numStyleLink" minOccurs="0"&gt;
+     *           &lt;complexType&gt;
+     *             &lt;complexContent&gt;
+     *               &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType"&gt;
+     *                 &lt;attribute name="val" type="{http://www.w3.org/2001/XMLSchema}string" /&gt;
+     *               &lt;/restriction&gt;
+     *             &lt;/complexContent&gt;
+     *           &lt;/complexType&gt;
+     *         &lt;/element&gt;
+     *         &lt;element name="lvl" type="{http://schemas.openxmlformats.org/wordprocessingml/2006/main}CT_Lvl" maxOccurs="9" minOccurs="0"/&gt;
+     *       &lt;/sequence&gt;
+     *       &lt;attribute name="abstractNumId" use="required" type="{http://schemas.openxmlformats.org/wordprocessingml/2006/main}ST_DecimalNumber" /&gt;
+     *     &lt;/restriction&gt;
+     *   &lt;/complexContent&gt;
+     * &lt;/complexType&gt;
      * </pre>
      * 
      * 
@@ -449,9 +447,7 @@ public class Numbering implements Child
         "lvl"
     })
     @XmlRootElement(name = "abstractNum")    
-    public static class AbstractNum
-        implements Child
-    {
+    public static class AbstractNum implements Child {
 
         protected CTLongHexNumber nsid;
         protected Numbering.AbstractNum.MultiLevelType multiLevelType;
@@ -464,7 +460,7 @@ public class Numbering implements Child
         protected BigInteger abstractNumId;
         @XmlTransient
         private Object parent;
-
+        
         /**
          * Gets the value of the nsid property.
          * 
@@ -615,7 +611,7 @@ public class Numbering implements Child
          * <p>
          * This accessor method returns a reference to the live list,
          * not a snapshot. Therefore any modification you make to the
-         * returned list will be present inside the JAXB object.
+         * returned list will be present inside the Jakarta XML Binding object.
          * This is why there is not a <CODE>set</CODE> method for the lvl property.
          * 
          * <p>
@@ -695,29 +691,28 @@ public class Numbering implements Child
          * <p>The following schema fragment specifies the expected content contained within this class.
          * 
          * <pre>
-         * &lt;complexType>
-         *   &lt;complexContent>
-         *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
-         *       &lt;attribute name="val" use="required">
-         *         &lt;simpleType>
-         *           &lt;restriction base="{http://www.w3.org/2001/XMLSchema}string">
-         *             &lt;enumeration value="singleLevel"/>
-         *             &lt;enumeration value="multilevel"/>
-         *             &lt;enumeration value="hybridMultilevel"/>
-         *           &lt;/restriction>
-         *         &lt;/simpleType>
-         *       &lt;/attribute>
-         *     &lt;/restriction>
-         *   &lt;/complexContent>
-         * &lt;/complexType>
+         * &lt;complexType&gt;
+         *   &lt;complexContent&gt;
+         *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType"&gt;
+         *       &lt;attribute name="val" use="required"&gt;
+         *         &lt;simpleType&gt;
+         *           &lt;restriction base="{http://www.w3.org/2001/XMLSchema}string"&gt;
+         *             &lt;enumeration value="singleLevel"/&gt;
+         *             &lt;enumeration value="multilevel"/&gt;
+         *             &lt;enumeration value="hybridMultilevel"/&gt;
+         *           &lt;/restriction&gt;
+         *         &lt;/simpleType&gt;
+         *       &lt;/attribute&gt;
+         *     &lt;/restriction&gt;
+         *   &lt;/complexContent&gt;
+         * &lt;/complexType&gt;
          * </pre>
          * 
          * 
          */
         @XmlAccessorType(XmlAccessType.FIELD)
         @XmlType(name = "")
-        public static class MultiLevelType implements Child
-        {
+        public static class MultiLevelType implements Child {
 
             @XmlAttribute(name = "val", namespace = "http://schemas.openxmlformats.org/wordprocessingml/2006/main", required = true)
             protected String val;
@@ -747,7 +742,6 @@ public class Numbering implements Child
             public void setVal(String value) {
                 this.val = value;
             }
-
             /**
              * Gets the parent object in the object tree representing the unmarshalled xml document.
              * 
@@ -783,27 +777,26 @@ public class Numbering implements Child
          * <p>The following schema fragment specifies the expected content contained within this class.
          * 
          * <pre>
-         * &lt;complexType>
-         *   &lt;complexContent>
-         *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
-         *       &lt;attribute name="val" type="{http://www.w3.org/2001/XMLSchema}string" />
-         *     &lt;/restriction>
-         *   &lt;/complexContent>
-         * &lt;/complexType>
+         * &lt;complexType&gt;
+         *   &lt;complexContent&gt;
+         *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType"&gt;
+         *       &lt;attribute name="val" type="{http://www.w3.org/2001/XMLSchema}string" /&gt;
+         *     &lt;/restriction&gt;
+         *   &lt;/complexContent&gt;
+         * &lt;/complexType&gt;
          * </pre>
          * 
          * 
          */
         @XmlAccessorType(XmlAccessType.FIELD)
         @XmlType(name = "")
-        public static class Name implements Child
-        {
+        public static class Name implements Child {
 
             @XmlAttribute(name = "val", namespace = "http://schemas.openxmlformats.org/wordprocessingml/2006/main")
             protected String val;
             @XmlTransient
             private Object parent;
-
+            
             /**
              * Gets the value of the val property.
              * 
@@ -827,7 +820,6 @@ public class Numbering implements Child
             public void setVal(String value) {
                 this.val = value;
             }
-
             /**
              * Gets the parent object in the object tree representing the unmarshalled xml document.
              * 
@@ -863,27 +855,26 @@ public class Numbering implements Child
          * <p>The following schema fragment specifies the expected content contained within this class.
          * 
          * <pre>
-         * &lt;complexType>
-         *   &lt;complexContent>
-         *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
-         *       &lt;attribute name="val" type="{http://www.w3.org/2001/XMLSchema}string" />
-         *     &lt;/restriction>
-         *   &lt;/complexContent>
-         * &lt;/complexType>
+         * &lt;complexType&gt;
+         *   &lt;complexContent&gt;
+         *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType"&gt;
+         *       &lt;attribute name="val" type="{http://www.w3.org/2001/XMLSchema}string" /&gt;
+         *     &lt;/restriction&gt;
+         *   &lt;/complexContent&gt;
+         * &lt;/complexType&gt;
          * </pre>
          * 
          * 
          */
         @XmlAccessorType(XmlAccessType.FIELD)
         @XmlType(name = "")
-        public static class NumStyleLink implements Child
-        {
+        public static class NumStyleLink implements Child {
 
             @XmlAttribute(name = "val", namespace = "http://schemas.openxmlformats.org/wordprocessingml/2006/main")
             protected String val;
             @XmlTransient
             private Object parent;
-
+            
             /**
              * Gets the value of the val property.
              * 
@@ -907,7 +898,6 @@ public class Numbering implements Child
             public void setVal(String value) {
                 this.val = value;
             }
-
             /**
              * Gets the parent object in the object tree representing the unmarshalled xml document.
              * 
@@ -943,27 +933,26 @@ public class Numbering implements Child
          * <p>The following schema fragment specifies the expected content contained within this class.
          * 
          * <pre>
-         * &lt;complexType>
-         *   &lt;complexContent>
-         *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
-         *       &lt;attribute name="val" type="{http://www.w3.org/2001/XMLSchema}string" />
-         *     &lt;/restriction>
-         *   &lt;/complexContent>
-         * &lt;/complexType>
+         * &lt;complexType&gt;
+         *   &lt;complexContent&gt;
+         *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType"&gt;
+         *       &lt;attribute name="val" type="{http://www.w3.org/2001/XMLSchema}string" /&gt;
+         *     &lt;/restriction&gt;
+         *   &lt;/complexContent&gt;
+         * &lt;/complexType&gt;
          * </pre>
          * 
          * 
          */
         @XmlAccessorType(XmlAccessType.FIELD)
         @XmlType(name = "")
-        public static class StyleLink implements Child
-        {
+        public static class StyleLink implements Child {
 
             @XmlAttribute(name = "val", namespace = "http://schemas.openxmlformats.org/wordprocessingml/2006/main")
             protected String val;
             @XmlTransient
             private Object parent;
-
+            
             /**
              * Gets the value of the val property.
              * 
@@ -987,7 +976,7 @@ public class Numbering implements Child
             public void setVal(String value) {
                 this.val = value;
             }
-
+            
             /**
              * Gets the parent object in the object tree representing the unmarshalled xml document.
              * 
@@ -1025,55 +1014,55 @@ public class Numbering implements Child
      * <p>The following schema fragment specifies the expected content contained within this class.
      * 
      * <pre>
-     * &lt;complexType>
-     *   &lt;complexContent>
-     *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
-     *       &lt;sequence>
-     *         &lt;element name="abstractNumId">
-     *           &lt;complexType>
-     *             &lt;complexContent>
-     *               &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
-     *                 &lt;attribute name="val" use="required">
-     *                   &lt;simpleType>
-     *                     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}integer">
-     *                     &lt;/restriction>
-     *                   &lt;/simpleType>
-     *                 &lt;/attribute>
-     *               &lt;/restriction>
-     *             &lt;/complexContent>
-     *           &lt;/complexType>
-     *         &lt;/element>
-     *         &lt;element name="lvlOverride" maxOccurs="9" minOccurs="0">
-     *           &lt;complexType>
-     *             &lt;complexContent>
-     *               &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
-     *                 &lt;sequence>
-     *                   &lt;element name="startOverride" minOccurs="0">
-     *                     &lt;complexType>
-     *                       &lt;complexContent>
-     *                         &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
-     *                           &lt;attribute name="val" use="required">
-     *                             &lt;simpleType>
-     *                               &lt;restriction base="{http://www.w3.org/2001/XMLSchema}integer">
-     *                               &lt;/restriction>
-     *                             &lt;/simpleType>
-     *                           &lt;/attribute>
-     *                         &lt;/restriction>
-     *                       &lt;/complexContent>
-     *                     &lt;/complexType>
-     *                   &lt;/element>
-     *                   &lt;element name="lvl" type="{http://schemas.openxmlformats.org/wordprocessingml/2006/main}CT_Lvl" minOccurs="0"/>
-     *                 &lt;/sequence>
-     *                 &lt;attribute name="ilvl" use="required" type="{http://schemas.openxmlformats.org/wordprocessingml/2006/main}ST_DecimalNumber" />
-     *               &lt;/restriction>
-     *             &lt;/complexContent>
-     *           &lt;/complexType>
-     *         &lt;/element>
-     *       &lt;/sequence>
-     *       &lt;attribute name="numId" use="required" type="{http://schemas.openxmlformats.org/wordprocessingml/2006/main}ST_DecimalNumber" />
-     *     &lt;/restriction>
-     *   &lt;/complexContent>
-     * &lt;/complexType>
+     * &lt;complexType&gt;
+     *   &lt;complexContent&gt;
+     *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType"&gt;
+     *       &lt;sequence&gt;
+     *         &lt;element name="abstractNumId"&gt;
+     *           &lt;complexType&gt;
+     *             &lt;complexContent&gt;
+     *               &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType"&gt;
+     *                 &lt;attribute name="val" use="required"&gt;
+     *                   &lt;simpleType&gt;
+     *                     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}integer"&gt;
+     *                     &lt;/restriction&gt;
+     *                   &lt;/simpleType&gt;
+     *                 &lt;/attribute&gt;
+     *               &lt;/restriction&gt;
+     *             &lt;/complexContent&gt;
+     *           &lt;/complexType&gt;
+     *         &lt;/element&gt;
+     *         &lt;element name="lvlOverride" maxOccurs="9" minOccurs="0"&gt;
+     *           &lt;complexType&gt;
+     *             &lt;complexContent&gt;
+     *               &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType"&gt;
+     *                 &lt;sequence&gt;
+     *                   &lt;element name="startOverride" minOccurs="0"&gt;
+     *                     &lt;complexType&gt;
+     *                       &lt;complexContent&gt;
+     *                         &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType"&gt;
+     *                           &lt;attribute name="val" use="required"&gt;
+     *                             &lt;simpleType&gt;
+     *                               &lt;restriction base="{http://www.w3.org/2001/XMLSchema}integer"&gt;
+     *                               &lt;/restriction&gt;
+     *                             &lt;/simpleType&gt;
+     *                           &lt;/attribute&gt;
+     *                         &lt;/restriction&gt;
+     *                       &lt;/complexContent&gt;
+     *                     &lt;/complexType&gt;
+     *                   &lt;/element&gt;
+     *                   &lt;element name="lvl" type="{http://schemas.openxmlformats.org/wordprocessingml/2006/main}CT_Lvl" minOccurs="0"/&gt;
+     *                 &lt;/sequence&gt;
+     *                 &lt;attribute name="ilvl" use="required" type="{http://schemas.openxmlformats.org/wordprocessingml/2006/main}ST_DecimalNumber" /&gt;
+     *               &lt;/restriction&gt;
+     *             &lt;/complexContent&gt;
+     *           &lt;/complexType&gt;
+     *         &lt;/element&gt;
+     *       &lt;/sequence&gt;
+     *       &lt;attribute name="numId" use="required" type="{http://schemas.openxmlformats.org/wordprocessingml/2006/main}ST_DecimalNumber" /&gt;
+     *     &lt;/restriction&gt;
+     *   &lt;/complexContent&gt;
+     * &lt;/complexType&gt;
      * </pre>
      * 
      * 
@@ -1083,9 +1072,8 @@ public class Numbering implements Child
         "abstractNumId",
         "lvlOverride"
     })
-    @XmlRootElement(name = "num")
-    public static class Num implements Child
-    {
+    @XmlRootElement(name = "num")    
+    public static class Num implements Child {
 
         @XmlElement(required = true)
         protected Numbering.Num.AbstractNumId abstractNumId;
@@ -1094,7 +1082,7 @@ public class Numbering implements Child
         protected BigInteger numId;
         @XmlTransient
         private Object parent;
-
+        
         /**
          * Gets the value of the abstractNumId property.
          * 
@@ -1125,7 +1113,7 @@ public class Numbering implements Child
          * <p>
          * This accessor method returns a reference to the live list,
          * not a snapshot. Therefore any modification you make to the
-         * returned list will be present inside the JAXB object.
+         * returned list will be present inside the Jakarta XML Binding object.
          * This is why there is not a <CODE>set</CODE> method for the lvlOverride property.
          * 
          * <p>
@@ -1198,39 +1186,37 @@ public class Numbering implements Child
             setParent(parent);
         }
 
-
         /**
          * <p>Java class for anonymous complex type.
          * 
          * <p>The following schema fragment specifies the expected content contained within this class.
          * 
          * <pre>
-         * &lt;complexType>
-         *   &lt;complexContent>
-         *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
-         *       &lt;attribute name="val" use="required">
-         *         &lt;simpleType>
-         *           &lt;restriction base="{http://www.w3.org/2001/XMLSchema}integer">
-         *           &lt;/restriction>
-         *         &lt;/simpleType>
-         *       &lt;/attribute>
-         *     &lt;/restriction>
-         *   &lt;/complexContent>
-         * &lt;/complexType>
+         * &lt;complexType&gt;
+         *   &lt;complexContent&gt;
+         *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType"&gt;
+         *       &lt;attribute name="val" use="required"&gt;
+         *         &lt;simpleType&gt;
+         *           &lt;restriction base="{http://www.w3.org/2001/XMLSchema}integer"&gt;
+         *           &lt;/restriction&gt;
+         *         &lt;/simpleType&gt;
+         *       &lt;/attribute&gt;
+         *     &lt;/restriction&gt;
+         *   &lt;/complexContent&gt;
+         * &lt;/complexType&gt;
          * </pre>
          * 
          * 
          */
         @XmlAccessorType(XmlAccessType.FIELD)
         @XmlType(name = "")
-        public static class AbstractNumId implements Child
-        {
+        public static class AbstractNumId implements Child {
 
             @XmlAttribute(name = "val", namespace = "http://schemas.openxmlformats.org/wordprocessingml/2006/main", required = true)
             protected BigInteger val;
             @XmlTransient
             private Object parent;
-
+            
             /**
              * Gets the value of the val property.
              * 
@@ -1254,7 +1240,6 @@ public class Numbering implements Child
             public void setVal(BigInteger value) {
                 this.val = value;
             }
-
             /**
              * Gets the parent object in the object tree representing the unmarshalled xml document.
              * 
@@ -1290,30 +1275,30 @@ public class Numbering implements Child
          * <p>The following schema fragment specifies the expected content contained within this class.
          * 
          * <pre>
-         * &lt;complexType>
-         *   &lt;complexContent>
-         *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
-         *       &lt;sequence>
-         *         &lt;element name="startOverride" minOccurs="0">
-         *           &lt;complexType>
-         *             &lt;complexContent>
-         *               &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
-         *                 &lt;attribute name="val" use="required">
-         *                   &lt;simpleType>
-         *                     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}integer">
-         *                     &lt;/restriction>
-         *                   &lt;/simpleType>
-         *                 &lt;/attribute>
-         *               &lt;/restriction>
-         *             &lt;/complexContent>
-         *           &lt;/complexType>
-         *         &lt;/element>
-         *         &lt;element name="lvl" type="{http://schemas.openxmlformats.org/wordprocessingml/2006/main}CT_Lvl" minOccurs="0"/>
-         *       &lt;/sequence>
-         *       &lt;attribute name="ilvl" use="required" type="{http://schemas.openxmlformats.org/wordprocessingml/2006/main}ST_DecimalNumber" />
-         *     &lt;/restriction>
-         *   &lt;/complexContent>
-         * &lt;/complexType>
+         * &lt;complexType&gt;
+         *   &lt;complexContent&gt;
+         *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType"&gt;
+         *       &lt;sequence&gt;
+         *         &lt;element name="startOverride" minOccurs="0"&gt;
+         *           &lt;complexType&gt;
+         *             &lt;complexContent&gt;
+         *               &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType"&gt;
+         *                 &lt;attribute name="val" use="required"&gt;
+         *                   &lt;simpleType&gt;
+         *                     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}integer"&gt;
+         *                     &lt;/restriction&gt;
+         *                   &lt;/simpleType&gt;
+         *                 &lt;/attribute&gt;
+         *               &lt;/restriction&gt;
+         *             &lt;/complexContent&gt;
+         *           &lt;/complexType&gt;
+         *         &lt;/element&gt;
+         *         &lt;element name="lvl" type="{http://schemas.openxmlformats.org/wordprocessingml/2006/main}CT_Lvl" minOccurs="0"/&gt;
+         *       &lt;/sequence&gt;
+         *       &lt;attribute name="ilvl" use="required" type="{http://schemas.openxmlformats.org/wordprocessingml/2006/main}ST_DecimalNumber" /&gt;
+         *     &lt;/restriction&gt;
+         *   &lt;/complexContent&gt;
+         * &lt;/complexType&gt;
          * </pre>
          * 
          * 
@@ -1323,10 +1308,8 @@ public class Numbering implements Child
             "startOverride",
             "lvl"
         })
-        @XmlRootElement(name = "lvlOverride")
-        public static class LvlOverride
-            implements Child
-        {
+        @XmlRootElement(name = "lvlOverride")       
+        public static class LvlOverride  implements Child {
 
             protected Numbering.Num.LvlOverride.StartOverride startOverride;
             protected Lvl lvl;
@@ -1334,7 +1317,7 @@ public class Numbering implements Child
             protected BigInteger ilvl;
             @XmlTransient
             private Object parent;
-
+            
             /**
              * Gets the value of the startOverride property.
              * 
@@ -1433,39 +1416,37 @@ public class Numbering implements Child
                 setParent(parent);
             }
 
-
             /**
              * <p>Java class for anonymous complex type.
              * 
              * <p>The following schema fragment specifies the expected content contained within this class.
              * 
              * <pre>
-             * &lt;complexType>
-             *   &lt;complexContent>
-             *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
-             *       &lt;attribute name="val" use="required">
-             *         &lt;simpleType>
-             *           &lt;restriction base="{http://www.w3.org/2001/XMLSchema}integer">
-             *           &lt;/restriction>
-             *         &lt;/simpleType>
-             *       &lt;/attribute>
-             *     &lt;/restriction>
-             *   &lt;/complexContent>
-             * &lt;/complexType>
+             * &lt;complexType&gt;
+             *   &lt;complexContent&gt;
+             *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType"&gt;
+             *       &lt;attribute name="val" use="required"&gt;
+             *         &lt;simpleType&gt;
+             *           &lt;restriction base="{http://www.w3.org/2001/XMLSchema}integer"&gt;
+             *           &lt;/restriction&gt;
+             *         &lt;/simpleType&gt;
+             *       &lt;/attribute&gt;
+             *     &lt;/restriction&gt;
+             *   &lt;/complexContent&gt;
+             * &lt;/complexType&gt;
              * </pre>
              * 
              * 
              */
             @XmlAccessorType(XmlAccessType.FIELD)
             @XmlType(name = "")
-            public static class StartOverride implements Child
-            {
+            public static class StartOverride implements Child {
 
                 @XmlAttribute(name = "val", namespace = "http://schemas.openxmlformats.org/wordprocessingml/2006/main", required = true)
                 protected BigInteger val;
                 @XmlTransient
                 private Object parent;
-
+                
                 /**
                  * Gets the value of the val property.
                  * 
@@ -1489,7 +1470,6 @@ public class Numbering implements Child
                 public void setVal(BigInteger value) {
                     this.val = value;
                 }
-
                 /**
                  * Gets the parent object in the object tree representing the unmarshalled xml document.
                  * 
@@ -1515,7 +1495,6 @@ public class Numbering implements Child
                 public void afterUnmarshal(Unmarshaller unmarshaller, Object parent) {
                     setParent(parent);
                 }
-
             }
 
         }
@@ -1529,32 +1508,31 @@ public class Numbering implements Child
      * <p>The following schema fragment specifies the expected content contained within this class.
      * 
      * <pre>
-     * &lt;complexType>
-     *   &lt;complexContent>
-     *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
-     *       &lt;attribute name="val" use="required">
-     *         &lt;simpleType>
-     *           &lt;restriction base="{http://www.w3.org/2001/XMLSchema}integer">
-     *           &lt;/restriction>
-     *         &lt;/simpleType>
-     *       &lt;/attribute>
-     *     &lt;/restriction>
-     *   &lt;/complexContent>
-     * &lt;/complexType>
+     * &lt;complexType&gt;
+     *   &lt;complexContent&gt;
+     *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType"&gt;
+     *       &lt;attribute name="val" use="required"&gt;
+     *         &lt;simpleType&gt;
+     *           &lt;restriction base="{http://www.w3.org/2001/XMLSchema}integer"&gt;
+     *           &lt;/restriction&gt;
+     *         &lt;/simpleType&gt;
+     *       &lt;/attribute&gt;
+     *     &lt;/restriction&gt;
+     *   &lt;/complexContent&gt;
+     * &lt;/complexType&gt;
      * </pre>
      * 
      * 
      */
     @XmlAccessorType(XmlAccessType.FIELD)
     @XmlType(name = "")
-    public static class NumIdMacAtCleanup implements Child
-    {
+    public static class NumIdMacAtCleanup implements Child {
 
         @XmlAttribute(name = "val", namespace = "http://schemas.openxmlformats.org/wordprocessingml/2006/main", required = true)
         protected BigInteger val;
         @XmlTransient
         private Object parent;
-
+        
         /**
          * Gets the value of the val property.
          * 
@@ -1578,119 +1556,6 @@ public class Numbering implements Child
         public void setVal(BigInteger value) {
             this.val = value;
         }
-
-        /**
-         * Gets the parent object in the object tree representing the unmarshalled xml document.
-         * 
-         * @return
-         *     The parent object.
-         */
-        public Object getParent() {
-            return this.parent;
-        }
-
-        public void setParent(Object parent) {
-            this.parent = parent;
-        }
-
-        /**
-         * This method is invoked by the JAXB implementation on each instance when unmarshalling completes.
-         * 
-         * @param parent
-         *     The parent object in the object tree.
-         * @param unmarshaller
-         *     The unmarshaller that generated the instance.
-         */
-        public void afterUnmarshal(Unmarshaller unmarshaller, Object parent) {
-            setParent(parent);
-        }
-
-    }
-
-
-    /**
-     * <p>Java class for anonymous complex type.
-     * 
-     * <p>The following schema fragment specifies the expected content contained within this class.
-     * 
-     * <pre>
-     * &lt;complexType>
-     *   &lt;complexContent>
-     *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
-     *       &lt;sequence>
-     *         &lt;element name="pict" type="{http://schemas.openxmlformats.org/wordprocessingml/2006/main}CT_Picture"/>
-     *       &lt;/sequence>
-     *       &lt;attribute name="numPicBulletId" use="required" type="{http://schemas.openxmlformats.org/wordprocessingml/2006/main}ST_DecimalNumber" />
-     *     &lt;/restriction>
-     *   &lt;/complexContent>
-     * &lt;/complexType>
-     * </pre>
-     * 
-     * 
-     */
-    @XmlAccessorType(XmlAccessType.FIELD)
-    @XmlType(name = "", propOrder = {
-        "pict"
-    })
-    @XmlRootElement(name="numPicBullet")
-    public static class NumPicBullet implements Child
-    {
-
-        @XmlElement(required = true)
-        protected Pict pict;
-        @XmlAttribute(name = "numPicBulletId", namespace = "http://schemas.openxmlformats.org/wordprocessingml/2006/main", required = true)
-        protected BigInteger numPicBulletId;
-        @XmlTransient
-        private Object parent;
-
-        /**
-         * Gets the value of the pict property.
-         * 
-         * @return
-         *     possible object is
-         *     {@link Pict }
-         *     
-         */
-        public Pict getPict() {
-            return pict;
-        }
-
-        /**
-         * Sets the value of the pict property.
-         * 
-         * @param value
-         *     allowed object is
-         *     {@link Pict }
-         *     
-         */
-        public void setPict(Pict value) {
-            this.pict = value;
-        }
-
-        /**
-         * Gets the value of the numPicBulletId property.
-         * 
-         * @return
-         *     possible object is
-         *     {@link BigInteger }
-         *     
-         */
-        public BigInteger getNumPicBulletId() {
-            return numPicBulletId;
-        }
-
-        /**
-         * Sets the value of the numPicBulletId property.
-         * 
-         * @param value
-         *     allowed object is
-         *     {@link BigInteger }
-         *     
-         */
-        public void setNumPicBulletId(BigInteger value) {
-            this.numPicBulletId = value;
-        }
-
         
         /**
          * Gets the parent object in the object tree representing the unmarshalled xml document.
@@ -1717,6 +1582,143 @@ public class Numbering implements Child
         public void afterUnmarshal(Unmarshaller unmarshaller, Object parent) {
             setParent(parent);
         }
+
+    }
+
+
+    /**
+     * <p>Java class for anonymous complex type.
+     * 
+     * <p>The following schema fragment specifies the expected content contained within this class.
+     * 
+     * <pre>
+     * &lt;complexType&gt;
+     *   &lt;complexContent&gt;
+     *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType"&gt;
+     *       &lt;choice&gt;
+     *         &lt;element name="pict" type="{http://schemas.openxmlformats.org/wordprocessingml/2006/main}CT_Picture"/&gt;
+     *         &lt;element name="drawing" type="{http://schemas.openxmlformats.org/wordprocessingml/2006/main}CT_Drawing"/&gt;
+     *       &lt;/choice&gt;
+     *       &lt;attribute name="numPicBulletId" use="required" type="{http://schemas.openxmlformats.org/wordprocessingml/2006/main}ST_DecimalNumber" /&gt;
+     *     &lt;/restriction&gt;
+     *   &lt;/complexContent&gt;
+     * &lt;/complexType&gt;
+     * </pre>
+     * 
+     * 
+     */
+    @XmlAccessorType(XmlAccessType.FIELD)
+    @XmlType(name = "", propOrder = {
+        "pict",
+        "drawing"
+    })
+    @XmlRootElement(name="numPicBullet")   
+    public static class NumPicBullet implements Child {
+
+        protected Pict pict;
+        protected Drawing drawing;
+        @XmlAttribute(name = "numPicBulletId", namespace = "http://schemas.openxmlformats.org/wordprocessingml/2006/main", required = true)
+        protected BigInteger numPicBulletId;
+        @XmlTransient
+        private Object parent;
+        
+        /**
+         * Gets the value of the pict property.
+         * 
+         * @return
+         *     possible object is
+         *     {@link Pict }
+         *     
+         */
+        public Pict getPict() {
+            return pict;
+        }
+
+        /**
+         * Sets the value of the pict property.
+         * 
+         * @param value
+         *     allowed object is
+         *     {@link Pict }
+         *     
+         */
+        public void setPict(Pict value) {
+            this.pict = value;
+        }
+
+        /**
+         * Gets the value of the drawing property.
+         * 
+         * @return
+         *     possible object is
+         *     {@link Drawing }
+         *     
+         */
+        public Drawing getDrawing() {
+            return drawing;
+        }
+
+        /**
+         * Sets the value of the drawing property.
+         * 
+         * @param value
+         *     allowed object is
+         *     {@link Drawing }
+         *     
+         */
+        public void setDrawing(Drawing value) {
+            this.drawing = value;
+        }
+
+        /**
+         * Gets the value of the numPicBulletId property.
+         * 
+         * @return
+         *     possible object is
+         *     {@link BigInteger }
+         *     
+         */
+        public BigInteger getNumPicBulletId() {
+            return numPicBulletId;
+        }
+
+        /**
+         * Sets the value of the numPicBulletId property.
+         * 
+         * @param value
+         *     allowed object is
+         *     {@link BigInteger }
+         *     
+         */
+        public void setNumPicBulletId(BigInteger value) {
+            this.numPicBulletId = value;
+        }
+        
+        /**
+         * Gets the parent object in the object tree representing the unmarshalled xml document.
+         * 
+         * @return
+         *     The parent object.
+         */
+        public Object getParent() {
+            return this.parent;
+        }
+
+        public void setParent(Object parent) {
+            this.parent = parent;
+        }
+
+        /**
+         * This method is invoked by the JAXB implementation on each instance when unmarshalling completes.
+         * 
+         * @param parent
+         *     The parent object in the object tree.
+         * @param unmarshaller
+         *     The unmarshaller that generated the instance.
+         */
+        public void afterUnmarshal(Unmarshaller unmarshaller, Object parent) {
+            setParent(parent);
+        }        
 
     }
 
