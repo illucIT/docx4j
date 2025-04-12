@@ -425,30 +425,9 @@ public abstract class JaxbXmlPart<E> /* used directly only by DocProps parts, Re
 		    		XmlUtils.marshaltoInputStream(jaxbElement, true, this.jc)));            
 		}
 		
-        //log.debug((new String(baos.toByteArray())).substring(0, 4000) );
-		
-		if (jaxbElement==null
-				&& partStore instanceof ZipPartStore ) {
-			
-			log.debug("Just update the entry in the ZipPartStore");
-			
-			// Just update the entry in the ZipPartStore
-			ByteArray byteArray = ((ZipPartStore)partStore).getByteArray(this.getPartName().getName().substring(1));
-			byteArray.setBytes(saxHandler.getOutputStream().toByteArray());
-			
-		} else {
-			
-			if (jaxbElement==null
-					&& log.isInfoEnabled()) {				
-				log.info(partStore.getClass().getName() + ": can't update in place, so unmarshalling.");
-			} else {			
-				log.debug("unmarshalling");
-			}
-			jaxbElement = this.unmarshal( new ByteArrayInputStream(saxHandler.getOutputStream().toByteArray()) );  // so much for avoiding JAXB!
-			
-		}
+		replacePartContent(saxHandler.getOutputStream().toByteArray());
 	}
-	
+		
 	/**
 	 * Replace the contents of this part with the output of passing it through your StAXHandler. 
 	 * 
@@ -506,8 +485,9 @@ public abstract class JaxbXmlPart<E> /* used directly only by DocProps parts, Re
 	    // First, set up stream reader
 	    XMLStreamReader xmlr = null;
 	    PartStore partStore = null;
-
+	    
 		if (jaxbElement==null) {
+			log.info("jaxbElement not unmarshalled yet");
 
 			partStore = this.getPackage().getSourcePartStore();
 			String name = this.getPartName().getName();
@@ -528,6 +508,7 @@ public abstract class JaxbXmlPart<E> /* used directly only by DocProps parts, Re
 			}
 			
 		} else {
+			log.info("Existing jaxbElement..");
 			
 			// TODO marshal to XmlStreamWriter or event, then read from that.
 			// But for now..
@@ -640,28 +621,43 @@ public abstract class JaxbXmlPart<E> /* used directly only by DocProps parts, Re
         xmlWriter.flush();
         xmlWriter.close();  
         
-        //log.debug((new String(baos.toByteArray())).substring(0, 4000) );
+        replacePartContent(baos.toByteArray());
+	}
+	
+	/**
+	 * Replace the content of this part.  Unless the part has been 
+	 * unmashalled already, this is done at the PartStore level.
+	 * 
+	 * @throws JAXBException 
+	 * @throws Docx4JException 
+	 * @since 11.5.3
+	 */
+	public void replacePartContent(byte[] bytes) throws JAXBException, Docx4JException {
+
+        //log.debug((new String(bytes).substring(0, 4000) );
 		
-		if (jaxbElement==null
-				&& partStore instanceof ZipPartStore ) {
+		if (jaxbElement!=null) {
+			jaxbElement = this.unmarshal( new ByteArrayInputStream(bytes));
+			return;
+		}
 			
-			log.debug("Just update the entry in the ZipPartStore");
+		// Haven't unmarshalled yet, so ideally, just write to the part store.
+		PartStore partStore = this.getPackage().getSourcePartStore();				
+		if ( /* usual case */ partStore instanceof ZipPartStore ) {
 			
+			log.debug("Just update the entry in the ZipPartStore");			
 			// Just update the entry in the ZipPartStore
 			ByteArray byteArray = ((ZipPartStore)partStore).getByteArray(this.getPartName().getName().substring(1));
-			byteArray.setBytes(baos.toByteArray());
+			byteArray.setBytes(bytes);
 			
-		} else {
-			
-			if (jaxbElement==null
-					&& log.isInfoEnabled()) {				
+		} else  {
+			// Not unmarshalled yet, but we have no option
+			if (log.isInfoEnabled()) {
 				log.info(partStore.getClass().getName() + ": can't update in place, so unmarshalling.");
-			} else {			
-				log.debug("unmarshalling");
 			}
-			jaxbElement = this.unmarshal( new ByteArrayInputStream(baos.toByteArray()) );  // so much for avoiding JAXB!
+			jaxbElement = this.unmarshal( new ByteArrayInputStream(bytes ));  // so much for avoiding JAXB!
 			
-		}
+		} 
 	}
 	
 	
