@@ -274,6 +274,13 @@ public class BindingHandler {
 			
 			BindingTraverserInterface traverser = null;
 			
+			if (part.isUnmarshalled()) {
+				log.debug("Part already unmarshalled, so BindingTraverserStAX won't speed things up.");
+			} else {
+				log.info("Part not unmarshalled, so BindingTraverserStAX could speed things up.");				
+			}
+			
+			
 			if ( Docx4jProperties.getProperty("docx4j.model.datastorage.BindingHandler.Implementation", "BindingTraverserXSLT")
 					.equals("BindingTraverserNonXSLT") ) {
 				// Use the non-XSLT approach.  This is faster, but doesn't have feature parity.
@@ -293,10 +300,15 @@ public class BindingHandler {
 			
 			traverser.setStartingIdForNewBookmarks(initBookmarkIdStart());
 			
-			// TODO, rethink this approach so marshalling is not assumed
+			if (traverser instanceof BindingTraverserStAX) {
+				
+				((BindingTraverserStAX)traverser).streamToBind(part, wordMLPackage, xpathsMap);
+				
+			} else /* the JAXB approaches */ {
+				
 				part.setJaxbElement(
 						traverser.traverseToBind(part, wordMLPackage, xpathsMap) );
-			
+			}			
 			bookmarkId = traverser.getNextBookmarkId();
 					
 		}

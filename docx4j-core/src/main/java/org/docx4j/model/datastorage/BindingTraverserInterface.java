@@ -27,7 +27,10 @@ import org.docx4j.openpackaging.parts.JaxbXmlPart;
 import org.docx4j.openpackaging.parts.opendope.XPathsPart;
 
 public interface BindingTraverserInterface {
-	
+
+	/**
+	 * Traverse (typically a clone of) the part, binding content controls.  Returns JAXB content tree.
+	 */
 	public Object traverseToBind(JaxbXmlPart part,
 			org.docx4j.openpackaging.packages.OpcPackage pkg,
 			Map<String, org.opendope.xpaths.Xpaths.Xpath> xpathsMap)

@@ -61,6 +61,7 @@ import org.docx4j.wml.SdtElement;
 import org.docx4j.wml.SdtPr;
 import org.docx4j.wml.SdtRun;
 import org.docx4j.wml.Tag;
+import org.docx4j.wml.Tc;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -91,14 +92,30 @@ public class BindingTraverserStAX extends BindingTraverserCommonImpl {
 			org.docx4j.openpackaging.packages.OpcPackage pkg,
 			Map<String, org.opendope.xpaths.Xpaths.Xpath> xpathsMap)
 			throws Docx4JException {
-		
+
+		throw new Docx4JException("Not implemented; use streamToBind instead.");
+	}
+	
+	/**
+	 * Bind the content controls; avoid unmarshalling the entire part.
+	 * 
+	 * @param part
+	 * @param pkg
+	 * @param xpathsMap
+	 * @throws Docx4JException
+	 */
+	public void streamToBind(JaxbXmlPart part,
+			org.docx4j.openpackaging.packages.OpcPackage pkg,
+			Map<String, org.opendope.xpaths.Xpaths.Xpath> xpathsMap)
+			throws Docx4JException {
+	
 		log.info("Using BindingTraverserStAX");
-		
+
 		this.part = part;
 		this.pkg = pkg;
 		this.xpathsMap = xpathsMap;
 		
-		// Don't clone, since this unmarshals! TODO
+		// Don't clone, since this unmarshals! TODO clone the byte array??
 		//Object clone = XmlUtils.deepCopy(part.getJaxbElement());
 		
 		// Use StAX; be sure you are using https://github.com/FasterXML/woodstox
@@ -107,8 +124,6 @@ public class BindingTraverserStAX extends BindingTraverserCommonImpl {
 		} catch (Exception e) {
 			throw new Docx4JException(e.getMessage(), e);
 		}  
-				
-		return null; // TODO
 	}
 	
 	private Stack stack = new Stack();
@@ -153,13 +168,17 @@ public class BindingTraverserStAX extends BindingTraverserCommonImpl {
 							// If this method returns successfully, the reader will be pointing at the token right after the end event.
 														
 						} catch (JAXBException e) {
-							throw new XMLStreamException(e);
+							throw new XMLStreamException(e.getMessage(), e);
 						}
 						o = XmlUtils.unwrap(o);
 						log.debug(o.getClass().getName());   
 						if (o instanceof SdtElement) {
 							SdtElement sdt = (SdtElement)o;
-							handleSdt(sdt);
+							try {
+								handleSdt(sdt);
+							} catch (Docx4JException e1) {
+								throw new XMLStreamException(e1.getMessage(), e1);
+							}
 							// write it
 							try {
 								Marshaller m = context.createMarshaller();
@@ -204,7 +223,7 @@ public class BindingTraverserStAX extends BindingTraverserCommonImpl {
 	}
 		
 	
-		private void handleSdt(SdtElement sdt) {
+		private void handleSdt(SdtElement sdt) throws Docx4JException {
 			
 			SdtPr sdtPr = sdt.getSdtPr();
 			
@@ -258,25 +277,63 @@ public class BindingTraverserStAX extends BindingTraverserCommonImpl {
 					o = sdt.getSdtContent().getContent().get(0);
 					log.debug(o.getClass().getName());
 				}
-				if (o !=null && o instanceof P) {
-					/*
-			            <w:sdtContent>
-			                <w:p>
-			                    <w:r>
-			                        <w:t>Joe Bloggs</w:t>
-			                    </w:r>
-			                </w:p>
-			            </w:sdtContent>
-        			*/
-					P p = (P)o;
-					p.getContent().clear();
-					p.getContent().addAll(
-							this.xpathGenerateRuns(
-								(WordprocessingMLPackage)pkg, part, 
-								sdtPr,
-								sdtPr.getDataBinding(), 
-								//sdtParent, contentChild, 
-								null, isMultiline));
+				if (o !=null) {
+					
+					if (o instanceof P) {
+						/*
+				            <w:sdtContent>
+				                <w:p>
+				                    <w:r>
+				                        <w:t>Joe Bloggs</w:t>
+				                    </w:r>
+				                </w:p>
+				            </w:sdtContent>
+	        			*/
+						P p = (P)o;
+						p.getContent().clear();
+						p.getContent().addAll(
+								this.xpathGenerateRuns(
+									(WordprocessingMLPackage)pkg, part, 
+									sdtPr,
+									sdtPr.getDataBinding(), 
+									//sdtParent, contentChild, 
+									null, isMultiline));
+					} else if (o instanceof Tc) {
+						/*
+				            <w:sdtContent>
+                                <w:tc>
+                                    <w:p>
+                                        <w:r>
+                                            <w:t>apples</w:t>
+                                        </w:r>
+                                    </w:p>
+                                </w:tc>	
+                                
+                                We want to replace the contents of the w:p 
+                                					 */
+						
+						Tc tc = (Tc)o;
+						P p = null;
+						if (tc.getContent().size()>0) {
+							Object o2 = tc.getContent().get(0);
+							log.debug(o2.getClass().getName());
+							if (o2 instanceof P) {
+								p = (P)o2;
+								p.getContent().clear();
+							}
+						}					
+						if (p == null) {
+							p = new P();
+							tc.getContent().add(p);
+						}
+						p.getContent().addAll(
+								this.xpathGenerateRuns(
+									(WordprocessingMLPackage)pkg, part, 
+									sdtPr,
+									sdtPr.getDataBinding(), 
+									//sdtParent, contentChild, 
+									null, isMultiline));
+					}
 				} else {
 				
 					sdt.getSdtContent().getContent().clear();
@@ -309,13 +366,14 @@ public class BindingTraverserStAX extends BindingTraverserCommonImpl {
 				
 			} else {
 				
-				// TODO: the sdt content might contain an SDT we have to process!
-				// Best to use BindingTraverserNonXSLT for this bit.
-				
-				
-				if(log.isDebugEnabled()) {
-                    log.debug("Not processing " + XmlUtils.marshaltoString(sdtPr, true));
-                }
+				// the sdt content might contain an SDT we have to process!
+				log.info("Found an SDT without binding information; traversing for nested...");
+				if (log.isDebugEnabled() ) {
+					log.debug(XmlUtils.marshaltoString(sdtPr));
+				}
+
+				BindingTraverserNonXSLT traverser = new BindingTraverserNonXSLT();
+				traverser.traverseToBind(part, sdt, xpathsMap);
 				 
 			}
 			
