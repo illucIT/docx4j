@@ -279,6 +279,11 @@ public class BindingHandler {
 				// Use the non-XSLT approach.  This is faster, but doesn't have feature parity.
 				log.info("Using BindingTraverserNonXSLT, which is faster, but missing some features");
 				traverser = new BindingTraverserNonXSLT();
+			} else if ( Docx4jProperties.getProperty("docx4j.model.datastorage.BindingHandler.Implementation", "BindingTraverserXSLT")
+					.equals("BindingTraverserStAX") ) {
+				// Use StAX + JAXB.  This is potentially faster (provided the MDP has not been unmarshalled already), but doesn't have feature parity.
+				log.info("Using BindingTraverserStAX");
+				traverser = new BindingTraverserStAX();
 			} else {
 				// Slower, fully featured. The default.
 				log.info("Using BindingTraverserXSLT, which is slower, but fully featured");
@@ -288,6 +293,7 @@ public class BindingHandler {
 			
 			traverser.setStartingIdForNewBookmarks(initBookmarkIdStart());
 			
+			// TODO, rethink this approach so marshalling is not assumed
 				part.setJaxbElement(
 						traverser.traverseToBind(part, wordMLPackage, xpathsMap) );
 			
