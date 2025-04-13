@@ -25,10 +25,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
 
-import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.XMLStreamReader;
-import javax.xml.stream.XMLStreamWriter;
-
 import org.apache.commons.codec.binary.Base64;
 import org.apache.xmlgraphics.image.loader.ImageSize;
 import org.docx4j.TraversalUtil;
@@ -40,26 +36,21 @@ import org.docx4j.dml.wordprocessingDrawing.Inline;
 import org.docx4j.jaxb.Context;
 import org.docx4j.model.sdt.QueryString;
 import org.docx4j.openpackaging.exceptions.Docx4JException;
-import org.docx4j.openpackaging.exceptions.LocationAwareXMLStreamException;
 import org.docx4j.openpackaging.packages.WordprocessingMLPackage;
 import org.docx4j.openpackaging.parts.CustomXmlPart;
 import org.docx4j.openpackaging.parts.JaxbXmlPart;
-import org.docx4j.openpackaging.parts.StAXHandlerAbstract;
 import org.docx4j.openpackaging.parts.WordprocessingML.BinaryPartAbstractImage;
+import org.docx4j.openpackaging.parts.WordprocessingML.SdtStAXHandler;
 import org.docx4j.openpackaging.parts.relationships.Namespaces;
 import org.docx4j.wml.CTDataBinding;
-import org.docx4j.wml.CTSdtCell;
-import org.docx4j.wml.CTSdtRow;
 import org.docx4j.wml.CTSdtText;
 import org.docx4j.wml.Drawing;
 import org.docx4j.wml.P;
 import org.docx4j.wml.P.Hyperlink;
 import org.docx4j.wml.R;
 import org.docx4j.wml.RPr;
-import org.docx4j.wml.SdtBlock;
 import org.docx4j.wml.SdtElement;
 import org.docx4j.wml.SdtPr;
-import org.docx4j.wml.SdtRun;
 import org.docx4j.wml.Tag;
 import org.docx4j.wml.Tc;
 import org.slf4j.Logger;
@@ -67,8 +58,6 @@ import org.slf4j.LoggerFactory;
 
 import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.JAXBException;
-import jakarta.xml.bind.Marshaller;
-import jakarta.xml.bind.Unmarshaller;
 
 /**
  * Use StAX to bind content controls, bypassing the need
@@ -120,112 +109,24 @@ public class BindingTraverserStAX extends BindingTraverserCommonImpl {
 		
 		// Use StAX; be sure you are using https://github.com/FasterXML/woodstox
 		try {
-			part.pipe(new MyStaXHandler(), null);  // no real need for a filter here, see https://docs.oracle.com/cd/E19575-01/819-3669/bnbgh/index.html
+			part.pipe(new StaXBindingHandler(), null);  // no real need for a filter here, see https://docs.oracle.com/cd/E19575-01/819-3669/bnbgh/index.html
 		} catch (Exception e) {
 			throw new Docx4JException(e.getMessage(), e);
 		}  
 	}
 	
-	private Stack stack = new Stack();
 	
-	public class MyStaXHandler extends StAXHandlerAbstract  {
-
-		@Override
-		public void handle(XMLStreamReader xsr, XMLStreamWriter xmlWriter)
-				throws LocationAwareXMLStreamException, XMLStreamException {
-
-			boolean mustMove = true;  			
-			while (xsr.hasNext()) {
-				
-				if (mustMove) {
-					xsr.next();
-				}
-				int eventType = xsr.getEventType();
-
-				if (eventType == XMLStreamReader.START_ELEMENT) {
-					String localName = xsr.getLocalName();
-			        log.debug("START_ELEMENT " + localName);
-					if (xsr.getLocalName().equals("sdt")) {
-//			            	log.debug("** found one **");
-						Unmarshaller unmarshaller;
-						Object o=null;
-						try {
-							unmarshaller = context.createUnmarshaller();
-							// To unmarshall to the correct type of sdt, we need to know context
-							if (stack.peek().equals("body")
-									|| stack.peek().equals("tc")) {
-								o = unmarshaller.unmarshal(xsr, SdtBlock.class);
-							} else if (stack.peek().equals("tbl")) {
-								o = unmarshaller.unmarshal(xsr, CTSdtRow.class);								
-							} else if (stack.peek().equals("tr")) {
-								o = unmarshaller.unmarshal(xsr, CTSdtCell.class);								
-							} else if (stack.peek().equals("p")) {
-								o = unmarshaller.unmarshal(xsr, SdtRun.class);								
-							} else {
-								log.error("TODO stack.peek() " + stack.peek() );
-							}
-							// Unmarshalling will be done from this start event to the corresponding end event. 
-							// If this method returns successfully, the reader will be pointing at the token right after the end event.
-														
-						} catch (JAXBException e) {
-							throw new XMLStreamException(e.getMessage(), e);
-						}
-						o = XmlUtils.unwrap(o);
-						log.debug(o.getClass().getName());   
-						if (o instanceof SdtElement) {
-							SdtElement sdt = (SdtElement)o;
-							try {
-								handleSdt(sdt);
-							} catch (Docx4JException e1) {
-								throw new XMLStreamException(e1.getMessage(), e1);
-							}
-							// write it
-							try {
-								Marshaller m = context.createMarshaller();
-								m.setProperty(Marshaller.JAXB_FRAGMENT,true);									
-								m.marshal(o, xmlWriter);
-							} catch (JAXBException e) {
-								throw new XMLStreamException(e);
-							}
-							mustMove = false; // don't do this in this case, since JAXB will have done it.
-						} else {
-							// Shouldn't happen
-							log.error("Unexpected " + o.getClass().getName());							
-						}
-					} else /* not an sdt */ {
-						this.write(xsr,xmlWriter);
-						mustMove = true; // JAXB not involved
-						stack.push(localName);  // we don't do this for an sdt, because we can't pop, since JAXB has already moved the reader to the next token
-					}
-				} else if (eventType == XMLStreamReader.END_ELEMENT) {
-					stack.pop();
-					this.write(xsr,xmlWriter);
-					mustMove = true;
-					
-				} else  {
-					this.write(xsr,xmlWriter);
-					mustMove = true;
-				}
-
-			}
-		}
-
-		@Override
-		public void handleCharacters(XMLStreamReader xmlr, XMLStreamWriter writer) throws XMLStreamException {
-
-			StringBuilder sb = new StringBuilder();
-			sb.append(xmlr.getTextCharacters(), xmlr.getTextStart(), xmlr.getTextLength());
+	private class StaXBindingHandler extends SdtStAXHandler  {
 			
-			writer.writeCharacters(sb.toString() );
+		protected List<Object> handleSdt(SdtElement sdt) throws Docx4JException {
 			
-		}
-
-	}
-		
-	
-		private void handleSdt(SdtElement sdt) throws Docx4JException {
+			// Here the result is just the input manipulated
+			List<Object> results = new ArrayList<Object>();
+			results.add(sdt);
 			
 			SdtPr sdtPr = sdt.getSdtPr();
+			
+			log.debug(XmlUtils.marshaltoString(sdtPr));
 			
 			Tag tag = sdtPr.getTag();			
 			HashMap<String, String> map = null;
@@ -256,9 +157,16 @@ public class BindingTraverserStAX extends BindingTraverserCommonImpl {
 				log.error("TODO: add HTML import support");
 				
 			} else if (map!=null && map.containsKey(OpenDoPEHandler.BINDING_ROLE_CONDITIONAL) ) {
-				// Do nothing
+				
+				// Handle nested
+				BindingTraverserNonXSLT traverser = new BindingTraverserNonXSLT();
+				traverser.traverseToBind(part, sdt, xpathsMap);
+				
 			} else if (map!=null && map.containsKey(OpenDoPEHandler.BINDING_RESULT_RPTD) ) {
-				// Do nothing
+
+				// Handle nested
+				BindingTraverserNonXSLT traverser = new BindingTraverserNonXSLT();
+				traverser.traverseToBind(part, sdt, xpathsMap);
 				
 			} else if (map!=null && map.containsKey(OpenDoPEHandler.BINDING_ROLE_RPT_POS_CON) ) {
 				// This may be tricky to do here .. 
@@ -377,7 +285,7 @@ public class BindingTraverserStAX extends BindingTraverserCommonImpl {
 				traverser.traverseToBind(part, sdt, xpathsMap);
 				 
 			}
-			
+			return results;
 		}
 		
 		private Object  xpathInjectImage(WordprocessingMLPackage wmlPackage,
@@ -739,63 +647,37 @@ public class BindingTraverserStAX extends BindingTraverserCommonImpl {
 					
 			contents.add((Hyperlink)XmlUtils.unmarshalString(hpl));
 		}
+	}
 		
-	    static class ExtentFinder extends CallbackImpl {
-			
-	    	private CTPositiveSize2D extent;
-			public CTPositiveSize2D getExtent() {
-				return extent;
-			}
-
-			@Override
-			public List<Object> apply(Object o) {
-				
-				if (o instanceof Drawing) {
-					Object o2 = ((Drawing)o).getAnchorOrInline().get(0);
-					if (o2 instanceof Anchor) {
-						extent = ((Anchor)o2).getExtent();
-						return null;
-					}
-					if (o2 instanceof Inline) {
-						extent = ((Inline)o2).getExtent();
-						return null;
-					}
-				}
-				return null;
-			}
-	    	
-	    	@Override
-			public boolean shouldTraverse(Object o) {
-	    		return (extent==null);
-			}
-	    	
+    static class ExtentFinder extends CallbackImpl {
+		
+    	private CTPositiveSize2D extent;
+		public CTPositiveSize2D getExtent() {
+			return extent;
 		}
-		
-	    static class Stack {
-	        static ArrayList<String> list = new ArrayList<String>();
 
-	        public static boolean isEmpty() {
-	            return (list.size() == 0);
-	        }
-
-	        public static void push(String data) {
-	            list.add(data);
-	        }
-
-	        public static String pop() {
-	            if (isEmpty() == true)
-	                return null;
-	            String top = list.get(list.size() - 1);
-	            list.remove(list.size() - 1);
-	            return top;
-	        }
-
-	        public static String peek() {
-	            if (isEmpty())
-	                return null;
-	            return list.get(list.size() - 1);
-	        }
-	    }	
-	
+		@Override
+		public List<Object> apply(Object o) {
+			
+			if (o instanceof Drawing) {
+				Object o2 = ((Drawing)o).getAnchorOrInline().get(0);
+				if (o2 instanceof Anchor) {
+					extent = ((Anchor)o2).getExtent();
+					return null;
+				}
+				if (o2 instanceof Inline) {
+					extent = ((Inline)o2).getExtent();
+					return null;
+				}
+			}
+			return null;
+		}
+    	
+    	@Override
+		public boolean shouldTraverse(Object o) {
+    		return (extent==null);
+		}
+    	
+	}
 
 }
