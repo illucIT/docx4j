@@ -44,7 +44,7 @@ import jakarta.xml.bind.Marshaller;
 import jakarta.xml.bind.Unmarshaller;
 
 /**
- * A framework for using StAX to fins SDT elements, then using JAXB to manipulate them.
+ * A framework for using StAX to find SDT elements, then using JAXB to manipulate them.
  * 
  * @author jharrop
  *

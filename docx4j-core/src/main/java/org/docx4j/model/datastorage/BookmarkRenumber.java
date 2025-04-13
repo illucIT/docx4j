@@ -6,7 +6,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import javax.xml.stream.XMLStreamException;
+
 import jakarta.xml.bind.JAXBElement;
+import jakarta.xml.bind.JAXBException;
 
 import org.docx4j.TraversalUtil;
 import org.docx4j.TraversalUtil.CallbackImpl;
@@ -15,6 +18,7 @@ import org.docx4j.finders.RangeFinder;
 import org.docx4j.jaxb.Context;
 import org.docx4j.openpackaging.exceptions.Docx4JException;
 import org.docx4j.openpackaging.packages.WordprocessingMLPackage;
+import org.docx4j.openpackaging.parts.JaxbXmlPart;
 import org.docx4j.wml.CTBookmark;
 import org.docx4j.wml.CTMarkupRange;
 import org.docx4j.wml.CTPerm;
@@ -78,16 +82,32 @@ public class BookmarkRenumber {
 
 		int highestId = 0;
 		
-		RangeFinder rt = new RangeFinder();
-		new TraversalUtil(wordMLPackage.getMainDocumentPart().getContent(), rt);
-		
-		for (CTBookmark bm : rt.getStarts()) {
+		if (wordMLPackage.getMainDocumentPart().isUnmarshalled()) {
+			log.debug( " MDP already unmarshalled.");
+
+			RangeFinder rt = new RangeFinder();
+			new TraversalUtil(wordMLPackage.getMainDocumentPart().getContent(), rt);
 			
-			BigInteger id = bm.getId();
-			if (id!=null && id.intValue()>highestId) {
-				highestId = id.intValue();
+			for (CTBookmark bm : rt.getStarts()) {
+				
+				BigInteger id = bm.getId();
+				if (id!=null && id.intValue()>highestId) {
+					highestId = id.intValue();
+				}
 			}
+			
+		} else {
+			log.debug( " MDP not unmarshalled so can usefully use StAX.");
+			BookmarkHandlerStAX bh = new BookmarkHandlerStAX(); 
+			try {
+				wordMLPackage.getMainDocumentPart().pipe(bh, null);
+			} catch (Exception e) {
+				// TODO FIXME but would change method signature
+				throw new RuntimeException(e);
+			}
+			highestId = bh.getHighestId();
 		}
+		
 		return highestId +1;
 	}	
 	

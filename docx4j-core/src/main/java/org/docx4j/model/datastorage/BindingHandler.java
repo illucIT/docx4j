@@ -24,6 +24,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import javax.xml.stream.XMLStreamException;
+
 import org.docx4j.Docx4jProperties;
 import org.docx4j.TraversalUtil;
 import org.docx4j.XmlUtils;
@@ -43,6 +45,8 @@ import org.docx4j.wml.CTDataBinding;
 import org.opendope.xpaths.Xpaths;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import jakarta.xml.bind.JAXBException;
 
 public class BindingHandler {
 	
@@ -149,7 +153,7 @@ public class BindingHandler {
 		
 	}
 		
-	protected AtomicInteger initBookmarkIdStart() {
+	protected AtomicInteger initBookmarkIdStart() throws Docx4JException {
 		
 		// The efficient case, where this value is set by user,
 		// from previous step
@@ -159,16 +163,31 @@ public class BindingHandler {
 		log.warn("Recalculating starting value for new bookmarks.  For efficiency, you should set this in your code.");
 		int highestId = 0;
 		
-		RangeFinder rt = new RangeFinder();
-		new TraversalUtil(wordMLPackage.getMainDocumentPart().getContent(), rt);
+		if (wordMLPackage.getMainDocumentPart().isUnmarshalled()) {
+			log.debug( " MDP already unmarshalled.");
 		
-		for (CTBookmark bm : rt.getStarts()) {
+			RangeFinder rt = new RangeFinder();
+			new TraversalUtil(wordMLPackage.getMainDocumentPart().getContent(), rt);
 			
-			BigInteger id = bm.getId();
-			if (id!=null && id.intValue()>highestId) {
-				highestId = id.intValue();
+			for (CTBookmark bm : rt.getStarts()) {
+				
+				BigInteger id = bm.getId();
+				if (id!=null && id.intValue()>highestId) {
+					highestId = id.intValue();
+				}
 			}
+			
+		} else {
+			log.debug( " MDP not unmarshalled so can usefully use StAX.");
+			BookmarkHandlerStAX bh = new BookmarkHandlerStAX(); 
+			try {
+				wordMLPackage.getMainDocumentPart().pipe(bh, null);
+			} catch (Exception e) {
+				throw new Docx4JException(e.getMessage(), e);
+			}
+			highestId = bh.getHighestId();
 		}
+
 		return new AtomicInteger(highestId+1);
 	}	
 	
