@@ -220,10 +220,11 @@ public class BindingTraverserNonXSLT extends BindingTraverserCommonImpl {
 				Object ooo = null;
 				if (sdt.getSdtContent().getContent().size()>0) {
 					ooo = sdt.getSdtContent().getContent().get(0);
+					ooo = XmlUtils.unwrap(ooo);
 					log.debug(ooo.getClass().getName());
 				}
 				if (ooo !=null) {
-					
+										
 					if (ooo instanceof P) {
 						/*
 				            <w:sdtContent>
@@ -271,6 +272,7 @@ public class BindingTraverserNonXSLT extends BindingTraverserCommonImpl {
 							p = new P();
 							tc.getContent().add(p);
 						}
+						
 						p.getContent().addAll(
 								this.xpathGenerateRuns(
 									(WordprocessingMLPackage)pkg, part, 
@@ -520,7 +522,10 @@ public class BindingTraverserNonXSLT extends BindingTraverserCommonImpl {
 			Map<String, CustomXmlPart> customXmlDataStorageParts = pkg.getCustomXmlDataStorageParts();
 
 			String r = BindingHandler.xpathGetString(pkg, customXmlDataStorageParts, dataBinding);
-			if (r==null) return null;
+			if (r==null) {
+				log.info(dataBinding.getXpath() + " yielded result null!");				
+				return null;
+			}
 			
 			List<Object> contents = new ArrayList<Object>();
 			

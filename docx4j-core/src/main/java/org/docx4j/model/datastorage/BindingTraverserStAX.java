@@ -275,6 +275,7 @@ public class BindingTraverserStAX extends BindingTraverserCommonImpl {
 				Object o = null;
 				if (sdt.getSdtContent().getContent().size()>0) {
 					o = sdt.getSdtContent().getContent().get(0);
+					o = XmlUtils.unwrap(o);					
 					log.debug(o.getClass().getName());
 				}
 				if (o !=null) {
