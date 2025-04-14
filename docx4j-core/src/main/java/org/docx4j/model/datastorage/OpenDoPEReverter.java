@@ -79,7 +79,6 @@ public class OpenDoPEReverter {
 
 	private static Logger log = LoggerFactory.getLogger(OpenDoPEReverter.class);	
 	
-	
 	private WordprocessingMLPackage openDopePkg;
 	private WordprocessingMLPackage instancePkg;
 	
@@ -118,8 +117,8 @@ public class OpenDoPEReverter {
 	public boolean revert() throws Docx4JException {
 		
 		// template docx:- find top level repeat/condition controls
-		TopLevelSdtTemplateFinder sdtPrFinder = new TopLevelSdtTemplateFinder(false);
-		findSdtsInTemplate(openDopePkg, sdtPrFinder);
+		TopLevelSdtTemplateFinder sdtPrFinder = new TopLevelSdtTemplateFinder();
+		findSdtsInTemplate(openDopePkg, sdtPrFinder, false);
 		
 		templateConditionSdtsByID = sdtPrFinder.conditionSdtsByID;
 		templateRepeatSdtsByID = sdtPrFinder.repeatSdtsByID;
@@ -144,8 +143,8 @@ public class OpenDoPEReverter {
 		int expectedConditions = templateConditionSdtsByID.size();
 		int expectedRepeats = templateRepeatSdtsByID.size();
 		
-		TopLevelSdtTemplateFinder sdtPrFinder = new TopLevelSdtTemplateFinder(true);
-		findSdtsInTemplate(instancePkg, sdtPrFinder); // feed the instance through here to count (not bothering to count plain binds)
+		TopLevelSdtTemplateFinder sdtPrFinder = new TopLevelSdtTemplateFinder();
+		findSdtsInTemplate(instancePkg, sdtPrFinder, true); // feed the instance through here to count (not bothering to count plain binds)
 		
 		boolean resultC = sdtPrFinder.conditionSdtsByID.size() == expectedConditions;
 		if (!resultC) {
@@ -162,9 +161,15 @@ public class OpenDoPEReverter {
 	// ======================================================================================
 	// ====== openDopePkg template stuff
 	
-	private void findSdtsInTemplate(WordprocessingMLPackage pkg, TopLevelSdtTemplateFinder sdtPrFinder) throws Docx4JException {
+	private void findSdtsInTemplate(WordprocessingMLPackage pkg, TopLevelSdtTemplateFinder sdtPrFinder, boolean instanceCountOnly) throws Docx4JException {
 
-		findSdtsInTemplatePart(pkg.getMainDocumentPart(), sdtPrFinder);
+		if (!pkg.getMainDocumentPart().isUnmarshalled()) {
+			log.info("Even though this part is not unmarshalled, this step is not easily amenable to StAX");
+			// Reason is that the existing design creates maps of objects which are then acted on later
+			// (and this doesn't work well with a streaming approach).
+		}
+		
+		findSdtsInTemplatePart(pkg.getMainDocumentPart(), sdtPrFinder, instanceCountOnly);
 
 		// Add headers/footers
 		RelationshipsPart rp = pkg.getMainDocumentPart()
@@ -172,26 +177,27 @@ public class OpenDoPEReverter {
 		for (Relationship r : rp.getRelationships().getRelationship()) {
 
 			if (r.getType().equals(Namespaces.HEADER)) {
-				findSdtsInTemplatePart((HeaderPart) rp.getPart(r), sdtPrFinder);
+				findSdtsInTemplatePart((HeaderPart) rp.getPart(r), sdtPrFinder, instanceCountOnly);
 			} else if (r.getType().equals(Namespaces.FOOTER)) {
-				findSdtsInTemplatePart((FooterPart) rp.getPart(r), sdtPrFinder);
+				findSdtsInTemplatePart((FooterPart) rp.getPart(r), sdtPrFinder, instanceCountOnly);
 			}
 		}
 	}
 
-	private void findSdtsInTemplatePart(ContentAccessor content, TopLevelSdtTemplateFinder sdtPrFinder) throws Docx4JException {
-		
-		new TraversalUtil(content.getContent(), sdtPrFinder);
+	private void findSdtsInTemplatePart(ContentAccessor content, TopLevelSdtTemplateFinder sdtPrFinder, boolean instanceCountOnly) throws Docx4JException {
+				
+		sdtPrFinder.setInstanceCountOnly(instanceCountOnly);
+		new TraversalUtil(content, sdtPrFinder);
 	}	
 	
 	private static class TopLevelSdtTemplateFinder extends CallbackImpl {
 		
 		private boolean instanceCountOnly;
 		
-		TopLevelSdtTemplateFinder(boolean instanceCountOnly) {
+		public void setInstanceCountOnly(boolean instanceCountOnly) {
 			this.instanceCountOnly = instanceCountOnly;
 		}
-		
+				
 		// Separate map for each
 		// Maps are by SDT ID, since 2 distinct SDT could use the one condition or repeat
 		Map<BigInteger, Object> conditionSdtsByID = new HashMap<BigInteger, Object>();  
