@@ -257,8 +257,8 @@ public class RemovalHandler {
     				if (result instanceof JAXBResult) {
     					
     					try {
-    						((JaxbXmlPart)part).setJaxbElement(result);
-    					
+    						((JaxbXmlPart)part).setJaxbElement(((JAXBResult)result).getResult());
+
     						// this will fail if there is unexpected content, 
     						// since JaxbValidationEventHandler fails by default
     						

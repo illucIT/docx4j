@@ -156,7 +156,7 @@ public class OpenDoPEIntegrityAfterBinding {
 				if (result instanceof JAXBResult) {
 				
 					try {
-						part.setJaxbElement(result);
+						part.setJaxbElement(((JAXBResult)result).getResult());
 					
 						// this will fail if there is unexpected content, 
 						// since JaxbValidationEventHandler fails by default
