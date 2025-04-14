@@ -325,8 +325,13 @@ public class BindingHandler {
 				
 			} else /* the JAXB approaches */ {
 				
-				part.setJaxbElement(
-						traverser.traverseToBind(part, wordMLPackage, xpathsMap) );
+				if ( ((JaxbXmlPart)part).isUnmarshalled() ) {
+				
+					part.setJaxbElement(
+							traverser.traverseToBind(part, wordMLPackage, xpathsMap) );
+				} else {
+					traverser.traverseToBind(part, wordMLPackage, xpathsMap);
+				}
 			}			
 			bookmarkId = traverser.getNextBookmarkId();
 					

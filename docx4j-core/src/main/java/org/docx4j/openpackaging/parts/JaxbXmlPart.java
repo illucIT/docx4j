@@ -460,66 +460,7 @@ public abstract class JaxbXmlPart<E> /* used directly only by DocProps parts, Re
 	 */
 	public void pipe(StAXHandlerInterface handler, StreamFilter filter) throws XMLStreamException, Docx4JException, JAXBException {
 		
-	       XMLInputFactory xmlif = null;
-	        xmlif = XMLInputFactory.newInstance();
-	        xmlif.setProperty(XMLInputFactory.IS_VALIDATING, Boolean.FALSE);
-	        xmlif.setProperty(XMLInputFactory.IS_COALESCING, Boolean.TRUE);
-	        xmlif.setProperty(XMLInputFactory.IS_NAMESPACE_AWARE, Boolean.TRUE);
-	        xmlif.setProperty(XMLInputFactory.IS_REPLACING_ENTITY_REFERENCES, Boolean.TRUE);
-	        xmlif.setProperty(XMLInputFactory.IS_SUPPORTING_EXTERNAL_ENTITIES, Boolean.FALSE);
-	        
-	        // Nonfatal errors and warnings
-	        xmlif.setXMLReporter(
-	        		(new XMLReporter() {
-
-	            @Override
-	            public void report(String message, String errorType, Object relatedInformation, Location location) throws XMLStreamException {
-	    			log.warn("Error:" + errorType + ", " + message + " at line " + location.getLineNumber() + ", col " +   location.getColumnNumber());
-	            }
-	        })
-	        );
-	        
-	        // xmlif.setProperty(XMLInputFactory.RESOLVER
-	        // xmlif.setProperty(XMLInputFactory.ALLOCATOR
-	    
-	    // First, set up stream reader
-	    XMLStreamReader xmlr = null;
-	    PartStore partStore = null;
-	    
-		if (jaxbElement==null) {
-			log.info("jaxbElement not unmarshalled yet");
-
-			partStore = this.getPackage().getSourcePartStore();
-			String name = this.getPartName().getName();
-			InputStream is = partStore.loadPart( 
-					name.substring(1));
-			if (is==null) {
-				log.warn(name + " missing from part store");
-				throw new Docx4JException(name + " missing from part store");
-			} else {
-				log.info("Fetching from part store " + name);
-					
-		        if (filter==null) {
-		        	xmlr = xmlif.createXMLStreamReader(is);
-		        } else {
-		        	xmlr = xmlif.createFilteredReader(xmlif.createXMLStreamReader(is), filter);            
-		        }
-					
-			}
-			
-		} else {
-			log.info("Existing jaxbElement..");
-			
-			// TODO marshal to XmlStreamWriter or event, then read from that.
-			// But for now..
-	        if (filter==null) {
-	        	xmlr = xmlif.createXMLStreamReader(XmlUtils.marshaltoInputStream(jaxbElement, true, this.jc));
-	        } else {
-	        	xmlr = xmlif.createFilteredReader(
-	        			xmlif.createXMLStreamReader(
-	        					XmlUtils.marshaltoInputStream(jaxbElement, true, this.jc)), filter);            
-	        }			
-		}
+		XMLStreamReader xmlr = getXMLStreamReader(filter);
 		
         XMLOutputFactory outputFactory = XMLOutputFactory.newInstance();            
         XMLStreamWriter xmlWriter = null; // outputFactory.createXMLStreamWriter(outputFile);    
@@ -552,6 +493,7 @@ public abstract class JaxbXmlPart<E> /* used directly only by DocProps parts, Re
 			e.getCause().printStackTrace();
 			
 			// now print that out
+		    PartStore partStore;
 			InputStream is = null;
 			if (jaxbElement==null) {
 				
@@ -622,6 +564,72 @@ public abstract class JaxbXmlPart<E> /* used directly only by DocProps parts, Re
         xmlWriter.close();  
         
         replacePartContent(baos.toByteArray());
+	}
+
+	public XMLStreamReader getXMLStreamReader(StreamFilter filter)
+			throws FactoryConfigurationError, Docx4JException, XMLStreamException {
+		
+		XMLInputFactory xmlif = null;
+        xmlif = XMLInputFactory.newInstance();
+        xmlif.setProperty(XMLInputFactory.IS_VALIDATING, Boolean.FALSE);
+        xmlif.setProperty(XMLInputFactory.IS_COALESCING, Boolean.TRUE);
+        xmlif.setProperty(XMLInputFactory.IS_NAMESPACE_AWARE, Boolean.TRUE);
+        xmlif.setProperty(XMLInputFactory.IS_REPLACING_ENTITY_REFERENCES, Boolean.TRUE);
+        xmlif.setProperty(XMLInputFactory.IS_SUPPORTING_EXTERNAL_ENTITIES, Boolean.FALSE);
+        
+        // Nonfatal errors and warnings
+        xmlif.setXMLReporter(
+        		(new XMLReporter() {
+
+            @Override
+            public void report(String message, String errorType, Object relatedInformation, Location location) throws XMLStreamException {
+    			log.warn("Error:" + errorType + ", " + message + " at line " + location.getLineNumber() + ", col " +   location.getColumnNumber());
+            }
+        })
+        );
+        
+        // xmlif.setProperty(XMLInputFactory.RESOLVER
+        // xmlif.setProperty(XMLInputFactory.ALLOCATOR
+	    
+	    // First, set up stream reader
+	    XMLStreamReader xmlr = null;
+	    PartStore partStore = null;
+	    
+		if (jaxbElement==null) {
+			log.info("jaxbElement not unmarshalled yet");
+
+			partStore = this.getPackage().getSourcePartStore();
+			String name = this.getPartName().getName();
+			InputStream is = partStore.loadPart( 
+					name.substring(1));
+			if (is==null) {
+				log.warn(name + " missing from part store");
+				throw new Docx4JException(name + " missing from part store");
+			} else {
+				log.info("Fetching from part store " + name);
+					
+		        if (filter==null) {
+		        	xmlr = xmlif.createXMLStreamReader(is);
+		        } else {
+		        	xmlr = xmlif.createFilteredReader(xmlif.createXMLStreamReader(is), filter);            
+		        }
+					
+			}
+			
+		} else {
+			log.info("Existing jaxbElement..");
+			
+			// TODO marshal to XmlStreamWriter or event, then read from that.
+			// But for now..
+	        if (filter==null) {
+	        	xmlr = xmlif.createXMLStreamReader(XmlUtils.marshaltoInputStream(jaxbElement, true, this.jc));
+	        } else {
+	        	xmlr = xmlif.createFilteredReader(
+	        			xmlif.createXMLStreamReader(
+	        					XmlUtils.marshaltoInputStream(jaxbElement, true, this.jc)), filter);            
+	        }			
+		}
+		return xmlr;
 	}
 	
 	/**
