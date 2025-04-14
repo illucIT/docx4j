@@ -1,14 +1,19 @@
 package org.docx4j.model.datastorage;
 
+import java.io.ByteArrayOutputStream;
 import java.util.HashMap;
 import java.util.Map;
 
 import jakarta.xml.bind.JAXBException;
 import jakarta.xml.bind.UnmarshalException;
 import jakarta.xml.bind.Unmarshaller;
+
+import javax.xml.stream.XMLStreamReader;
 import javax.xml.transform.Templates;
 import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.dom.DOMResult;
+import javax.xml.transform.stax.StAXSource;
+import javax.xml.transform.stream.StreamResult;
 
 import org.docx4j.Docx4jProperties;
 import org.docx4j.XmlUtils;
@@ -41,7 +46,7 @@ import org.w3c.dom.traversal.NodeIterator;
  */
 public class XsltFinisher {
 
-	private static Logger log = LoggerFactory.getLogger(BindingTraverserXSLT.class);
+	private static Logger log = LoggerFactory.getLogger(XsltFinisher.class);
 	
 	private WordprocessingMLPackage wordMLPackage;
 	
@@ -91,63 +96,106 @@ public class XsltFinisher {
 			throw new Docx4JException(e1.getMessage(), e1);
 		}
 		
-		org.w3c.dom.Document doc = XmlUtils.marshaltoW3CDomDocument(
-				part.getJaxbElement() ); 	
+		javax.xml.transform.Source source = null;		
+		javax.xml.transform.Result result = null;
 		
-		try {
+		// If we're using a StAXSource
+		XMLStreamReader xmlReader = null;
+//        XMLStreamWriter xmlWriter = null; 
+        ByteArrayOutputStream baos = null;
+        
+        org.w3c.dom.Document doc = null;
+		if ( ((JaxbXmlPart)part).isUnmarshalled() ) {
+			
+			log.debug( ((JaxbXmlPart)part).getPartName().getName() + " already unmarshalled.");		
+			doc = XmlUtils.marshaltoW3CDomDocument(
+				part.getJaxbElement() );
+			source = new javax.xml.transform.dom.DOMSource(doc);
+			
 			// We used to use a JAXBResult, which 
 			// but its better to use DOMResult
 			// so we can use part.unmarshal, which should create a binder where possible
-			DOMResult result = new DOMResult(); 
+			result = new DOMResult(); 
 			
-			Map<String, Object> transformParameters = new HashMap<String, Object>();
-			transformParameters.put("customXmlDataStorageParts", 
-					part.getPackage().getCustomXmlDataStorageParts());			
-			transformParameters.put("wmlPackage", wordMLPackage);			
-			transformParameters.put("sourcePart", part);			
-			transformParameters.put("xPathsMap", xpathsMap);
-			
-			transformParameters.put("finisherParams", finisherParams);
-			
-			org.docx4j.XmlUtils.transform(doc, 
-					template, 
-					transformParameters, result);
-			
+		} else {
+			log.debug( ((JaxbXmlPart)part).getPartName().getName() + " not yet unmarshalled.");
+			try {
+				xmlReader = part.getXMLStreamReader(null);
+				source = new StAXSource(xmlReader);
+//		        XMLOutputFactory outputFactory = XMLOutputFactory.newInstance();            
+		        baos = new ByteArrayOutputStream(); 
+//				xmlWriter = outputFactory.createXMLStreamWriter(baos, "UTF-8");	
+				result = new StreamResult(baos);  // Xalan TransformerImpl doesn't support StAXResult: https://issues.apache.org/jira/browse/XALANJ-2550 
+//				result = new StAXResult(xmlWriter);
+			} catch (Exception e) {
+				throw new Docx4JException(e.getMessage(), e);
+			}
+		}
+
+		Map<String, Object> transformParameters = new HashMap<String, Object>();
+		transformParameters.put("customXmlDataStorageParts", 
+				part.getPackage().getCustomXmlDataStorageParts());			
+		transformParameters.put("wmlPackage", wordMLPackage);			
+		transformParameters.put("sourcePart", part);			
+		transformParameters.put("xPathsMap", xpathsMap);
+		
+		transformParameters.put("finisherParams", finisherParams);
+		
+		org.docx4j.XmlUtils.transform(source, 
+				template, 
+				transformParameters, result);
+		
+		if (result instanceof DOMResult) {
 //			if (log.isDebugEnabled()) {
 //				
 //				org.w3c.dom.Document docResult = ((org.w3c.dom.Document)result.getNode());
-//				String xml = XmlUtils.w3CDomNodeToString(docResult);
-//				System.out.println(XmlUtils.w3CDomNodeToString(docResult));
+////				String xml = XmlUtils.w3CDomNodeToString(docResult);
+//				log.debug(XmlUtils.w3CDomNodeToString(docResult));
 //				return XmlUtils.unmarshal( docResult);
 //			} else 
-			{
+		
 				try {
 					// Default behaviour is to fail in the event of content loss
 					part.setJaxbElement(
-							unmarshal(((org.w3c.dom.Document)result.getNode()),
-							Docx4jProperties.getProperty("docx4j.model.datastorage.BindingTraverserXSLT.ValidationEventContinue", 
+						unmarshal(((org.w3c.dom.Document)((DOMResult)result).getNode()),
+								Docx4jProperties.getProperty("docx4j.model.datastorage.BindingTraverserXSLT.ValidationEventContinue", 
 									false)));
+					
 				} catch (UnmarshalException e) {
+				
+					if (!Docx4jProperties.getProperty("docx4j.model.datastorage.BindingTraverserXSLT.ValidationEventContinue", 
+							false)) {
+						log.error("Configured to fail in the case of content loss; "
+								+ "you can set property docx4j.model.datastorage.BindingTraverserXSLT.ValidationEventContinue if you wish to force output to be generated"); 
+					}
+					
+					throw new Docx4JException("Problems applying bindings", e);				
+							
+				} catch (Exception e) {
 
-					log.error("Problem: " + XmlUtils.w3CDomNodeToString(result.getNode()));
-					throw e;
+					log.error("Problem: " + XmlUtils.w3CDomNodeToString(((DOMResult)result).getNode()));
+					throw new Docx4JException(e.getMessage(), e);
 				}
 					
+			} else {
+	        
+		        try {
+			        xmlReader.close();
+			        baos.flush();
+			        if (log.isDebugEnabled() ) {
+			        	byte[] bytes = baos.toByteArray();
+			        	log.debug(new String(bytes));
+			        	((JaxbXmlPart)part).replacePartContent(bytes);
+			        } else {
+			        	((JaxbXmlPart)part).replacePartContent(baos.toByteArray());
+			        }
+			        baos.close(); 
+				} catch (Exception e) {
+					throw new Docx4JException(e.getMessage(), e);				
+				}
+				
 			}
-		} catch (UnmarshalException e) {
-
-			if (!Docx4jProperties.getProperty("docx4j.model.datastorage.BindingTraverserXSLT.ValidationEventContinue", 
-					false)) {
-				log.error("Configured to fail in the case of content loss; "
-						+ "you can set property docx4j.model.datastorage.BindingTraverserXSLT.ValidationEventContinue if you wish to force output to be generated"); 
-			}
-			
-			throw new Docx4JException("Problems applying bindings", e);				
-			
-		} catch (Exception e) {
-			throw new Docx4JException("Problems applying bindings", e);				
 		}
-	}
 	
 	/**
 	 * Unmarshal a node using Context.jc, WITHOUT fallback to pre-processing in case of failure.

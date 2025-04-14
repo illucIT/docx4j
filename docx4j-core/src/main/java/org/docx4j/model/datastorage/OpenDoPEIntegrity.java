@@ -26,11 +26,6 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-import jakarta.xml.bind.JAXBContext;
-import jakarta.xml.bind.JAXBException;
-import jakarta.xml.bind.Unmarshaller;
-import jakarta.xml.bind.util.JAXBResult;
-
 import javax.xml.stream.XMLStreamReader;
 import javax.xml.transform.Source;
 import javax.xml.transform.Templates;
@@ -42,7 +37,6 @@ import javax.xml.transform.stream.StreamSource;
 
 import org.docx4j.XmlUtils;
 import org.docx4j.jaxb.Context;
-import org.docx4j.jaxb.JaxbValidationEventHandler;
 import org.docx4j.openpackaging.exceptions.Docx4JException;
 import org.docx4j.openpackaging.packages.WordprocessingMLPackage;
 import org.docx4j.openpackaging.parts.JaxbXmlPart;
@@ -53,6 +47,8 @@ import org.docx4j.openpackaging.parts.relationships.RelationshipsPart;
 import org.docx4j.relationships.Relationship;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import jakarta.xml.bind.util.JAXBResult;
 
 /**
  * Word (2007) can't open a docx if it has more than one
