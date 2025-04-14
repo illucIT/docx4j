@@ -23,13 +23,19 @@ import static org.docx4j.model.datastorage.RemovalHandler.Quantifier.ALL_BUT_PLA
 import static org.docx4j.model.datastorage.RemovalHandler.Quantifier.ALL_BUT_PLACEHOLDERS_CONTENT;
 import static org.docx4j.model.datastorage.RemovalHandler.Quantifier.NAMED;
 
+import java.io.ByteArrayOutputStream;
 import java.util.HashMap;
 import java.util.Map;
 
 import jakarta.xml.bind.JAXBException;
 import jakarta.xml.bind.util.JAXBResult;
+
+import javax.xml.stream.XMLStreamReader;
 import javax.xml.transform.Source;
 import javax.xml.transform.Templates;
+import javax.xml.transform.dom.DOMResult;
+import javax.xml.transform.stax.StAXSource;
+import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
 import org.apache.commons.lang3.ArrayUtils;
@@ -213,19 +219,100 @@ public class RemovalHandler {
                 if (quantifier == NAMED)
                         parameters.put("types", ArrayUtils.toString(keys));
 
-                final Document partDOM = marshaltoW3CDomDocument(part.getJaxbElement());
-                final JAXBResult result = prepareJAXBResult(Context.jc);
+    			javax.xml.transform.Source source = null;		
+    			javax.xml.transform.Result result = null;
+    			
+    			// If we're using a StAXSource
+    			XMLStreamReader xmlReader = null;
+//    	        XMLStreamWriter xmlWriter = null; 
+    	        ByteArrayOutputStream baos = null;
+    	        
+    	        org.w3c.dom.Document doc = null;
+    			if ( ((JaxbXmlPart)part).isUnmarshalled() ) {
+    				
+    				log.debug( ((JaxbXmlPart)part).getPartName().getName() + " already unmarshalled.");		
+    				doc = XmlUtils.marshaltoW3CDomDocument(
+    					part.getJaxbElement() );
+    				source = new javax.xml.transform.dom.DOMSource(doc);				
+    				result = prepareJAXBResult(Context.jc);
+    				
+    			} else {
+    				log.debug( ((JaxbXmlPart)part).getPartName().getName() + " not yet unmarshalled.");
+    				try {
+    					xmlReader = part.getXMLStreamReader(null);
+    					source = new StAXSource(xmlReader);
+//    			        XMLOutputFactory outputFactory = XMLOutputFactory.newInstance();            
+    			        baos = new ByteArrayOutputStream(); 
+//    					xmlWriter = outputFactory.createXMLStreamWriter(baos, "UTF-8");	
+    					result = new StreamResult(baos);  // Xalan TransformerImpl doesn't support StAXResult: https://issues.apache.org/jira/browse/XALANJ-2550 
+//    					result = new StAXResult(xmlWriter);
+    				} catch (Exception e) {
+    					throw new Docx4JException(e.getMessage(), e);
+    				}
+    			}
 
-                transform(partDOM, removalTemplate, parameters, result);
+    			try {
+    				transform(source, removalTemplate, parameters, result);
 
-                try {
-                        part.setJaxbElement(result);
-
-                } catch (JAXBException e) {
-                        throw new Docx4JException(
-                                        "Error unmarshalling document part for SDT removal", e);
-                }
-        }
+    				if (result instanceof JAXBResult) {
+    					
+    					try {
+    						((JaxbXmlPart)part).setJaxbElement(result);
+    					
+    						// this will fail if there is unexpected content, 
+    						// since JaxbValidationEventHandler fails by default
+    						
+    					} catch (Exception e) {
+    	
+    						log.error(e.getMessage(), e);				
+    						log.error("Input in question:" + XmlUtils.w3CDomNodeToString(doc));				
+    						log.error("Now trying DOMResult..");				
+    						
+    						result = new DOMResult(); 
+    						org.docx4j.XmlUtils.transform(doc, removalTemplate, parameters,  result);
+    	
+    						if (log.isDebugEnabled()) {
+    							
+    							org.w3c.dom.Document docResult = ((org.w3c.dom.Document)((DOMResult)result).getNode());
+    							
+    							//log.debug("After ODI: " + XmlUtils.w3CDomNodeToString(docResult));
+    							
+    							Object o = XmlUtils.unmarshal(((org.w3c.dom.Document)((DOMResult)result).getNode()) );
+    							((JaxbXmlPart)part).setJaxbElement(o);
+    						} else 
+    						{
+    							//part.unmarshal( ((org.w3c.dom.Document)result.getNode()).getDocumentElement() );
+    							Object o = XmlUtils.unmarshal(((org.w3c.dom.Document)((DOMResult)result).getNode()) );
+    							((JaxbXmlPart)part).setJaxbElement(o);
+    						}
+    					}
+    						
+    				} else {
+    			        
+    			        try {
+    				        xmlReader.close();
+    				        baos.flush();
+    				        if (log.isDebugEnabled() ) {
+    				        	byte[] bytes = baos.toByteArray();
+    				        	log.debug(new String(bytes));
+    				        	((JaxbXmlPart)part).replacePartContent(bytes);
+    				        } else {
+    				        	((JaxbXmlPart)part).replacePartContent(baos.toByteArray());
+    				        }
+    				        baos.close(); 
+    					} catch (Exception e) {
+    						throw new Docx4JException(e.getMessage(), e);				
+    					}
+    					
+    				}					
+    				
+    			} catch (Exception e) {
+    				
+    				throw new Docx4JException("Error unmarshalling document part for SDT removal", e);			
+    			}
+    					
+    		}
+        
         
         private Quantifier defaultQuantifier = null;
         private Quantifier getQuantifier() {

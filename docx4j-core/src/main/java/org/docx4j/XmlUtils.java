@@ -1312,8 +1312,12 @@ public class XmlUtils {
 
 		final JAXBResult result;
 		try {
+			// Use constructor which takes Unmarshaller, rather than JAXBContext,
+			// so we can set JaxbValidationEventHandler
+			
 			final Unmarshaller unmarshaller = context.createUnmarshaller();
 			unmarshaller.setEventHandler(new JaxbValidationEventHandler());
+			//eventHandler.setContinue(true);							
 			result = new JAXBResult(unmarshaller);
 
 		} catch (JAXBException e) {

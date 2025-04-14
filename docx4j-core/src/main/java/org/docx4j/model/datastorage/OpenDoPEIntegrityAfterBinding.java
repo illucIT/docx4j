@@ -19,6 +19,8 @@
  */
 package org.docx4j.model.datastorage;
 
+import static org.docx4j.XmlUtils.prepareJAXBResult;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.HashMap;
@@ -116,8 +118,6 @@ public class OpenDoPEIntegrityAfterBinding {
 				// Binding is a concept which applies more broadly
 				// than just Word documents.
 			
-			JAXBContext jc = Context.jc;
-			
 			javax.xml.transform.Source source = null;		
 			javax.xml.transform.Result result = null;
 			
@@ -133,21 +133,7 @@ public class OpenDoPEIntegrityAfterBinding {
 				doc = XmlUtils.marshaltoW3CDomDocument(
 					part.getJaxbElement() );
 				source = new javax.xml.transform.dom.DOMSource(doc);
-				
-				// Use constructor which takes Unmarshaller, rather than JAXBContext,
-				// so we can set JaxbValidationEventHandler
-				Unmarshaller u;
-				try {
-					u = jc.createUnmarshaller();
-					JaxbValidationEventHandler eventHandler = new org.docx4j.jaxb.JaxbValidationEventHandler();
-					//eventHandler.setContinue(true);				
-					u.setEventHandler(eventHandler);
-					result = new jakarta.xml.bind.util.JAXBResult(u );
-					
-				} catch (JAXBException e) {
-					throw new Docx4JException(e.getMessage(), e);					
-				}
-				
+				result = prepareJAXBResult(Context.jc);
 				
 			} else {
 				log.debug( ((JaxbXmlPart)part).getPartName().getName() + " not yet unmarshalled.");
