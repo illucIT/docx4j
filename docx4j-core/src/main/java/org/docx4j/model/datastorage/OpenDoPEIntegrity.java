@@ -19,16 +19,23 @@
  */
 package org.docx4j.model.datastorage;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
 import jakarta.xml.bind.JAXBContext;
+import jakarta.xml.bind.JAXBException;
 import jakarta.xml.bind.Unmarshaller;
+import jakarta.xml.bind.util.JAXBResult;
+
+import javax.xml.stream.XMLStreamReader;
 import javax.xml.transform.Source;
 import javax.xml.transform.Templates;
 import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.dom.DOMResult;
+import javax.xml.transform.stax.StAXSource;
+import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
 import org.docx4j.XmlUtils;
@@ -137,57 +144,112 @@ public class OpenDoPEIntegrity {
 				// Binding is a concept which applies more broadly
 				// than just Word documents.
 			
-			org.w3c.dom.Document doc = XmlUtils.marshaltoW3CDomDocument(
-					part.getJaxbElement() ); 	
-			
 			JAXBContext jc = Context.jc;
-			try {
+			
+			javax.xml.transform.Source source = null;		
+			javax.xml.transform.Result result = null;
+			
+			// If we're using a StAXSource
+			XMLStreamReader xmlReader = null;
+//	        XMLStreamWriter xmlWriter = null; 
+	        ByteArrayOutputStream baos = null;
+	        
+	        org.w3c.dom.Document doc = null;
+			if ( ((JaxbXmlPart)part).isUnmarshalled() ) {
+				
+				log.debug( ((JaxbXmlPart)part).getPartName().getName() + " already unmarshalled.");		
+				doc = XmlUtils.marshaltoW3CDomDocument(
+					part.getJaxbElement() );
+				source = new javax.xml.transform.dom.DOMSource(doc);
+				
 				// Use constructor which takes Unmarshaller, rather than JAXBContext,
 				// so we can set JaxbValidationEventHandler
-				Unmarshaller u = jc.createUnmarshaller();
-				
-				JaxbValidationEventHandler eventHandler = new org.docx4j.jaxb.JaxbValidationEventHandler();
-				//eventHandler.setContinue(true);				
-				u.setEventHandler(eventHandler);
-
-				Map<String, Object> transformParameters = new HashMap<String, Object>();
-				transformParameters.put("OpenDoPEIntegrity", this);			
-				
+				Unmarshaller u;
 				try {
+					u = jc.createUnmarshaller();
+					JaxbValidationEventHandler eventHandler = new org.docx4j.jaxb.JaxbValidationEventHandler();
+					//eventHandler.setContinue(true);				
+					u.setEventHandler(eventHandler);
+					result = new jakarta.xml.bind.util.JAXBResult(u );
 					
-					jakarta.xml.bind.util.JAXBResult result = new jakarta.xml.bind.util.JAXBResult(u );
-					org.docx4j.XmlUtils.transform(doc, xslt, transformParameters, result);
-					part.setJaxbElement(result);
-					
-					// this will fail if there is unexpected content, 
-					// since JaxbValidationEventHandler fails by default
-					
+				} catch (JAXBException e) {
+					throw new Docx4JException(e.getMessage(), e);					
+				}
+				
+				
+			} else {
+				log.debug( ((JaxbXmlPart)part).getPartName().getName() + " not yet unmarshalled.");
+				try {
+					xmlReader = part.getXMLStreamReader(null);
+					source = new StAXSource(xmlReader);
+//			        XMLOutputFactory outputFactory = XMLOutputFactory.newInstance();            
+			        baos = new ByteArrayOutputStream(); 
+//					xmlWriter = outputFactory.createXMLStreamWriter(baos, "UTF-8");	
+					result = new StreamResult(baos);  // Xalan TransformerImpl doesn't support StAXResult: https://issues.apache.org/jira/browse/XALANJ-2550 
+//					result = new StAXResult(xmlWriter);
 				} catch (Exception e) {
-
-					log.error(e.getMessage(), e);				
-					log.error("Input in question:" + XmlUtils.w3CDomNodeToString(doc));				
-					log.error("Now trying DOMResult..");				
+					throw new Docx4JException(e.getMessage(), e);
+				}
+			}
+						
+			Map<String, Object> transformParameters = new HashMap<String, Object>();
+			transformParameters.put("OpenDoPEIntegrity", this);			
+			
+			try {
+				
+				org.docx4j.XmlUtils.transform(source, xslt, transformParameters, result);
+				
+				if (result instanceof JAXBResult) {
+				
+					try {
+						part.setJaxbElement(result);
 					
-					DOMResult result = new DOMResult(); 
-					org.docx4j.XmlUtils.transform(doc, xslt, transformParameters, result);
-
-					if (log.isDebugEnabled()) {
+						// this will fail if there is unexpected content, 
+						// since JaxbValidationEventHandler fails by default
 						
-						org.w3c.dom.Document docResult = ((org.w3c.dom.Document)result.getNode());
+					} catch (Exception e) {
+	
+						log.error(e.getMessage(), e);				
+						log.error("Input in question:" + XmlUtils.w3CDomNodeToString(doc));				
+						log.error("Now trying DOMResult..");				
 						
-						//log.debug("After ODI: " + XmlUtils.w3CDomNodeToString(docResult));
+						result = new DOMResult(); 
+						org.docx4j.XmlUtils.transform(doc, xslt, transformParameters, result);
+	
+						if (log.isDebugEnabled()) {
+							
+							org.w3c.dom.Document docResult = ((org.w3c.dom.Document)((DOMResult)result).getNode());
+							
+							//log.debug("After ODI: " + XmlUtils.w3CDomNodeToString(docResult));
+							
+							Object o = XmlUtils.unmarshal(((org.w3c.dom.Document)((DOMResult)result).getNode()) );
+							part.setJaxbElement(o);
+						} else 
+						{
+							//part.unmarshal( ((org.w3c.dom.Document)result.getNode()).getDocumentElement() );
+							Object o = XmlUtils.unmarshal(((org.w3c.dom.Document)((DOMResult)result).getNode()) );
+							part.setJaxbElement(o);
+						}
+					}
 						
-						Object o = XmlUtils.unmarshal(((org.w3c.dom.Document)result.getNode()) );
-						part.setJaxbElement(o);
-					} else 
-					{
-						//part.unmarshal( ((org.w3c.dom.Document)result.getNode()).getDocumentElement() );
-						Object o = XmlUtils.unmarshal(((org.w3c.dom.Document)result.getNode()) );
-						part.setJaxbElement(o);
+				} else {
+			        
+			        try {
+				        xmlReader.close();
+				        baos.flush();
+				        if (log.isDebugEnabled() ) {
+				        	byte[] bytes = baos.toByteArray();
+				        	log.debug(new String(bytes));
+				        	((JaxbXmlPart)part).replacePartContent(bytes);
+				        } else {
+				        	((JaxbXmlPart)part).replacePartContent(baos.toByteArray());
+				        }
+				        baos.close(); 
+					} catch (Exception e) {
+						throw new Docx4JException(e.getMessage(), e);				
 					}
 					
-					
-				}
+				}					
 				
 			} catch (Exception e) {
 				

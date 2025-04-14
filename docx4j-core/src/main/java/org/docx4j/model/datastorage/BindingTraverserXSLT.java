@@ -18,7 +18,6 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.xml.stream.XMLStreamReader;
-import javax.xml.stream.XMLStreamWriter;
 import javax.xml.transform.Source;
 import javax.xml.transform.Templates;
 import javax.xml.transform.TransformerConfigurationException;
@@ -130,7 +129,7 @@ public class BindingTraverserXSLT extends BindingTraverserCommonImpl {
 		
 		// If we're using a StAXSource
 		XMLStreamReader xmlReader = null;
-        XMLStreamWriter xmlWriter = null; 
+//        XMLStreamWriter xmlWriter = null; 
         ByteArrayOutputStream baos = null;
         
 		if ( ((JaxbXmlPart)part).isUnmarshalled() ) {
