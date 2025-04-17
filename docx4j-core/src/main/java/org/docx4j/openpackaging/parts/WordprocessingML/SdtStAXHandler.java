@@ -47,7 +47,7 @@ import jakarta.xml.bind.Unmarshaller;
  * A framework for using StAX to find SDT elements, then using JAXB to manipulate them.
  * 
  * @author jharrop
- *
+ * @since 11.5.3
  */
 public abstract class SdtStAXHandler extends StAXHandlerAbstract  {
 	
@@ -162,6 +162,7 @@ public abstract class SdtStAXHandler extends StAXHandlerAbstract  {
 	}
 
     public static class Stack {
+    	
         static ArrayList<String> list = new ArrayList<String>();
 
         public static boolean isEmpty() {
@@ -175,9 +176,7 @@ public abstract class SdtStAXHandler extends StAXHandlerAbstract  {
         public static String pop() {
             if (isEmpty() == true)
                 return null;
-            String top = list.get(list.size() - 1);
-            list.remove(list.size() - 1);
-            return top;
+            return list.remove(list.size() - 1);
         }
 
         public static String peek() {
