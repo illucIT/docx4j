@@ -94,6 +94,26 @@ public class ContentControlBindingExtensionsOld {
 		System.out.println(filepathprefix);
 		
 		StringBuilder timingSummary = new StringBuilder();
+
+		boolean forceUnmashall=true;
+	
+	long startTime = System.currentTimeMillis();
+	long endTime;
+	long diff;
+	long total=0;
+	
+	if (forceUnmashall) {
+		Object o = wordMLPackage.getMainDocumentPart().getJaxbElement();
+		System.out.println(
+		XmlUtils.marshaltoString(o, true, true)
+		);	
+		endTime = System.currentTimeMillis();
+		
+		diff = endTime-startTime;
+		timingSummary.append("\nUnmarshalling: " + (endTime-startTime));
+	}
+
+	
 		
 //		long startTime, endTime;
 //		SaveToZipFile saver = null;
@@ -107,12 +127,12 @@ public class ContentControlBindingExtensionsOld {
 		// 3. component processing is not recursive anymore
 		// 4. components typically use the "main" answer file
 		// For this to work (ie docx altChunks to be processed), you need Enterprise 6.1.0
-		long startTime = System.currentTimeMillis();
+		startTime = System.currentTimeMillis();
 		OpenDoPEHandlerComponents componentsHandler =
 				new OpenDoPEHandlerComponents(wordMLPackage);
 		componentsHandler.setDocxFetcher(new MyDocxFetcher() );
 		wordMLPackage = componentsHandler.fetchComponents();
-		long endTime = System.currentTimeMillis();
+		endTime = System.currentTimeMillis();
 		timingSummary.append("Component processing: " + (endTime-startTime));
 		
 //		System.out.println(
@@ -128,29 +148,33 @@ public class ContentControlBindingExtensionsOld {
 		OpenDoPEHandler odh = new OpenDoPEHandler(wordMLPackage);
 		wordMLPackage = odh.preprocess();
 		endTime = System.currentTimeMillis();
+		diff = endTime-startTime;	
+		total += diff;
 		timingSummary.append("\nOpenDoPEHandler: " + (endTime-startTime));
 		
 //		System.out.println(
 //				XmlUtils.marshaltoString(wordMLPackage.getMainDocumentPart().getJaxbElement(), true, true)
 //				);		
-		saver = new SaveToZipFile(wordMLPackage);
-		saver.save(filepathprefix + "_preprocessed.docx");
-		System.out.println("Saved: " + filepathprefix + "_preprocessed.docx");
-		
-
+//		SaveToZipFile saver = new SaveToZipFile(wordMLPackage);
+//		saver.save(filepathprefix + "_preprocessed.docx");
+//		System.out.println("Saved: " + filepathprefix + "_preprocessed.docx");
+//		
+//
 		startTime = System.currentTimeMillis();
 		OpenDoPEIntegrity odi = new OpenDoPEIntegrity();
 		odi.process(wordMLPackage);
 		endTime = System.currentTimeMillis();
+		diff = endTime-startTime;	
+		total += diff;		
 		timingSummary.append("\nOpenDoPEIntegrity: " + (endTime-startTime));
-		
-//		System.out.println(
-//				XmlUtils.marshaltoString(wordMLPackage.getMainDocumentPart().getJaxbElement(), true, true)
-//				);		
-		saver = new SaveToZipFile(wordMLPackage);
-		saver.save(filepathprefix + "_integrity.docx");
-		System.out.println("Saved: " + filepathprefix + "_integrity.docx");
-
+//		
+////		System.out.println(
+////				XmlUtils.marshaltoString(wordMLPackage.getMainDocumentPart().getJaxbElement(), true, true)
+////				);		
+//		saver = new SaveToZipFile(wordMLPackage);
+//		saver.save(filepathprefix + "_integrity.docx");
+//		System.out.println("Saved: " + filepathprefix + "_integrity.docx");
+//
 		
 		// Apply the bindings
 		BindingHandler.setHyperlinkStyle("Hyperlink");						
@@ -162,11 +186,13 @@ public class ContentControlBindingExtensionsOld {
 		bh.applyBindings(wordMLPackage.getMainDocumentPart());
 		
 		endTime = System.currentTimeMillis();
+		diff = endTime-startTime;	
+		total += diff;		
 		timingSummary.append("\nBindingHandler.applyBindings: " + (endTime-startTime));
 //		String bound = XmlUtils.marshaltoString(wordMLPackage.getMainDocumentPart().getJaxbElement(), true, true);
 //		System.out.println( bound);
-		saver.save(filepathprefix + "_bound.docx");
-		System.out.println("Saved: " + filepathprefix + "_bound.docx");
+//		saver.save(filepathprefix + "_bound.docx");
+//		System.out.println("Saved: " + filepathprefix + "_bound.docx");
 				
 		// OpenDoPEIntegrityAfterBinding
 		startTime = System.currentTimeMillis();
@@ -174,12 +200,16 @@ public class ContentControlBindingExtensionsOld {
 		odiab.process(wordMLPackage);
 
 		endTime = System.currentTimeMillis();
+		diff = endTime-startTime;	
+		total += diff;
 		timingSummary.append("\nOpenDoPEIntegrityAfterBinding: " + (endTime-startTime));
 //		String odiabMarshalled = XmlUtils.marshaltoString(wordMLPackage.getMainDocumentPart().getJaxbElement(), true, true);
 //		System.out.println( odiabMarshalled
 //				);
-		saver.save(filepathprefix + "_intAftrB.docx");
-		System.out.println("Saved: " + filepathprefix + "_intAftrB.docx");
+		
+		
+//		saver.save(filepathprefix + "_intAftrB.docx");
+//		System.out.println("Saved: " + filepathprefix + "_intAftrB.docx");
 
 		
 		// docx4j 6.1:  user-defined XSLT
@@ -211,16 +241,29 @@ public class ContentControlBindingExtensionsOld {
 		RemovalHandler rh = new RemovalHandler();
 		rh.removeSDTs(wordMLPackage, Quantifier.ALL_BUT_PLACEHOLDERS);
 		endTime = System.currentTimeMillis();
+		diff = endTime-startTime;		
+		total += diff;		
 		timingSummary.append("\nRemovalHandler: " + (endTime-startTime));
 
 		String stripped = XmlUtils.marshaltoString(wordMLPackage.getMainDocumentPart().getJaxbElement(), true, true);
 		System.out.println( stripped
 				);
+
+		System.out.println("Unmarshalled? " + wordMLPackage.getMainDocumentPart().isUnmarshalled());
 		
-		saver.save(filepathprefix + "_stripped.docx");
-		System.out.println("Saved: " + filepathprefix + "_stripped.docx");
+//		startTime = System.currentTimeMillis();
+//		SaveToZipFile saver = new SaveToZipFile(wordMLPackage);		
+//		saver.save(filepathprefix + "_stripped.docx");
+//		System.out.println("Saved: " + filepathprefix + "_stripped.docx");
+//		endTime = System.currentTimeMillis();
+//		diff = endTime-startTime;	
+//		total += diff;		
+//		timingSummary.append("\nSave docx: " + (endTime-startTime));
+//		
+//		timingSummary.append("\nTOTAL: " + total);
+//		
+//		System.out.println(timingSummary);
 		
-		System.out.println(timingSummary);
 	}	
 	
 	public static void reverter(String inputfilepath, String instancePath) throws Docx4JException {
