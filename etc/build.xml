@@ -42,7 +42,7 @@
 		
 		<property name="log4j-slf4j-impl" value="log4j-slf4j18-impl"/>
 	 -->
-	<property name="logback-version" value="1.5.3"/>
+	<property name="logback-version" value="1.5.6"/>
 	<property name="log4j-slf4j-impl" value="log4j-slf4j18-impl"/>
 	
 	<!--.NET properties -->
@@ -130,6 +130,20 @@
         <pathelement location="${m2Repository}/org/apache/xmlgraphics/batik-codec/1.19/batik-codec-1.19.jar"/>
 		
 	</path>
+	
+	<path id="docx4j-ImportXHTML.classpath">
+		
+		<pathelement location="${m2Repository}/org/docx4j/docx4j-ImportXHTML-core/${importxhtml-version}/docx4j-ImportXHTML-core-${importxhtml-version}.jar" />
+
+        <pathelement location="${m2Repository}/io/github/openhtmltopdf/openhtmltopdf-core/1.1.28/openhtmltopdf-core-1.1.28.jar"/>
+        <pathelement location="${m2Repository}/io/github/openhtmltopdf/openhtmltopdf-pdfbox/1.1.28/openhtmltopdf-pdfbox-1.1.28.jar"/>
+        <pathelement location="${m2Repository}/org/apache/pdfbox/pdfbox/3.0.3/pdfbox-3.0.3.jar"/>
+        <pathelement location="${m2Repository}/org/apache/pdfbox/xmpbox/3.0.3/xmpbox-3.0.3.jar"/>
+        <pathelement location="${m2Repository}/de/rototor/pdfbox/graphics2d/3.0.1/graphics2d-3.0.1.jar"/>
+        <pathelement location="${m2Repository}/org/apache/pdfbox/fontbox/3.0.3/fontbox-3.0.3.jar"/>
+        <pathelement location="${m2Repository}/org/apache/pdfbox/pdfbox-io/3.0.3/pdfbox-io-3.0.3.jar"/>
+	</path>
+	
 
 	<target name="release" depends="release-main,release-JAXB-ReferenceImpl,release-JAXB-MOXy,release-samples" />
 	<target name="release-samples" depends="release-samples-docx4j,release-samples-pptx4j,release-samples-xlsx4j,release-documents4j-local,release-documents4j-remote" />
@@ -178,16 +192,15 @@
 		
 		<!-- ImportXHTML -->
 		<mkdir dir="${release.dir}/optional/ImportXHTML"/>
-		<copy file="${m2Repository}/org/docx4j/docx4j-ImportXHTML-core/${importxhtml-version}/docx4j-ImportXHTML-core-${importxhtml-version}.jar" todir="${release.dir}/optional/ImportXHTML"/>
-
-        <copy file="${m2Repository}/com/openhtmltopdf/openhtmltopdf-core/1.0.10/openhtmltopdf-core-1.0.10.jar" todir="${release.dir}/optional/ImportXHTML"/>
-        <copy file="${m2Repository}/com/openhtmltopdf/openhtmltopdf-pdfbox/1.0.10/openhtmltopdf-pdfbox-1.0.10.jar" todir="${release.dir}/optional/ImportXHTML"/>
-        <copy file="${m2Repository}/org/apache/pdfbox/pdfbox/2.0.24/pdfbox-2.0.24.jar" todir="${release.dir}/optional/ImportXHTML"/>
-        <copy file="${m2Repository}/commons-logging/commons-logging/1.2/commons-logging-1.2.jar" todir="${release.dir}/optional/ImportXHTML"/>
-        <copy file="${m2Repository}/org/apache/pdfbox/xmpbox/2.0.24/xmpbox-2.0.24.jar" todir="${release.dir}/optional/ImportXHTML"/>
-        <copy file="${m2Repository}/de/rototor/pdfbox/graphics2d/0.32/graphics2d-0.32.jar" todir="${release.dir}/optional/ImportXHTML"/>
-
+		<copy todir="${release.dir}/optional/ImportXHTML" flatten="true">
+			<!-- requires Ant 1.7.0 -->
+			<path>
+				<path refid="docx4j-ImportXHTML.classpath"/>
+			</path>
+		</copy>
+		
 		<copy file="${importxhtml-dir}/docx4j-ImportXHTML-samples/src/main/resources/docx4j-ImportXHTML.properties" todir="${release.dir}/optional/ImportXHTML"/>
+		
 
 		<!-- export-fo -->
 		<mkdir dir="${release.dir}/optional/export-fo"/>
