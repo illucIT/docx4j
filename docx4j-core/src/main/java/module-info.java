@@ -26,7 +26,7 @@ module org.docx4j.core {
 //    requires transitive slf4j.api;
     requires transitive stringtemplate;
     requires transitive docx4j_xalan_interpretive;
-    requires transitive xmlgraphics.commons;
+    requires transitive org.apache.xmlgraphics.commons; // v2.11
 	requires error.prone.annotations;
 	requires org.checkerframework.checker.qual;
 //	requires org.eclipse.persistence.moxy;
