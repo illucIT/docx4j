@@ -8,10 +8,10 @@ module docx4j_samples_docx4j {
 	requires jakarta.xml.bind;
 	
 	// Uncomment ONE of the following:
-	 requires org.docx4j.JAXB_ReferenceImpl;
-	requires xercesImpl;
+	requires org.docx4j.JAXB_ReferenceImpl;
 //	 requires org.docx4j.JAXB_MOXy;
 	
+//	requires xercesImpl;
 	
 	opens org.docx4j.samples; // required for mbassador	
 }
