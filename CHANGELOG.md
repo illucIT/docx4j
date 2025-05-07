@@ -2,24 +2,33 @@ CHANGELOG
 =========
 
 
-Version 11.5.3   (NOT YET RELEASED)
+Version 11.5.3  
 ===============
 
 Release date
 ------------
 
-xx March 2025
+7 May 2025
+
 
 Contributors to this release
 ----------------------------
 
+Ben Howell-Thomas
+
 Jason Harrop
+
+Nikolay Vorobev
+
 
 Changes in Version 11.5.3
 --------------------------
 
-Uses FOP 2.11 (NOT YET RELEASED)  and FontBox 3
+Migrate to FontBox 3 and use FOP 2.11  
 
+OpenDoPE StAX option
+
+Some bug fixes
 
 
 Version 11.5.2   (fixes regression in 11.5.1) 
