@@ -68,6 +68,8 @@ import jakarta.xml.bind.util.JAXBResult;
  * Note that the w:sdts can be nested, so simple parent/child
  * checks aren't sufficient.
  * 
+ * It also removes w15 repeats.
+ * 
  * @author jharrop
  *
  */
