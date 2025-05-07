@@ -595,6 +595,10 @@ implements XPathEnabled<E> {
 					
 					doc = (org.w3c.dom.Document)result.getNode();
 					
+					if (log.isDebugEnabled()) {
+						XmlUtils.w3CDomNodeToOutputStream(doc, System.out);
+					}
+					
 					try {
 						// mimic docx4j 2.7.0 and earlier behaviour; this will 
 						// drop things we don't have a content model for; the preprocessor doesn't need to 
