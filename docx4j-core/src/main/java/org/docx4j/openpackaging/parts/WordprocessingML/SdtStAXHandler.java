@@ -89,7 +89,9 @@ public abstract class SdtStAXHandler extends StAXHandlerAbstract  {
 						unmarshaller = context.createUnmarshaller();
 						// To unmarshall to the correct type of sdt, we need to know context
 						if (stack.peek().equals("body")
-								|| stack.peek().equals("tc")) {
+								|| stack.peek().equals("tc")
+								|| stack.peek().equals("txbxContent")
+								) {
 							o = unmarshaller.unmarshal(xsr, SdtBlock.class);
 						} else if (stack.peek().equals("tbl")) {
 							o = unmarshaller.unmarshal(xsr, CTSdtRow.class);								
