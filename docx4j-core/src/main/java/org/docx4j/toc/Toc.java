@@ -132,6 +132,13 @@ public class Toc {
 
     /**
      * The switches are processed in a specific order.
+     * 
+     * p10 O (heading Outline)
+     * p 9 T (sTyle)
+     * p 8 U (oUtline)
+     * p 7 C (SEQ entries)
+     * p 6 N (page number)
+     * p 5 H (Hyperlink)
      */
     private void sortSwitchesListByPriority() {
         Collections.sort(switchesList, new Comparator<SwitchInterface>() {

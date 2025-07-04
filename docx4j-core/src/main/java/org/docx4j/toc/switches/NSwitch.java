@@ -23,10 +23,22 @@ import org.docx4j.model.PropertyResolver;
 import org.docx4j.toc.TocEntry;
 import org.docx4j.wml.Style;
 
-public class NSwitch extends AbstractSwitch {
+/**
+ * page Numbers switch
+ * 
+ * Per http://webapp.docx4java.org/OnlineDemo/ecma376/WordML/TOC.html
+ * 
+ * Without field-argument, omits page numbers from the table of contents. 
+ * 
+ * Page numbers are omitted from all levels unless a range of entry levels 
+ * is specified by text in this switch's field-argument. 
+ * 
+ * A range is specified as for \l.
+ */
+public class NSwitch extends FormattingSwitch {
 
     public static final String ID = "\\n";
-    private static final int PRIORITY = 7;
+    private static final int PRIORITY = 6;
 
     @Override
     public boolean hasFieldArgument() {

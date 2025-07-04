@@ -19,13 +19,23 @@
  */
 package org.docx4j.toc.switches;
 
-import org.docx4j.model.PropertyResolver;
 import org.docx4j.wml.Style;
 
 public interface SwitchInterface {
+	
+    /**
+     * Parse the field argument, return error string if any.  Invoked from TOC parseInstruction()
+     *  
+     * @param fieldArgument.  
+     * 
+     * @return error string if any for exception
+     */
     public String parseFieldArgument(String fieldArgument);
+    
     public boolean hasFieldArgument();
+    
     public void process(Style s, SwitchProcessorInterface sp);
+    
     public int getPriority();
-    public boolean isStyleSwitch();
+    
 }

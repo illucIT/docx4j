@@ -30,19 +30,44 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
+ * paragraph oUtline switch
+ * 
  * This switch indicates to consider the outline level set
  * on the paragraph.
  * 
- * That value trumps heading style (eg if outline level is set to
+ * Old (Word 2007?): That value trumps heading style (eg if outline level is set to
  * body text, a heading won't appear in the outline), 
  * EXCEPT where the outline level is set in the heading style definition
  * (which is ignored - the style name is parsed for the level!).
  * 
- * If style X is based on heading style, and style X has an outline level
+ * 2025 07:  Current Word Version 2506 (Build 18925.20076), Office 2013 and Word 2010
+ * (14.0.7194.5000) won't let you set an outline level 
+ * on P with a heading style (tested heading 1).  And if you open a docx eg  
+ * 
+ *    <w:pPr>
+        <w:pStyle w:val="Heading1"/>
+        <w:outlineLvl w:val="4"/>
+      </w:pPr>      
+ * 
+ * it removes the w:outlineLvl setting. So nowadays this conflict is theoretical. 
+ * 
+ * Also, the Word UI won't allow you to build a ToC from arbitrary styles and outline level; 
+ * it is XOR.
+ * 
+ * But if you manually construct such a TOC, then outline level 
+ * trumps style? <w:instrText xml:space="preserve"> TOC \o "1-3" \h \z \t "MyStyle,1" \\u </w:instrText> 
+ * Word seems to get confused by such a TOC definition
+ * (it ignores certain paragraphs which by style should be in the TOC!). 
+ * 
+ * Since I can't readily construct a TOC in which the switches conflict,
+ * it is not easy to determine whether the switches are applied in the
+ * other in which they appear, or by priority.  (But nor does it much matter?) 
+ * 
+ * Old: If style X is based on heading style, and style X has an outline level
  * setting, that setting is considered.
  *
  */
-public class USwitch extends AbstractSwitch {
+public class USwitch extends SelectorSwitch {
 
 	private static Logger log = LoggerFactory.getLogger(USwitch.class);					
 	
@@ -78,11 +103,11 @@ public class USwitch extends AbstractSwitch {
     	}
     	
         if( level == 9){
-            sp.setProceed(false);
+            sp.setSelected(false);  // this is the only case where a switch can cause a P to be excluded 
         } else {
             TocEntry te = sp.getEntry(); // creates it       	
             te.setEntryLevel(level);
-        	sp.setStyleFound(true);
+        	sp.setSelected(true);
         }
     }
     

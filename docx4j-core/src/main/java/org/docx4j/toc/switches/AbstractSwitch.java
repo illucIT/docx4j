@@ -52,12 +52,15 @@ public abstract class AbstractSwitch implements SwitchInterface {
 
     Map<String, Integer> styleLevelMap = null;
 
+    /**
+     * Default implementation doesn't need to parse at all.
+     */
     public String parseFieldArgument(String fieldArgument){
         this.fieldArgument = fieldArgument;
         return EMPTY;
     }
 
-    public boolean isStyleSwitch(){
+    public boolean isSelectorSwitch(){
         return false;
     }
 
@@ -149,7 +152,7 @@ public abstract class AbstractSwitch implements SwitchInterface {
      * @param fieldArgument
      * @return empty string in case field argument can not be parsed correctly
      */
-    private String prepareArgument(String fieldArgument){
+    protected String prepareArgument(String fieldArgument){
     	
         String tmp = fieldArgument;
         

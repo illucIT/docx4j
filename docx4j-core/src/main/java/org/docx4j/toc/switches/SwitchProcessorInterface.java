@@ -10,14 +10,11 @@ public interface SwitchProcessorInterface {
 	
 	public void setPageNumbers(boolean pageNumbers);
 
-	public boolean isStyleFound();
+	public void setSelected(boolean selected);
+	public boolean isSelected();
 
 	public StyleBasedOnHelper getStyleBasedOnHelper();
-
-	public void setStyleFound(boolean b);
 	
 	public PropertyResolver getPropertyResolver();
 	
-	// Only used by USwitch, which can force stop
-	public void setProceed(boolean proceed);
 }

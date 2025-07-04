@@ -41,6 +41,8 @@ public class SwitchesFactory {
             return new TSwitch();
         } else if(id.equals(USwitch.ID)){
             return new USwitch();
+        } else if(id.equals(CSwitch.ID)){
+            return new CSwitch();
         }
         return null;
     }

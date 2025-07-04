@@ -25,6 +25,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
+ * heading Outline switch
+ * 
+ * Per http://webapp.docx4java.org/OnlineDemo/ecma376/WordML/TOC.html
+ *
  * Uses paragraphs formatted with (or based on) all or the specified range of built-in heading styles. 
  * Headings in a style range are specified by text in this switch's field-argument 
  * using the notation specified as for \l, where each integer corresponds to the style 
@@ -35,7 +39,7 @@ import org.slf4j.LoggerFactory;
  * (TODO confirm its that or id, not instead of id)
  *
  */
-public class OSwitch extends AbstractSwitch {
+public class OSwitch extends SelectorSwitch {
 	
 	private static Logger log = LoggerFactory.getLogger(OSwitch.class);				
 	
@@ -46,24 +50,24 @@ public class OSwitch extends AbstractSwitch {
 
     @Override
     public void process(Style s, SwitchProcessorInterface sp) {
-        if(sp.isStyleFound()){
-            return;
-        }
+//        if(sp.isStyleFound()){
+//            return;
+//        }
         TocEntry te = sp.getEntry();
 
         int level = sp.getStyleBasedOnHelper().getBasedOnHeading(s);
         
         if(level != -1){
         	
-            if(fieldArgument == null){
+            if(fieldArgument == null /* include all heading levels */){
             	
                 te.setEntryLevel(level);
-                sp.setStyleFound(true);
+                sp.setSelected(true);
                 
             } else if (level >= getStartLevel() && level <= getEndLevel()){
             	
                 te.setEntryLevel(level);
-                sp.setStyleFound(true);
+                sp.setSelected(true);
             }
         }
     }
@@ -90,7 +94,7 @@ public class OSwitch extends AbstractSwitch {
     }
 
     @Override
-    public boolean isStyleSwitch() {
+    public boolean isSelectorSwitch() {
         return true;
     }
 

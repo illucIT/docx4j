@@ -28,13 +28,17 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
+ * sTyle switch
+ * 
+ * Per http://webapp.docx4java.org/OnlineDemo/ecma376/WordML/TOC.html
+ *
  * Uses paragraphs formatted with (or based on) styles other than the built-in heading styles. 
  * text in this switch's field-argument specifies those styles as a set of comma-separated doublets, 
  * with each doublet being a comma-separated set of style name and table of content level. 
  * \t can be combined with \o.
  *
  */
-public class TSwitch extends AbstractSwitch{
+public class TSwitch extends SelectorSwitch {
 	
 	private static Logger log = LoggerFactory.getLogger(TSwitch.class);					
 
@@ -51,10 +55,12 @@ public class TSwitch extends AbstractSwitch{
     		log.debug(s.getStyleId());
     	}
     	
-        if(sp.isStyleFound()){
-        	log.debug(s.getName().getVal() + "already found");
-            return;
-        }
+//        if(sp.isStyleFound()){
+//        	// 2025 doubt this works; there is no cache
+//        	log.debug(s.getName().getVal() + "already found");
+//            return;
+//        }
+    	
         TocEntry te = sp.getEntry();
         Map<String, Integer> styleLevelMap = getStyleLevelMap();
         for(String styleMapValue: styleLevelMap.keySet()){
@@ -64,14 +70,14 @@ public class TSwitch extends AbstractSwitch{
                 if (log.isDebugEnabled()) {
                 	log.debug("its based on " + styleMapValue + "; level " + styleLevelMap.get(styleMapValue));
                 }
-                sp.setStyleFound(true);
+                sp.setSelected(true);
                 break;
             }
         }
     }
 
     @Override
-    public boolean isStyleSwitch() {
+    public boolean isSelectorSwitch() {
         return true;
     }
 

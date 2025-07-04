@@ -19,26 +19,18 @@
  */
 package org.docx4j.toc.switches;
 
-import java.io.StringWriter;
 import java.math.BigInteger;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import jakarta.xml.bind.JAXBElement;
-import jakarta.xml.bind.JAXBException;
-
-import org.docx4j.TextUtils;
 import org.docx4j.TraversalUtil;
-import org.docx4j.XmlUtils;
 import org.docx4j.finders.RangeFinder;
 import org.docx4j.jaxb.Context;
 import org.docx4j.model.PropertyResolver;
 import org.docx4j.model.listnumbering.Emulator.ResultTriple;
 import org.docx4j.model.structure.PageDimensions;
-import org.docx4j.openpackaging.exceptions.InvalidFormatException;
 import org.docx4j.openpackaging.packages.WordprocessingMLPackage;
 import org.docx4j.toc.StyleBasedOnHelper;
 import org.docx4j.toc.TocEntry;
@@ -47,13 +39,13 @@ import org.docx4j.wml.CTMarkupRange;
 import org.docx4j.wml.ObjectFactory;
 import org.docx4j.wml.P;
 import org.docx4j.wml.PPr;
-import org.docx4j.wml.R;
+import org.docx4j.wml.PPrBase.PStyle;
 import org.docx4j.wml.STTabTlc;
 import org.docx4j.wml.Style;
-import org.docx4j.wml.Text;
-import org.docx4j.wml.PPrBase.PStyle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import jakarta.xml.bind.JAXBElement;
 
 public class SwitchProcessor implements SwitchProcessorInterface {
 	
@@ -77,19 +69,14 @@ public class SwitchProcessor implements SwitchProcessorInterface {
     private TocEntry entry = null;
     private STTabTlc leader;
     
-    private boolean proceed = true;
-    public void setProceed(boolean proceed) {
-		this.proceed = proceed;
+    private boolean selected = false;
+    public boolean isSelected() {
+		return selected;
 	}
 
-	private boolean styleFound = false;
-    public boolean isStyleFound() {
-        return styleFound;
-    }
-
-    public void setStyleFound(boolean headingFound) {
-        this.styleFound = headingFound;
-    }
+	public void setSelected(boolean selected) {
+		this.selected = selected;
+	}
     
     private boolean pageNumbers = true;
         
@@ -104,6 +91,16 @@ public class SwitchProcessor implements SwitchProcessorInterface {
     	this.leader = leader;
     }
     
+    /**
+     * Return a list consisting of those p in pList which are determined to
+     * form part of the ToC.
+     * 
+     * @param wordMLPackage
+     * @param pList
+     * @param switchesList
+     * @param pNumbersMap
+     * @return
+     */
     public List<TocEntry> processSwitches(WordprocessingMLPackage wordMLPackage, List<P> pList, 
     		List<SwitchInterface> switchesList,
     		Map<P, ResultTriple> pNumbersMap){
@@ -146,16 +143,10 @@ public class SwitchProcessor implements SwitchProcessorInterface {
              * 
              * Otherwise, check the cache for this style.
              * If not cached, work it out, and cache the result.
-             * 
-             * Some switches are for formatting eg \h, \n
-             * Others are for inclusion/exclusion eg \\u, \o, \t
-             * 
-             * Consider creating subclasses, and processing separately.
-             * 
              */
             
             s = propertyResolver.getStyle(pStyle.getVal());
-            log.debug("Processing switches for stylename " + pStyle.getVal() );
+            log.debug("Processing switches for P with stylename " + pStyle.getVal() );
             if (s==null) {
             	log.warn("Style " + pStyle.getVal() + " is not defined in styles part!");
             	continue; 
@@ -167,7 +158,6 @@ public class SwitchProcessor implements SwitchProcessorInterface {
             	 * when s==null   
             	 */            	
             }
-            int i = 1;
             
             OSwitch oSwitch = null;
             for(SwitchInterface sw: switchesList){
@@ -178,50 +168,39 @@ public class SwitchProcessor implements SwitchProcessorInterface {
             
             for(SwitchInterface sw: switchesList){
             	log.debug(sw.getClass().getName());
-            	if (sw instanceof USwitch) {
+            	
+            	if (sw instanceof CSwitch) {
+
+            		// C switch is sensitive to paragraph content containing "SEQ" field.
+            		((CSwitch)sw).process(p, this);
+            		
+            	} else if (sw instanceof USwitch) {            		
             		// Need pPr
             		((USwitch)sw).process(s, this, ppr, oSwitch);
             	} else {
             		sw.process(s, this);
             	}
-                if(!proceed){
-                	log.debug(sw.getClass().getName() + " forced break!"); 
-                	// the \\u switch (outline level) will do this if the outline level is 9 
-                    break;
-                }
-                // processed all style switches and style was not found
-                if(!sw.isStyleSwitch()){
-                    if(!styleFound){
-                    	log.debug("processed all style switches and style was not found");
-                        proceed = false;
-                        break;
-                    }
-                }
-                // last style switch processed and style not found
-                else {
-                    if(i == switchesList.size()){
-                        if(!styleFound){
-                        	log.debug("last style switch processed and style not found");
-                            proceed = false;
-                            break;
-                        }
-                    }
-                }
-                i++;
+            	                
             }
-            if(proceed){
+            
+            
+            if (selected){
             	
-                {	                
-	                // create the visible entry text
-                	entry.setEntryValue(p);
-                	// number the paragraph, if necessary
-                	entry.numberEntry(pNumbersMap.get(p));	
-                }
+                // create the visible entry text
+            	entry.setEntryValue(p);  // C, O, T, and U switches instantiate entry. 
+            	// number the paragraph, if necessary
+            	entry.numberEntry(pNumbersMap.get(p));	
                 
                 // If the p is empty, omit it UNLESS it is numbered,
                 // in which case Word includes it.
                 if (entry.getEntryValue()==null
                 		|| entry.getEntryValue().size()==0) { 
+                	
+                	// TODO FIXME should exclude:
+                    /* <w:r>
+                         <w:t></w:t>
+                       </w:r> 
+                       */                	
                 	
                     log.debug("Not adding p to toc since it is empty.  (stylename " + pStyle.getVal() );
                 
@@ -239,8 +218,7 @@ public class SwitchProcessor implements SwitchProcessorInterface {
             } 
             //set default for new iteration
             entry = null;
-            proceed = true;
-            styleFound = false;
+            selected = false;  // default to exclude
         }
 
         return tocEntries;
