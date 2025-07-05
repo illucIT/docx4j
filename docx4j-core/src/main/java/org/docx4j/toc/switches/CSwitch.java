@@ -19,17 +19,24 @@
  */
 package org.docx4j.toc.switches;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.xml.transform.TransformerException;
 
 import org.apache.commons.lang3.NotImplementedException;
 import org.docx4j.TraversalUtil;
 import org.docx4j.XmlUtils;
 import org.docx4j.finders.InstrTextFinder;
+import org.docx4j.model.fields.FieldRef;
+import org.docx4j.model.fields.FieldsPreprocessor;
 import org.docx4j.model.fields.FldSimpleModel;
 import org.docx4j.model.fields.FormattingSwitchHelper;
 import org.docx4j.model.fields.SimpleFieldLocator;
+import org.docx4j.model.listnumbering.NumberFormatter;
 import org.docx4j.toc.TocEntry;
 import org.docx4j.wml.CTSimpleField;
+import org.docx4j.wml.NumberFormat;
 import org.docx4j.wml.P;
 import org.docx4j.wml.Style;
 import org.docx4j.wml.Text;
@@ -57,7 +64,12 @@ public class CSwitch extends SelectorSwitch {
 	
 
     public static final String ID = "\\c";
+    
     private static final int PRIORITY = 7;
+	@Override
+	public int getPriority() {
+		return PRIORITY;
+	}
     
     /**
      * identifier is the name assigned to the series of items that are to be numbered. 
@@ -66,6 +78,9 @@ public class CSwitch extends SelectorSwitch {
      * identifier shall start with a Latin letter and shall consist of no more than 40 Latin letters, Arabic digits, and underscores. 
      * 
      * (See the TOC field (§2.16.5.75) switches \c and \s for uses of identifier.)
+     * 
+     * Since a C switch can only include one series (ie 1 identifier), there is
+     * a 1:1 relationship in this class.
      */
     private String itemIdentifier;
     
@@ -73,6 +88,7 @@ public class CSwitch extends SelectorSwitch {
 		return itemIdentifier;
 	}
 
+    int counter = 4;
 
 	@Override
     public String parseFieldArgument(String fieldArgument){
@@ -127,6 +143,7 @@ public class CSwitch extends SelectorSwitch {
     				
     		        TocEntry te = sp.getEntry(); // creates it       	
     		        te.setEntryLevel(1); // ??
+    		        detected = true;
     		    	sp.setSelected(true);  // important 
     		    	return;
     			}
@@ -145,6 +162,7 @@ public class CSwitch extends SelectorSwitch {
 				
 		        TocEntry te = sp.getEntry(); // creates it       	
 		        te.setEntryLevel(1); // ??
+		        detected = true;
 		    	sp.setSelected(true);  // important 
 		    	return;
 			}			
@@ -153,10 +171,251 @@ public class CSwitch extends SelectorSwitch {
     	
     }
     
+    boolean detected = false;
     
-	@Override
-	public int getPriority() {
-		return PRIORITY;
+	public boolean isDetected() {
+		return detected;
 	}
+
+    /**
+     * We detected a SEQ in the P, so before we put the P in the TOC,
+     * lets resolve the SEQ to a number.
+     * @param p
+     */
+    public P postprocess(P p) {
+    	
+    	// Step 1: create a clone of the P
+    	P clonedP = (P)XmlUtils.deepCopy(p);
+    	
+    	// Have to do this for both simple and complex fields
+    	List<FieldRef> fieldRefs = new ArrayList<FieldRef>();
+    	clonedP = FieldsPreprocessor.canonicalise(clonedP, fieldRefs);
+    	
+    	/* canonicalised result:
+    	 * 
+			<w:p>
+			    <w:pPr>
+			        <w:pStyle w:val="Caption"/>
+			    </w:pPr>
+			    <w:bookmarkStart w:name="_Toc198891146" w:id="4"/>
+			    <w:r>
+			        <w:t xml:space="preserve">Figure </w:t>
+			    </w:r>
+			    <w:r>
+			        <w:fldChar w:fldCharType="begin"/>
+			        <w:instrText xml:space="preserve"> SEQ Figure \* ARABIC </w:instrText>
+			        <w:fldChar w:fldCharType="separate"/>
+			    </w:r>
+			    <w:r>
+			        <w:rPr>
+			            <w:noProof/>
+			        </w:rPr>
+			        <w:t>1</w:t>
+			    </w:r>
+			    <w:r>
+			        <w:fldChar w:fldCharType="end"/>
+			    </w:r>
+			    <w:r>
+			        <w:t xml:space="preserve"> Turbines</w:t>
+			    </w:r>
+			    <w:bookmarkEnd w:id="4"/>
+			</w:p>
+    	 */
+    	
+//    	System.out.println(XmlUtils.marshaltoString(clonedP));
+    	
+    	for (FieldRef fr : fieldRefs) {
+
+    		if (log.isDebugEnabled()) {
+    			log.debug("'" + fr.getFldName() + "'");
+    		}
+			if ( fr.getFldName().equals("SEQ") ) {
+				
+				String instr = extractInstr(fr.getInstructions() );
+				if (instr==null) {
+					log.warn("No instructions found in this field");
+					// TODO for various cases
+					continue;
+				}  
+				System.out.println(instr);
+				// SEQ Figure \* ARABIC 
+				
+				String identifier = getIdentifierFromInstr(instr);
+				if (!this.getItemIdentifier().equals(identifier)) {
+					
+	    			log.debug("'" + identifier + "' does not match sought '" + this.getItemIdentifier() + "'");
+										
+				} else {
+					
+					// Now format the result
+					FldSimpleModel fsm = new FldSimpleModel();
+					String result = counter + "";
+					
+					try {
+						fsm.build(instr);
+						/*
+							Per http://webapp.docx4java.org/OnlineDemo/ecma376/WordML/SEQ.html
+							Switches: Zero or one of the numeric-formatting-switches, or zero or more of the following field-specific-switches. If no numeric-formatting-switch is present, \* Arabic is used.
+							
+							\c Repeats the closest preceding sequence number. [Note: This is useful for inserting chapter numbers in headers or footers. end note]
+							
+							\h Hides the field result unless a general-formatting-switch is also present.[Note: This switch can be used to refer to a SEQ field in a cross-reference without printing the number. end note]
+							
+							\n Inserts the next sequence number for the specified item. This is the default.
+							
+							\r field-argument  Resets the sequence number to the integer number specified by text in this switch's field-argument.
+							
+							\s field-argument  Resets the sequence number to the built-in (integer) heading level specified by text in this switch's field-argument.
+							
+						*/	
+						// At present, this implementation only supports the general formatting switch \* 
+						// (see further http://webapp.docx4java.org/OnlineDemo/ecma376/WordML/file_10.html )
+						// and then only for values ARABIC and ROMAN 
+						
+						String val = FormattingSwitchHelper.findFirstSwitchValue("\\*", fsm.getFldParameters(), false);
+						System.out.println(val); //ARABIC
+						if ("ARABIC".equals(val)) {
+							
+							result = NumberFormatter.getCurrentValueFormatted(NumberFormat.DECIMAL, counter);
+							
+						} else if ("Roman".equals(val)) {
+							// formats a numeric result using uppercase Roman numerals. 
+							result = NumberFormatter.getCurrentValueFormatted(NumberFormat.UPPER_ROMAN, counter);
+
+						} else if ("roman".equals(val)) {
+							// formats a numeric result using lowercase Roman numerals. 
+							result = NumberFormatter.getCurrentValueFormatted(NumberFormat.LOWER_ROMAN, counter);
+
+						} else {
+							log.warn("TODO handle general formatting switch " + val);
+						}
+						System.out.println("result " + result);
+						
+					} catch (TransformerException e) {
+						log.warn("Can't format the field", e);
+					}
+					
+					fr.setResult(result);
+					
+					fr.getParent().getContent().remove(fr.getBeginRun());
+					fr.getParent().getContent().remove(fr.getEndRun());
+					
+				} 
+			} 
+    	}
+			
+    	
+    	// System.out.println(XmlUtils.marshaltoString(clonedP));
+    	/* result:
+			<w:p>
+			    <w:pPr>
+			        <w:pStyle w:val="Caption"/>
+			    </w:pPr>
+			    <w:bookmarkStart w:name="_Toc198891146" w:id="4"/>
+			    <w:r>
+			        <w:t xml:space="preserve">Figure </w:t>
+			    </w:r>
+			    <w:r>
+			        <w:rPr>
+			            <w:noProof/>
+			        </w:rPr>
+			        <w:t>4</w:t>
+			    </w:r>
+			    <w:r>
+			        <w:t xml:space="preserve"> Turbines</w:t>
+			    </w:r>
+			    <w:bookmarkEnd w:id="4"/>
+			</w:p>
+    	 */
+    	
+    	// reset
+    	detected = false;
+    	return clonedP;
+    }
+	
+
+	
+	protected static String extractInstr(List<Object> instructions) {
+		// For SEQ, expect the list to contain a simple string
+		
+		if (instructions.size()!=1) {
+			log.warn("SEQ field contained complex instruction; attempting to process");
+			/* eg
+			 * 
+			 *    <w:r>
+			        <w:instrText xml:space="preserve"> SEQ  Fig</w:instrText>
+			      </w:r>
+			      <w:r>
+			        <w:instrText xml:space="preserve">ure  \* ARABIC </w:instrText>
+			      </w:r>
+			      
+				for (Object i : instructions) {
+					i = XmlUtils.unwrap(i);
+					if (i instanceof Text) {
+						log.error( ((Text)i).getValue());
+					} else {
+						log.error(XmlUtils.marshaltoString(i, true, true) );
+					}
+				}
+			 */
+			StringBuffer sb = new StringBuffer(); 
+			for (Object i : instructions) {
+				i = XmlUtils.unwrap(i);
+				if (i instanceof Text) {
+					String t = ((Text)i).getValue();
+					log.debug( t);
+					sb.append(t);
+				} else {
+					log.warn("Failed: non Text object encountered.");
+					log.debug(XmlUtils.marshaltoString(i, true, true) );
+					return null;					
+				}
+			}
+			return sb.toString();
+		}
+		
+		Object o = XmlUtils.unwrap(instructions.get(0));
+		if (o instanceof Text) {
+			return ((Text)o).getValue();
+		} else {
+            if(log.isErrorEnabled()) {
+                log.error("TODO: extract field name from " + o.getClass().getName());
+                log.error(XmlUtils.marshaltoString(instructions.get(0), true, true));
+            }
+			return null;
+		}
+	}
+	
+	/**
+	 * Get the identifier from, for example
+	 * SEQ Figure \* ARABIC
+	 */
+	protected static String getIdentifierFromInstr(String instr) {
+		// Copied from MailMerger.getDatafieldNameFromInstr
+
+//		System.out.println("BEFORE " +XmlUtils.marshaltoString(
+//			fr.getParent(), true, true));
+		
+//		log.debug(instr);
+		String tmp = instr.substring( instr.indexOf("SEQ") + 3);
+		tmp = tmp.trim();
+		String datafieldName  = null;
+		// A data field name will be quoted if it contains spaces
+		if (tmp.startsWith("\"")) {
+			if (tmp.indexOf("\"",1)>-1) {
+				datafieldName = tmp.substring(1, tmp.indexOf("\"",1));				
+			} else {
+				log.warn("Quote mismatch in " + instr);
+				// hope for the best
+				datafieldName = tmp.indexOf(" ") >-1 ? tmp.substring(1, tmp.indexOf(" ")) : tmp.substring(1) ;				
+			}
+		} else {
+			datafieldName = tmp.indexOf(" ") >-1 ? tmp.substring(0, tmp.indexOf(" ")) : tmp ;
+		}
+		log.info("Key: '" + datafieldName + "'");
+
+		return datafieldName;
+		
+	}	
 
 }

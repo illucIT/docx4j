@@ -174,6 +174,11 @@ public class SwitchProcessor implements SwitchProcessorInterface {
             		// C switch is sensitive to paragraph content containing "SEQ" field.
             		((CSwitch)sw).process(p, this);
             		
+            		if (((CSwitch)sw).isDetected()) {
+            			// P contains SEQ, so return a P where that is converted to sequence number
+            			p = ((CSwitch)sw).postprocess(p);
+            		}
+            		
             	} else if (sw instanceof USwitch) {            		
             		// Need pPr
             		((USwitch)sw).process(s, this, ppr, oSwitch);
@@ -188,6 +193,7 @@ public class SwitchProcessor implements SwitchProcessorInterface {
             	
                 // create the visible entry text
             	entry.setEntryValue(p);  // C, O, T, and U switches instantiate entry. 
+            	
             	// number the paragraph, if necessary
             	entry.numberEntry(pNumbersMap.get(p));	
                 

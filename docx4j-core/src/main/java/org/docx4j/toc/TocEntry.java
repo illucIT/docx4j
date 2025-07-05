@@ -340,6 +340,7 @@ public class TocEntry {
         // Create object for webHidden
         BooleanDefaultTrue booleandefaulttrue25 = wmlObjectFactory.createBooleanDefaultTrue(); 
         rpr13.setWebHidden(booleandefaulttrue25); 
+                
         // Create object for fldChar (wrapped in JAXBElement) 
         FldChar fldchar6 = wmlObjectFactory.createFldChar(); 
         JAXBElement<FldChar> fldcharWrapped6 = wmlObjectFactory.createRFldChar(fldchar6); 
@@ -357,6 +358,7 @@ public class TocEntry {
         // Create object for webHidden
         BooleanDefaultTrue booleandefaulttrue27 = wmlObjectFactory.createBooleanDefaultTrue(); 
         rpr14.setWebHidden(booleandefaulttrue27); 
+                
         // Create object for instrText (wrapped in JAXBElement) 
         Text text7 = wmlObjectFactory.createText(); 
         JAXBElement<Text> textWrapped7 = wmlObjectFactory.createRInstrText(text7); 
@@ -387,6 +389,7 @@ public class TocEntry {
         // Create object for webHidden
         BooleanDefaultTrue booleandefaulttrue31 = wmlObjectFactory.createBooleanDefaultTrue(); 
         rpr16.setWebHidden(booleandefaulttrue31); 
+        
         // Create object for fldChar (wrapped in JAXBElement) 
         FldChar fldchar7 = wmlObjectFactory.createFldChar(); 
         JAXBElement<FldChar> fldcharWrapped7 = wmlObjectFactory.createRFldChar(fldchar7); 
