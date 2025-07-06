@@ -176,7 +176,7 @@ public class SwitchProcessor implements SwitchProcessorInterface {
             		
             		if (((CSwitch)sw).isDetected()) {
             			// P contains SEQ, so return a P where that is converted to sequence number
-            			p = ((CSwitch)sw).postprocess(p);
+            			p = ((CSwitch)sw).postprocess(p, wordMLPackage);
             		}
             		
             	} else if (sw instanceof USwitch) {            		

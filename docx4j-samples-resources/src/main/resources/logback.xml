@@ -83,6 +83,7 @@
 		-->
 
 	<logger name="org.docx4j.model.fields" level="WARN" />
+	<logger name="org.docx4j.model.fields.seq" level="INFO" />
 
 	<logger name="org.docx4j.model.listnumbering" level="WARN" />
 

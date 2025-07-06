@@ -7,7 +7,20 @@ import org.slf4j.LoggerFactory;
 public class NumberFormatter {
 	
 	protected static Logger log = LoggerFactory.getLogger(NumberFormatter.class);
-	
+
+    /**
+     * The current number, formatted using numFmt.
+     */
+    public static String getCurrentValueFormatted(NumberFormat numFmt, String num)
+    {
+
+    	try {
+    		return getCurrentValueFormatted(numFmt, Integer.parseInt(num));
+    	} catch (NumberFormatException e) {
+    		log.error("'" + num + "' is NaN");
+    		return "1";
+    	}
+    } 
     /**
      * The current number, formatted using numFmt.
      */

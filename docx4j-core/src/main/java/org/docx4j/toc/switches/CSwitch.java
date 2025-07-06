@@ -33,10 +33,10 @@ import org.docx4j.model.fields.FieldsPreprocessor;
 import org.docx4j.model.fields.FldSimpleModel;
 import org.docx4j.model.fields.FormattingSwitchHelper;
 import org.docx4j.model.fields.SimpleFieldLocator;
-import org.docx4j.model.listnumbering.NumberFormatter;
+import org.docx4j.openpackaging.exceptions.Docx4JException;
+import org.docx4j.openpackaging.packages.WordprocessingMLPackage;
 import org.docx4j.toc.TocEntry;
 import org.docx4j.wml.CTSimpleField;
-import org.docx4j.wml.NumberFormat;
 import org.docx4j.wml.P;
 import org.docx4j.wml.Style;
 import org.docx4j.wml.Text;
@@ -88,7 +88,7 @@ public class CSwitch extends SelectorSwitch {
 		return itemIdentifier;
 	}
 
-    int counter = 4;
+    int counter = 1;
 
 	@Override
     public String parseFieldArgument(String fieldArgument){
@@ -182,7 +182,7 @@ public class CSwitch extends SelectorSwitch {
      * lets resolve the SEQ to a number.
      * @param p
      */
-    public P postprocess(P p) {
+    public P postprocess(P p, WordprocessingMLPackage wordMLPackage) {
     	
     	// Step 1: create a clone of the P
     	P clonedP = (P)XmlUtils.deepCopy(p);
@@ -270,26 +270,15 @@ public class CSwitch extends SelectorSwitch {
 						*/	
 						// At present, this implementation only supports the general formatting switch \* 
 						// (see further http://webapp.docx4java.org/OnlineDemo/ecma376/WordML/file_10.html )
-						// and then only for values ARABIC and ROMAN 
-						
-						String val = FormattingSwitchHelper.findFirstSwitchValue("\\*", fsm.getFldParameters(), false);
-						System.out.println(val); //ARABIC
-						if ("ARABIC".equals(val)) {
-							
-							result = NumberFormatter.getCurrentValueFormatted(NumberFormat.DECIMAL, counter);
-							
-						} else if ("Roman".equals(val)) {
-							// formats a numeric result using uppercase Roman numerals. 
-							result = NumberFormatter.getCurrentValueFormatted(NumberFormat.UPPER_ROMAN, counter);
-
-						} else if ("roman".equals(val)) {
-							// formats a numeric result using lowercase Roman numerals. 
-							result = NumberFormatter.getCurrentValueFormatted(NumberFormat.LOWER_ROMAN, counter);
-
-						} else {
-							log.warn("TODO handle general formatting switch " + val);
+						// and then only for values ARABIC, Roman and roman 
+												
+						try {
+							result = FormattingSwitchHelper.applyFormattingSwitch(wordMLPackage, fsm, result);
+						} catch (Docx4JException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
 						}
-						System.out.println("result " + result);
+
 						
 					} catch (TransformerException e) {
 						log.warn("Can't format the field", e);
@@ -328,6 +317,7 @@ public class CSwitch extends SelectorSwitch {
 			</w:p>
     	 */
     	
+    	counter++;
     	// reset
     	detected = false;
     	return clonedP;
