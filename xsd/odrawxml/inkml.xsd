@@ -610,7 +610,13 @@
 		<xsd:attribute name="time" type="xsd:unsignedLong"/>
 		<xsd:attribute name="timestampRef" type="xsd:anyURI"/>
 		<xsd:attribute name="timeString" type="xsd:dateTime"/>
-		<xsd:attribute name="timeOffset" type="xsd:unsignedLong" use="optional" default="0"/>
+				<!-- 2025 07:  note discrepancy between spec text and spec XSD.
+				     Text says xsd:decimal; XSD says xsd:integer.
+				     "For ease of processing, all timestamps are expressed in milliseconds. Finer-grained timestamps are obtained using fractional values."
+				     suggests xsd:decimal is intended.
+				     For @timeOffset Word might emit decimal. 
+				     -->		
+		<xsd:attribute name="timeOffset" type="xsd:decimal" use="optional" default="0"/>
 	</xsd:complexType>
 	<xsd:complexType name="mapping.type" mixed="true">
 		<xsd:annotation>
@@ -758,8 +764,13 @@
 				<xsd:attribute name="priorRef" type="xsd:anyURI" use="optional"/>
 				<xsd:attribute name="contextRef" type="xsd:anyURI"/>
 				<xsd:attribute name="brushRef" type="xsd:anyURI"/>
-				<xsd:attribute name="duration" type="xsd:integer"/>
-				<xsd:attribute name="timeOffset" type="xsd:integer"/>
+				<!-- 2025 07:  note discrepancy between spec text and spec XSD.
+				     Text says xsd:decimal; XSD says xsd:integer.
+				     For @timeOffset Word emits decimals. 
+				     https://github.com/plutext/docx4j/issues/624
+				     -->
+				<xsd:attribute name="duration" type="xsd:decimal"/>
+				<xsd:attribute name="timeOffset" type="xsd:decimal"/>
 			</xsd:extension>
 		</xsd:simpleContent>
 	</xsd:complexType>
