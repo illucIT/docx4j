@@ -228,16 +228,17 @@ public class RemovalHandler {
     	        ByteArrayOutputStream baos = null;
     	        
     	        org.w3c.dom.Document doc = null;
-    			if ( ((JaxbXmlPart)part).isUnmarshalled() ) {
+    			if ( ((JaxbXmlPart)part).isUnmarshalled() 
+    				||  /* don't want to use StAX */ !Docx4jProperties.getProperty("docx4j.model.datastorage.BindingHandler.Implementation", "BindingTraverserXSLT").equals("BindingTraverserStAX"))  {
     				
-    				log.debug( ((JaxbXmlPart)part).getPartName().getName() + " already unmarshalled.");		
+    				log.debug( ((JaxbXmlPart)part).getPartName().getName() + " not using StAX.");		
     				doc = XmlUtils.marshaltoW3CDomDocument(
     					part.getJaxbElement() );
     				source = new javax.xml.transform.dom.DOMSource(doc);				
     				result = prepareJAXBResult(Context.jc);
     				
     			} else {
-    				log.debug( ((JaxbXmlPart)part).getPartName().getName() + " not yet unmarshalled.");
+    				log.debug( ((JaxbXmlPart)part).getPartName().getName() + " not yet unmarshalled; using StAX.");
     				try {
     					xmlReader = part.getXMLStreamReader(null);
     					source = new StAXSource(xmlReader);

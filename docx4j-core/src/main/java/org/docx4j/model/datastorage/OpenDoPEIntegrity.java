@@ -35,6 +35,7 @@ import javax.xml.transform.stax.StAXSource;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
+import org.docx4j.Docx4jProperties;
 import org.docx4j.XmlUtils;
 import org.docx4j.jaxb.Context;
 import org.docx4j.openpackaging.exceptions.Docx4JException;
@@ -153,16 +154,17 @@ public class OpenDoPEIntegrity {
 	        ByteArrayOutputStream baos = null;
 	        
 	        org.w3c.dom.Document doc = null;
-			if ( ((JaxbXmlPart)part).isUnmarshalled() ) {
+			if ( ((JaxbXmlPart)part).isUnmarshalled() 
+					|| /* don't want to use StAX */ !Docx4jProperties.getProperty("docx4j.model.datastorage.BindingHandler.Implementation", "BindingTraverserXSLT").equals("BindingTraverserStAX"))  {
 				
-				log.debug( ((JaxbXmlPart)part).getPartName().getName() + " already unmarshalled.");		
+				log.debug( ((JaxbXmlPart)part).getPartName().getName() + "; not using StAX.");		
 				doc = XmlUtils.marshaltoW3CDomDocument(
 					part.getJaxbElement() );
 				source = new javax.xml.transform.dom.DOMSource(doc);				
 				result = prepareJAXBResult(Context.jc);
 				
 			} else {
-				log.debug( ((JaxbXmlPart)part).getPartName().getName() + " not yet unmarshalled.");
+				log.debug( ((JaxbXmlPart)part).getPartName().getName() + " not yet unmarshalled; using StAX.");
 				try {
 					xmlReader = part.getXMLStreamReader(null);
 					source = new StAXSource(xmlReader);

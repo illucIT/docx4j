@@ -1,5 +1,5 @@
 /**
- *  Copyright 2010-2013, Plutext Pty Ltd.
+ *  Copyright 2010-2025, Plutext Pty Ltd.
  *   
  *  This file is part of docx4j.
 
@@ -322,15 +322,27 @@ public class OpenDoPEHandler {
 		// Process repeats and conditionals.
 		try {
 			for (ContentAccessor part : partList) {
-				if ( ((JaxbXmlPart)part).isUnmarshalled() ) {
+				if ( ((JaxbXmlPart)part).isUnmarshalled())  {
+						
 					log.debug( ((JaxbXmlPart)part).getPartName().getName() + " already unmarshalled.");
 					new TraversalUtil(part, shallowTraversor);
+
 				} else {
+					
 					log.debug( ((JaxbXmlPart)part).getPartName().getName() + " not yet unmarshalled.");
-					try {
-						((JaxbXmlPart)part).pipe(new ShallowTraversorStAX(), null);
-					} catch (Exception e) {
-						throw new Docx4JException(e.getMessage(),e);
+					
+					if ( /* don't want to use StAX */ !Docx4jProperties.getProperty("docx4j.model.datastorage.BindingHandler.Implementation", "BindingTraverserXSLT").equals("BindingTraverserStAX"))  {
+
+						log.debug( "Property setting forcing unmarshalling.");
+						new TraversalUtil(part, shallowTraversor);
+						
+					} else {
+					
+						try {
+							((JaxbXmlPart)part).pipe(new ShallowTraversorStAX(), null);
+						} catch (Exception e) {
+							throw new Docx4JException(e.getMessage(),e);
+						}
 					}
 				}
 			}
@@ -438,7 +450,9 @@ public class OpenDoPEHandler {
 			} else if (getW15RepeatingSection(sdtPr)!=null) {
 				return processW15Repeat( sdt, wordMLPackage.getCustomXmlDataStorageParts());					
 			} else {				
-				log.warn("TODO: handle " + XmlUtils.marshaltoString(sdtPr));
+				if (log.isDebugEnabled()) {
+					log.debug("Ignoring SDT " + XmlUtils.marshaltoString(sdtPr));
+				}
 				List<Object> results = new ArrayList<Object>();
 				results.add(sdt);
 				return results;

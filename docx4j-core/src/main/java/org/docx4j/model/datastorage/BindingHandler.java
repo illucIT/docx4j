@@ -163,8 +163,10 @@ public class BindingHandler {
 		log.warn("Recalculating starting value for new bookmarks.  For efficiency, you should set this in your code.");
 		int highestId = 0;
 		
-		if (wordMLPackage.getMainDocumentPart().isUnmarshalled()) {
-			log.debug( " MDP already unmarshalled.");
+		if (wordMLPackage.getMainDocumentPart().isUnmarshalled()
+				 || /* don't want to use StAX */ !Docx4jProperties.getProperty("docx4j.model.datastorage.BindingHandler.Implementation", "BindingTraverserXSLT").equals("BindingTraverserStAX"))  {
+			
+			log.debug( " MDP not using StAX.");
 		
 			RangeFinder rt = new RangeFinder();
 			new TraversalUtil(wordMLPackage.getMainDocumentPart().getContent(), rt);
@@ -300,17 +302,17 @@ public class BindingHandler {
 			}
 			
 			
-			if ( Docx4jProperties.getProperty("docx4j.model.datastorage.BindingHandler.Implementation", "BindingTraverserXSLT")
+			if ( /* Non XSLT */ Docx4jProperties.getProperty("docx4j.model.datastorage.BindingHandler.Implementation", "BindingTraverserXSLT")
 					.equals("BindingTraverserNonXSLT") ) {
 				// Use the non-XSLT approach.  This is faster, but doesn't have feature parity.
 				log.info("Using BindingTraverserNonXSLT, which is faster, but missing some features");
 				traverser = new BindingTraverserNonXSLT();
-			} else if ( Docx4jProperties.getProperty("docx4j.model.datastorage.BindingHandler.Implementation", "BindingTraverserXSLT")
+			} else if ( /* StAX */ Docx4jProperties.getProperty("docx4j.model.datastorage.BindingHandler.Implementation", "BindingTraverserXSLT")
 					.equals("BindingTraverserStAX") ) {
 				// Use StAX + JAXB.  This is potentially faster (provided the MDP has not been unmarshalled already), but doesn't have feature parity.
 				log.info("Using BindingTraverserStAX");
 				traverser = new BindingTraverserStAX();
-			} else {
+			} else { /* XSLT */
 				// Slower, fully featured. The default.
 				log.info("Using BindingTraverserXSLT, which is slower, but fully featured");
 				traverser = new BindingTraverserXSLT();
