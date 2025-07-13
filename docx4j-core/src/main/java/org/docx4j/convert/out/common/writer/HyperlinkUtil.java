@@ -72,7 +72,9 @@ public class HyperlinkUtil {
 		
 		if (internalTarget==null
 				&& externalTarget==null) {
-			log.error("No targets found for " );
+			log.info("hyperlink missing target; ignoring. " );
+			ret = doc.createElementNS("http://www.w3.org/1999/XSL/Format", "fo:inline");
+			return ret;
 		}
 		
 		String location = null;
