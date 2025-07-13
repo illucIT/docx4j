@@ -115,8 +115,8 @@ public class VariablePrepare {
 		// approach (which wouldn't involve marshal/unmarshall, and 
 		// so should be more efficient).
 		
-        if(log.isInfoEnabled()) {
-            log.info(XmlUtils.marshaltoString(wmlPackage.getMainDocumentPart().getJaxbElement(), true, true));
+        if(log.isDebugEnabled()) {
+            log.debug(XmlUtils.marshaltoString(wmlPackage.getMainDocumentPart().getJaxbElement(), true, true));
         }
 		
 		// Now clean up some more
@@ -128,8 +128,8 @@ public class VariablePrepare {
 					new TraversalUtilParagraphVisitor());
 		paragraphVisitor.walkJAXBElements(body);
 
-        if(log.isInfoEnabled()) {
-            log.info(XmlUtils.marshaltoString(wmlPackage.getMainDocumentPart().getJaxbElement(), true, true));
+        if(log.isDebugEnabled()) {
+            log.debug(XmlUtils.marshaltoString(wmlPackage.getMainDocumentPart().getJaxbElement(), true, true));
         }
 	}
 	
