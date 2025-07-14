@@ -2,6 +2,30 @@ CHANGELOG
 =========
 
 
+Version 11.5.4 (minor release) 
+===============
+
+Release date
+------------
+
+14 July 2025
+
+
+Contributors to this release
+----------------------------
+
+Jason Harrop
+
+
+Changes in Version 11.5.4
+--------------------------
+
+Support for Table of Figures (TOC C switch and SEQ field)
+
+Fix various issues (535, 576, 619, 624)
+
+
+
 Version 11.5.3  
 ===============
 
