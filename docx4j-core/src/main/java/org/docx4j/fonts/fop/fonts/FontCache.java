@@ -52,6 +52,8 @@ import org.docx4j.fonts.fop.util.LogUtil;
  * Fop cache (currently only used for font info caching)
  */
 public final class FontCache implements Serializable {
+	
+    private static  Logger log = LoggerFactory.getLogger(FontCache.class);
 
     /**
      * Serialization Version UID. Change this value if you want to make sure the
@@ -59,8 +61,6 @@ public final class FontCache implements Serializable {
      */
     private static final long serialVersionUID = 9129238336422194339L;
 
-    /** logging instance */
-    private static  Logger log = LoggerFactory.getLogger(FontCache.class);
 
     /** FOP's user directory name */
     private static final String FOP_USER_DIR = ".docx4j";
@@ -118,22 +118,34 @@ public final class FontCache implements Serializable {
      * @return the default font cache file
      */
     public static File getDefaultCacheFile(boolean forWriting) {
+    	
         File userHome = getUserHome();
         if (userHome != null) {
+        	if (log.isDebugEnabled() ) {
+        		log.debug("Got user.home: " + userHome.getAbsolutePath() );
+        	}
             File fopUserDir = new File(userHome, FOP_USER_DIR);
-            if (forWriting) {
+            if (forWriting /* eg discoverPhysicalFonts */ ) {
                 boolean writable = fopUserDir.canWrite();
                 if (!fopUserDir.exists()) {
                     writable = fopUserDir.mkdir();
                 }
                 if (!writable) {
                     userHome = getTempDirectory();
+                	if (log.isDebugEnabled() ) {
+                		log.debug("user.home not writable, so using temp dir: " + userHome.getAbsolutePath() );
+                	}
                     fopUserDir = new File(userHome, FOP_USER_DIR);
                     fopUserDir.mkdir();
                 }
             }
             return new File(fopUserDir, DEFAULT_CACHE_FILENAME);
         }
+    	if (log.isDebugEnabled() ) {
+    		File f = new File(FOP_USER_DIR);
+    		log.debug("user.home null; trying " + f.getAbsolutePath() );
+    		return f;
+    	}
         return new File(FOP_USER_DIR);
     }
 
