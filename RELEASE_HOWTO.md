@@ -55,8 +55,6 @@ Update CHANGELOG.md, README.md with release info.
 Update pom.xml with target version number (must NOT be -SNAPSHOT for nexus-staging-maven-plugin )
 Update <tag> in scm element.  (Can it just be deleted?)
 
-Check sub-modules are using <version>${revision}</version> (ie that the 2 Maven commits from last time have been reverted)
-
 Update build.xml so it has the same version as pom.xml (ie without  -SNAPSHOT)
 
 Check jar versions in pom.xml, build.xml
@@ -161,7 +159,13 @@ or to manually close then release :-)
 
 If the remote operation is skipped, it might be because your last module had skip in it? (eg docx4j-ImportXHTML)
 
+
+
 This new release process does not add a tag; easiest to do that in SmartGit: Branch > Add Tag...
+
+eg docx4j-parent-11.5.2 but better docx4j-11.5.2
+docx4j-ImportXHTML-11.5.2
+
 
 Repeat above for -ImportXHTML 
 

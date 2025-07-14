@@ -73,6 +73,7 @@
 
 	<logger name="org.docx4j.fonts.RunFontSelector" level="WARN" />
  -->
+	<logger name="org.docx4j.fonts.fop.fonts.FontCache" level="WARN" /> 
 
 	<logger name="org.docx4j.jaxb" level="INFO" />
 
@@ -133,7 +134,7 @@
 
 	<logger name="org.docx4j.services.client" level="INFO" />
 
-	<logger name="org.docx4j.toc" level="INFO" />
+	<logger name="org.docx4j.toc" level="DEBUG" />
 
 	<logger name="org.docx4j.wml" level="WARN" />
 
