@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.docx4j.XmlUtils;
 import org.docx4j.model.fields.merge.DataFieldName;
 import org.docx4j.model.fields.merge.MailMerger.OutputField;
 import org.docx4j.openpackaging.packages.WordprocessingMLPackage;
@@ -21,18 +22,18 @@ public class FieldsMailMerge {
 		
 		// Whether to create a single output docx, or a docx per Map of input data.
 		// Note: If you only have 1 instance of input data, then you can just invoke performMerge
-		boolean mergedOutput = false;
+		boolean mergedOutput = true;
 		
 		WordprocessingMLPackage wordMLPackage = WordprocessingMLPackage.load(
 				new java.io.File(
-						System.getProperty("user.dir") + "/src/test/resources/MERGEFIELD.docx"));
+						System.getProperty("user.dir") + "/../docx4j-core-tests/src/test/resources/MERGEFIELD.docx"));
 //						System.getProperty("user.dir") + "/template.docx"));
 		
 		List<Map<DataFieldName, String>> data = new ArrayList<Map<DataFieldName, String>>();
 
 		// Instance 1
 		Map<DataFieldName, String> map = new HashMap<DataFieldName, String>();
-		map.put( new DataFieldName("KundenNAme"), "Daffy duck");
+		map.put( new DataFieldName("KundenNAme"), "Daffy duck"); // ignored
 		map.put( new DataFieldName("Kundenname"), "Plutext");
 		map.put(new DataFieldName("Kundenstrasse"), "Bourke Street");
 		// To get dates right, make sure you have docx4j property docx4j.Fields.Dates.DateFormatInferencer.USA
