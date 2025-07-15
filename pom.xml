@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>org.docx4j</groupId>
-	<artifactId>docx4j-parent</artifactId>	
+	<artifactId>docx4j-parent</artifactId>
 	<version>${revision}</version>
 	
 	<properties>
@@ -75,9 +75,9 @@
 	    <comments>A business-friendly OSS license</comments>
 	  </license>
   	</licenses>
-  	
+
 	<!--  https://central.sonatype.org/pages/requirements.html
-	      requires developers be populated. Others have 
+	      requires developers be populated. Others have
 	      contributed to docx4j over the years; see the CHANGELOG -->
 	<developers>
 		<developer>
@@ -95,12 +95,13 @@
   </scm>
 	<inceptionYear>2007</inceptionYear>
 
-	<distributionManagement>
-		<snapshotRepository>
-			<id>ossrh</id>
-			<url>https://oss.sonatype.org/content/repositories/snapshots</url>
-		</snapshotRepository>
-	</distributionManagement>
+<!--	<distributionManagement>-->
+<!--		<snapshotRepository>-->
+<!--			<id>ossrh</id>-->
+<!--			<url>https://oss.sonatype.org/content/repositories/snapshots</url>-->
+<!--		</snapshotRepository>-->
+<!--	</distributionManagement>-->
+
 
 
 	<build>
@@ -144,17 +145,30 @@
     	
 		<plugins>
 
-			<plugin>
-				<groupId>org.sonatype.plugins</groupId>
-				<artifactId>nexus-staging-maven-plugin</artifactId>
-				<version>1.7.0</version>
-				<extensions>true</extensions>
-				<configuration>
-					<serverId>ossrh</serverId>
-					<nexusUrl>https://oss.sonatype.org/</nexusUrl>
-					<autoReleaseAfterClose>true</autoReleaseAfterClose>
-				</configuration>
-			</plugin>
+<!--			<plugin>-->
+<!--				<groupId>org.sonatype.plugins</groupId>-->
+<!--				<artifactId>nexus-staging-maven-plugin</artifactId>-->
+<!--				<version>1.7.0</version>-->
+<!--				<extensions>true</extensions>-->
+<!--				<configuration>-->
+<!--					<serverId>ossrh</serverId>-->
+<!--					<nexusUrl>https://oss.sonatype.org/</nexusUrl>-->
+<!--					<autoReleaseAfterClose>true</autoReleaseAfterClose>-->
+<!--				</configuration>-->
+<!--			</plugin>-->
+
+
+<!--			<plugin>-->
+<!--				<groupId>org.sonatype.plugins</groupId>-->
+<!--				<artifactId>nexus-staging-maven-plugin</artifactId>-->
+<!--				<version>1.7.0</version>-->
+<!--				<extensions>true</extensions>-->
+<!--				<configuration>-->
+<!--					<serverId>ossrh</serverId>-->
+<!--					<nexusUrl>https://oss.sonatype.org/</nexusUrl>-->
+<!--					<autoReleaseAfterClose>true</autoReleaseAfterClose>-->
+<!--				</configuration>-->
+<!--			</plugin>-->
 
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -208,8 +222,7 @@
 		          </dependency>
 		        </dependencies> 
 		      </plugin>
-		       -->
-
+-->
 			<plugin>
 				<artifactId>maven-source-plugin</artifactId>
 				<!-- The Source Plugin creates a jar archive of the source files of the
@@ -288,8 +301,7 @@
             </configuration>
         </plugin>
  -->
-
-			<!-- generate a flattened version of the pom.xml that Maven installs and deploys instead of the original -->
+<!-- generate a flattened version of the pom.xml that Maven installs and deploys instead of the original -->
 			<plugin>
 			    <groupId>org.codehaus.mojo</groupId>
 			    <artifactId>flatten-maven-plugin</artifactId>
@@ -316,26 +328,26 @@
 			    </executions>
 			</plugin>
 
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-gpg-plugin</artifactId>
-				<version>1.5</version>
-				<executions>
-					<execution>
-					<id>sign-artifacts</id>
-					<phase>verify</phase>
-					<goals>
-						<goal>sign</goal>
-					</goals>
-            <configuration>
-                <gpgArguments>
-                    <arg>--pinentry-mode</arg>
-                    <arg>loopback</arg>
-                </gpgArguments>
-            </configuration>
-					</execution>
-				</executions>
-			</plugin>
+<!--			<plugin>-->
+<!--				<groupId>org.apache.maven.plugins</groupId>-->
+<!--				<artifactId>maven-gpg-plugin</artifactId>-->
+<!--				<version>1.5</version>-->
+<!--				<executions>-->
+<!--					<execution>-->
+<!--					<id>sign-artifacts</id>-->
+<!--					<phase>verify</phase>-->
+<!--					<goals>-->
+<!--						<goal>sign</goal>-->
+<!--					</goals>-->
+<!--            <configuration>-->
+<!--                <gpgArguments>-->
+<!--                    <arg>&#45;&#45;pinentry-mode</arg>-->
+<!--                    <arg>loopback</arg>-->
+<!--                </gpgArguments>-->
+<!--            </configuration>-->
+<!--					</execution>-->
+<!--				</executions>-->
+<!--			</plugin>-->
 			
 		</plugins>
 	</build>
@@ -535,12 +547,17 @@
    </profiles>
 
 
-<distributionManagement>
-    <repository>
-        <id>internal.repo</id>
-        <name>illucIT Staging Repository</name>
-        <url>file://${project.build.directory}/mvn-repo</url>
-    </repository>
-</distributionManagement>   				
+	<distributionManagement>
+		<repository>
+			<id>illucit_artifactory_meteor</id>
+			<name>illucIT Artifactory Meteor Releases</name>
+			<url>https://artifactory.illucit.com:443/artifactory/meteor</url>
+		</repository>
+		<snapshotRepository>
+			<id>illucit_artifactory_meteor_snapshots</id>
+			<name>illucIT Artifactory Meteor Snapshots</name>
+			<url>https://artifactory.illucit.com:443/artifactory/meteor</url>
+		</snapshotRepository>
+	</distributionManagement>
 
 </project>
