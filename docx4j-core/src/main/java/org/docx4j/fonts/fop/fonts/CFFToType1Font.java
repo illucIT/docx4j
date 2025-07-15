@@ -35,6 +35,7 @@ import java.util.Map;
 import org.apache.commons.io.IOUtils;
 import org.apache.fontbox.cff.CFFFont;
 import org.apache.fontbox.cff.CFFParser;
+import org.apache.pdfbox.io.RandomAccessReadBuffer;
 import org.docx4j.fonts.fop.apps.io.InternalResourceResolver;
 import org.docx4j.fonts.fop.fonts.type1.PFBData;
 import org.docx4j.fonts.fop.fonts.type1.PFBParser;
@@ -59,7 +60,9 @@ public class CFFToType1Font extends MultiByteFont {
     }
 
     private List<InputStream> convertOTFToType1(InputStream in) throws IOException {
-        CFFFont f = new CFFParser().parse(IOUtils.toByteArray(in)).get(0);
+
+    	CFFFont f = new CFFParser().parse(new RandomAccessReadBuffer(IOUtils.toByteArray(in))).get(0);
+    	
         List<InputStream> fonts = new ArrayList<InputStream>();
         Map<Integer, Integer> glyphs = cidSet.getGlyphs();
         int i = 0;

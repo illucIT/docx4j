@@ -19,9 +19,18 @@
  */
 package org.docx4j.toc.switches;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+
 public class SwitchesFactory {
 
+	private static Logger log = LoggerFactory.getLogger(SwitchesFactory.class);				
+	
     public static SwitchInterface getSwitch(String id){
+    	
+    	log.debug("'"+id+"'");
+    	
         if(id.equals(HSwitch.ID)){
             return new HSwitch();
         } else if(id.equals(NSwitch.ID)){
@@ -32,6 +41,8 @@ public class SwitchesFactory {
             return new TSwitch();
         } else if(id.equals(USwitch.ID)){
             return new USwitch();
+        } else if(id.equals(CSwitch.ID)){
+            return new CSwitch();
         }
         return null;
     }

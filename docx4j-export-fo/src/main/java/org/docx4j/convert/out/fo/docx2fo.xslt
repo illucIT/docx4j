@@ -438,7 +438,10 @@
 		
 		  	<xsl:choose>
   				<xsl:when test="./w:sdtContent/w:p[1]/w:pPr">
-  				
+<!--  				
+		  			<xsl:value-of select="java:org.docx4j.convert.out.common.XsltCommonFunctions.logWarn($conversionContext, 'pPr case')" />
+		  			<xsl:value-of select="java:org.docx4j.convert.out.common.XsltCommonFunctions.logDebug($conversionContext, $childResults, 'pPr case')" />
+  -->  				
 					<xsl:variable name="pPrNode" select="./w:sdtContent/w:p[1]/w:pPr" />
 				  	
 					<xsl:variable name="pStyleVal" select="string( w:pPr/w:pStyle/@w:val )" />  	

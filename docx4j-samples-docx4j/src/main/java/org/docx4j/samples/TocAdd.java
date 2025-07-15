@@ -51,9 +51,15 @@ public class TocAdd  {
         
         TocGenerator tocGenerator = new TocGenerator(wordMLPackage);
         
+        // Some example TOC fields:
+        
         //tocGenerator.generateToc( 0,    "TOC \\h \\z \\t \"comh1,1,comh2,2,comh3,3,comh4,4\" ", true);
         
         tocGenerator.generateToc( 0,    "TOC \\o \"1-3\" \\h \\z \\u ", true);
+        
+        // tocGenerator.generateToc( 0,    "TOC \\h \\z \\c \"Figure\"", true);  // Table of Figures
+        
+//        System.out.println(wordMLPackage.getMainDocumentPart().getXML() );
         
         wordMLPackage.save(new java.io.File(outputfilepath) );
         

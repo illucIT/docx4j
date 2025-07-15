@@ -52,7 +52,7 @@ public class FOSettings extends AbstractConversionSettings {
 	public static final String APACHEFOP_CONFIGURATION = "apacheFopConfiguration";
 	public static final String APACHEFOP_MIME = "apacheFopMime";
 	public static final String CUSTOM_FO_RENDERER = "customFoRenderer";
-	public static final String FO_DUMP_FILE = "foDumpFile";
+	private static final String FO_DUMP_FILE = "foDumpFile";
 
 	private Fop fopConfig;
 	/**

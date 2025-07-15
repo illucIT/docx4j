@@ -13,6 +13,7 @@ import java.util.Locale;
 import java.util.Map;
 
 import org.docx4j.Docx4jProperties;
+import org.docx4j.model.listnumbering.NumberFormatter;
 import org.docx4j.openpackaging.exceptions.Docx4JException;
 import org.docx4j.openpackaging.packages.WordprocessingMLPackage;
 import org.docx4j.openpackaging.parts.WordprocessingML.DocumentSettingsPart;
@@ -739,6 +740,20 @@ public class FormattingSwitchHelper {
 
 		if (format.toUpperCase().contains("LOWER") ) {
 			return value.toLowerCase();
+		}
+		
+		if ("ARABIC".equals(format)) {
+			
+			return NumberFormatter.getCurrentValueFormatted(NumberFormat.DECIMAL, value);
+			
+		} else if ("Roman".equals(format)) {
+			// formats a numeric result using uppercase Roman numerals. 
+			return NumberFormatter.getCurrentValueFormatted(NumberFormat.UPPER_ROMAN, value);
+
+		} else if ("roman".equals(format)) {
+			// formats a numeric result using lowercase Roman numerals. 
+			return NumberFormatter.getCurrentValueFormatted(NumberFormat.LOWER_ROMAN, value);
+
 		}
 		
 		log.debug("Ignoring format: " + format);

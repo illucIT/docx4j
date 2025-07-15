@@ -300,7 +300,7 @@ public class Load3 extends Load {
 	 * @throws Docx4JException
 	 * @throws InvalidFormatException
 	 */
-	private void getPart(OpcPackage pkg, RelationshipsPart rp, 
+	protected void getPart(OpcPackage pkg, RelationshipsPart rp, 
 			Relationship r, ContentTypeManager ctm)
 			throws Docx4JException, InvalidFormatException, URISyntaxException {
 		
@@ -466,7 +466,7 @@ public class Load3 extends Load {
 				
 				// Get a subclass of Part appropriate for this content type	
 				// This will throw UnrecognisedPartException in the absence of
-				// specific knowledge. Hence it is important to get the is
+				// specific knowledge. Hence it is important to get the InputStream
 				// first, as we do above.
 				part = ctm.getPart("/" + resolvedPartUri, rel);				
 
@@ -568,7 +568,7 @@ public class Load3 extends Load {
 						
 					} catch (jakarta.xml.bind.UnmarshalException ue) {
 
-						log.warn("No JAXB model for this CustomXmlDataStorage part; " + ue.getMessage()  );
+						log.info("No JAXB model for this CustomXmlDataStorage part; " + ue.getMessage()  );
 						
 						CustomXmlDataStorage data = getCustomXmlDataStorageClass().factory();	
 						is.reset();

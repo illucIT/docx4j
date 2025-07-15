@@ -24,10 +24,10 @@ import org.docx4j.wml.Style;
 /**
  * hyperlinks switch
  */
-public class HSwitch extends AbstractSwitch{
+public class HSwitch extends FormattingSwitch {
 
     public static final String ID = "\\h";
-    private static final int PRIORITY = 6;
+    private static final int PRIORITY = 5;
 
     @Override
     public boolean hasFieldArgument() {
@@ -35,7 +35,7 @@ public class HSwitch extends AbstractSwitch{
     }
 
     @Override
-    public void process(Style s, SwitchProcessor sp) {
+    public void process(Style s, SwitchProcessorInterface sp) {
         sp.getEntry().makeHyperlink(true);
     }
 

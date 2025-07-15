@@ -53,6 +53,13 @@
 		      <xsl:apply-templates select="@*|node()"/>
 		    </xsl:copy>
 		</xsl:when>
+
+<!-- Not required for 11.5.3 or later.
+
+	    <xsl:when test="parent::w:numPicBullet and mc:Choice[@Requires='v']/w:pict">
+  			<xsl:copy-of select="mc:Choice[@Requires='v']/*"/>
+		</xsl:when>
+		-->
 		  	
   	<!-- See comment in SlidePart as to why we don't do this!
   	
@@ -243,5 +250,31 @@
   <xsl:template match="w:unhidenWhenUsed" > <!--  BIRT typo -->
 	<w:unhideWhenUsed/>
   </xsl:template>  
+  
+<!-- POI writes 'on' and 'off', no good for docx4j; see https://github.com/plutext/docx4j/issues/585    -->  
+<xsl:template match="@w:val" >
+  	<xsl:choose>
+	   	<!-- shouldn't be necessary?
+  		<xsl:when test="local-name(..)='start' or local-name(..)='numFmt' or local-name(..)='lvlText' or local-name(..)='abstractNumId' or local-name(..)='nsid' or local-name(..)='multiLevelType'  or local-name(..)='lvlPicBulletId'" >
+		    <xsl:copy-of select="."/>
+  		</xsl:when>
+  		-->
+  		<xsl:when test=".='true' or .='on'">
+		  	<xsl:attribute name="w:val">true</xsl:attribute>
+  		</xsl:when>
+  		<xsl:when test=".='false' or .='off'">
+		  	<xsl:attribute name="w:val">false</xsl:attribute>
+  		</xsl:when>
+  		<xsl:otherwise> <!-- don't alter 0 or 1 -->'
+  			<xsl:copy-of select="."/>
+  		</xsl:otherwise>
+  	</xsl:choose>
+  </xsl:template>  
+  	<!--
+  	    <xsl:when test="local-name(/*)='numbering'">
+		    <xsl:copy-of select="."/>
+  		</xsl:when>  
+  		slow?
+  		-->	   
 
 </xsl:stylesheet>

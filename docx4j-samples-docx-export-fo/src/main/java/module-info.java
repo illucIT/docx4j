@@ -5,7 +5,10 @@ module docx4j_samples_docx4_export_fo {
 	requires org.docx4j.openxml_objects;
 	
 	requires org.docx4j.export_fo;
-	requires fop;
+	requires org.apache.xmlgraphics.fop.core;
+	requires org.apache.xmlgraphics.fop.events;
+	requires org.apache.xmlgraphics.fop.util;
+	
 	requires jakarta.xml.bind;
 
 	

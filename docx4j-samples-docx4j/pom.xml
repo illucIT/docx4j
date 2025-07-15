@@ -28,15 +28,17 @@
 		<outputDirectory>bin</outputDirectory><!--  for a clean jar, be sure to avoid mixing mvn and eclipse output -->
 		
 		<plugins>
+		
 			<!--  don't deploy this jar to Maven Central -->			
 			<plugin>
-			  <groupId>org.apache.maven.plugins</groupId>
-			  <artifactId>maven-deploy-plugin</artifactId>
-			  <version>3.0.0-M1</version>
-			  <configuration>
-			    <skip>true</skip>
-			  </configuration>
-			</plugin>					
+				<groupId>org.sonatype.plugins</groupId>
+				<artifactId>nexus-staging-maven-plugin</artifactId>
+				<version>1.7.0</version>
+				<configuration>
+				    <skipNexusStagingDeployMojo>true</skipNexusStagingDeployMojo>
+				</configuration>
+			</plugin>
+
 		</plugins>
 		
 	</build>
@@ -44,7 +46,10 @@
 	
 	<dependencies>
 
-		<!--  choose a docx4j-JAXB implementation, one ONLY of the 2 following :-->
+		<!--  choose a docx4j-JAXB implementation, one ONLY of the 2 following.
+		
+			  You also need to update module-info.java consistent with your choice here.
+		 :-->
 
 		<dependency>
             <groupId>org.docx4j</groupId>
@@ -79,7 +84,7 @@
 		<dependency>
 		  <groupId>xerces</groupId>
 		  <artifactId>xercesImpl</artifactId>
-		  <version>2.12.0</version>
+		  <version>2.12.2</version>
 		  <!-- 
 		  <exclusions>
 		  	<exclusion>
@@ -92,7 +97,6 @@
 
 		<!--  choose your preferred logging implementation, for example: 
 -->
-
 		<dependency>
 			<groupId>ch.qos.logback</groupId>
 			<artifactId>logback-classic</artifactId>
@@ -129,13 +133,14 @@
 	
 <!-- Uncomment if javax.xml.stream is missing from your env (shouldn't be necessary in Java 8).  This provides that via META-INF/services.
      Or you can use: System.setProperty("javax.xml.stream.XMLInputFactory", "com.ctc.wstx.stax.WstxInputFactory");
+      -->
        	
 		<dependency>
 			<groupId>com.fasterxml.woodstox</groupId>
 			<artifactId>woodstox-core</artifactId>
-			<version>5.2.0</version>
+			<version>7.1.0</version>
 		</dependency>
-	  -->
+	  
 	  
 	</dependencies>
 

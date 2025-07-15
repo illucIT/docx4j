@@ -1,5 +1,5 @@
 /**
- *  Copyright 2010-2013, Plutext Pty Ltd.
+ *  Copyright 2010-2025, Plutext Pty Ltd.
  *   
  *  This file is part of docx4j.
 
@@ -74,6 +74,9 @@ public class BindingTraverserNonXSLT extends BindingTraverserCommonImpl {
 	//XPathsPart xPathsPart;
 	Map<String, org.opendope.xpaths.Xpaths.Xpath> xpathsMap; // not currently used; will be when this is fixed to handle XHTML, images, RepeatPositionCondition, FlatOPC
 	
+	/**
+	 * Entry point.  Traverse a clone of the part.
+	 */
 	public Object traverseToBind(JaxbXmlPart part,
 			org.docx4j.openpackaging.packages.OpcPackage pkg,
 			Map<String, org.opendope.xpaths.Xpaths.Xpath> xpathsMap)
@@ -89,6 +92,29 @@ public class BindingTraverserNonXSLT extends BindingTraverserCommonImpl {
 		new TraversalUtil(clone, bt);
 		
 		return clone;
+	}
+
+	/**
+	 * Traverse a sub-tree.  Typically invoked from BindingTraverserStAX
+	 * when a non-bound SDT is encountered (since that might contain
+	 * nested SDTs which *are* bound).
+	 * 
+	 * @param part
+	 * @param jaxbObject
+	 * @param xpathsMap
+	 * @throws Docx4JException
+	 */
+	public void traverseToBind(JaxbXmlPart part, Object jaxbObject,
+			Map<String, org.opendope.xpaths.Xpaths.Xpath> xpathsMap)
+			throws Docx4JException {
+		
+		this.part = part;  // required for image rels etc
+		this.pkg = part.getPackage();
+		this.xpathsMap = xpathsMap;
+				
+		BindingTraversor bt = new BindingTraversor();
+		new TraversalUtil(jaxbObject, bt);
+		
 	}
 	
     static class ExtentFinder extends CallbackImpl {
@@ -184,17 +210,90 @@ public class BindingTraverserNonXSLT extends BindingTraverserCommonImpl {
 				
 			} else if (map!=null && map.containsKey(OpenDoPEHandler.BINDING_ROLE_XPATH) ) {
 				
-				boolean isMultiline = isMultiline(sdtPr);
+				log.debug("OpenDoPEHandler.BINDING_ROLE_XPATH, " + sdtPr.getDataBinding().getXpath() );
+				if (log.isDebugEnabled()) {
+					log.debug(XmlUtils.marshaltoString(sdt));
+				}
 				
-				sdt.getSdtContent().getContent().clear();
+				boolean isMultiline = isMultiline(sdtPr);				
 				
-				sdt.getSdtContent().getContent().addAll(
-						this.xpathGenerateRuns(
-							(WordprocessingMLPackage)pkg, part, 
-							sdtPr,
-							sdtPr.getDataBinding(), 
-							//sdtParent, contentChild, 
-							null, isMultiline));
+				Object ooo = null;
+				if (sdt.getSdtContent().getContent().size()>0) {
+					ooo = sdt.getSdtContent().getContent().get(0);
+					ooo = XmlUtils.unwrap(ooo);
+					log.debug(ooo.getClass().getName());
+				}
+				if (ooo !=null) {
+										
+					if (ooo instanceof P) {
+						/*
+				            <w:sdtContent>
+				                <w:p>
+				                    <w:r>
+				                        <w:t>Joe Bloggs</w:t>
+				                    </w:r>
+				                </w:p>
+				            </w:sdtContent>
+	        			*/
+						P p = (P)ooo;
+						p.getContent().clear();
+						p.getContent().addAll(
+								this.xpathGenerateRuns(
+									(WordprocessingMLPackage)pkg, part, 
+									sdtPr,
+									sdtPr.getDataBinding(), 
+									//sdtParent, contentChild, 
+									null, isMultiline));
+					} else if (ooo instanceof Tc) {
+						/*
+				            <w:sdtContent>
+                                <w:tc>
+                                    <w:p>
+                                        <w:r>
+                                            <w:t>apples</w:t>
+                                        </w:r>
+                                    </w:p>
+                                </w:tc>	
+                                
+                                We want to replace the contents of the w:p 
+                                					 */
+						
+						Tc tc = (Tc)ooo;
+						P p = null;
+						if (tc.getContent().size()>0) {
+							Object o2 = tc.getContent().get(0);
+							log.debug(o2.getClass().getName());
+							if (o2 instanceof P) {
+								p = (P)o2;
+								p.getContent().clear();
+							}
+						}					
+						if (p == null) {
+							p = new P();
+							tc.getContent().add(p);
+						}
+						
+						p.getContent().addAll(
+								this.xpathGenerateRuns(
+									(WordprocessingMLPackage)pkg, part, 
+									sdtPr,
+									sdtPr.getDataBinding(), 
+									//sdtParent, contentChild, 
+									null, isMultiline));
+					}
+				} else {
+				
+					sdt.getSdtContent().getContent().clear();
+					
+					sdt.getSdtContent().getContent().addAll(
+							this.xpathGenerateRuns(
+								(WordprocessingMLPackage)pkg, part, 
+								sdtPr,
+								sdtPr.getDataBinding(), 
+								//sdtParent, contentChild, 
+								null, isMultiline));
+				}	
+				
 				
 			} else if (sdtPr.getDataBinding()!=null && !isRichText(sdtPr) ) {
 				// TODO and not(w:sdtPr/w:docPartGallery)
@@ -423,7 +522,10 @@ public class BindingTraverserNonXSLT extends BindingTraverserCommonImpl {
 			Map<String, CustomXmlPart> customXmlDataStorageParts = pkg.getCustomXmlDataStorageParts();
 
 			String r = BindingHandler.xpathGetString(pkg, customXmlDataStorageParts, dataBinding);
-			if (r==null) return null;
+			if (r==null) {
+				log.info(dataBinding.getXpath() + " yielded result null!");				
+				return null;
+			}
 			
 			List<Object> contents = new ArrayList<Object>();
 			

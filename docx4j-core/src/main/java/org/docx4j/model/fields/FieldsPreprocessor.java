@@ -37,7 +37,7 @@ import java.util.NoSuchElementException;
  * 
  * Currently the canonicalisation is done at the paragraph level,
  * so it is not suitable for fields (such as TOC) which extend across paragraphs.
- * TOC will need to be regenerated (using Word) if touched by canonicalisation.
+ * TOC will need to be regenerated if touched by canonicalisation.
  * 
  * @author jharrop
  *

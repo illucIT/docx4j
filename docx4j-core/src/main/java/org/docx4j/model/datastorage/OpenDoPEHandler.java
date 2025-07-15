@@ -1,5 +1,5 @@
 /**
- *  Copyright 2010-2013, Plutext Pty Ltd.
+ *  Copyright 2010-2025, Plutext Pty Ltd.
  *   
  *  This file is part of docx4j.
 
@@ -45,8 +45,10 @@ import org.docx4j.openpackaging.exceptions.Docx4JException;
 import org.docx4j.openpackaging.packages.WordprocessingMLPackage;
 import org.docx4j.openpackaging.parts.CustomXmlDataStoragePart;
 import org.docx4j.openpackaging.parts.CustomXmlPart;
+import org.docx4j.openpackaging.parts.JaxbXmlPart;
 import org.docx4j.openpackaging.parts.WordprocessingML.FooterPart;
 import org.docx4j.openpackaging.parts.WordprocessingML.HeaderPart;
+import org.docx4j.openpackaging.parts.WordprocessingML.SdtStAXHandler;
 import org.docx4j.openpackaging.parts.opendope.JaxbCustomXmlDataStoragePart;
 import org.docx4j.openpackaging.parts.relationships.Namespaces;
 import org.docx4j.openpackaging.parts.relationships.RelationshipsPart;
@@ -320,7 +322,29 @@ public class OpenDoPEHandler {
 		// Process repeats and conditionals.
 		try {
 			for (ContentAccessor part : partList) {
-				new TraversalUtil(part, shallowTraversor);
+				if ( ((JaxbXmlPart)part).isUnmarshalled())  {
+						
+					log.debug( ((JaxbXmlPart)part).getPartName().getName() + " already unmarshalled.");
+					new TraversalUtil(part, shallowTraversor);
+
+				} else {
+					
+					log.debug( ((JaxbXmlPart)part).getPartName().getName() + " not yet unmarshalled.");
+					
+					if ( /* don't want to use StAX */ !Docx4jProperties.getProperty("docx4j.model.datastorage.BindingHandler.Implementation", "BindingTraverserXSLT").equals("BindingTraverserStAX"))  {
+
+						log.debug( "Property setting forcing unmarshalling.");
+						new TraversalUtil(part, shallowTraversor);
+						
+					} else {
+					
+						try {
+							((JaxbXmlPart)part).pipe(new ShallowTraversorStAX(), null);
+						} catch (Exception e) {
+							throw new Docx4JException(e.getMessage(),e);
+						}
+					}
+				}
 			}
 		} catch (InputIntegrityException iie) { // RuntimeException
 			throw new Docx4JException(iie.getMessage(), iie);
@@ -410,6 +434,32 @@ public class OpenDoPEHandler {
 	// wordMLPackage.getParts().
 	// }
 
+	/**
+	 * @author jharrop
+	 * @since 11.5.3
+	 */
+	private class ShallowTraversorStAX extends SdtStAXHandler  {
+
+		@Override
+		protected List<Object> handleSdt(SdtElement sdt) throws Docx4JException {
+							
+			SdtPr sdtPr = sdt.getSdtPr();
+			if (sdtPr.getDataBinding() == null)  {
+				// a real binding attribute trumps any tag
+				return processBindingRoleIfAny(wordMLPackage, sdt);
+			} else if (getW15RepeatingSection(sdtPr)!=null) {
+				return processW15Repeat( sdt, wordMLPackage.getCustomXmlDataStorageParts());					
+			} else {				
+				if (log.isDebugEnabled()) {
+					log.debug("Ignoring SDT " + XmlUtils.marshaltoString(sdtPr));
+				}
+				List<Object> results = new ArrayList<Object>();
+				results.add(sdt);
+				return results;
+			}
+		}	
+	}
+	
 	/**
 	 * This traversor duplicates the repeats, and removes false conditonals
 	 */
@@ -574,7 +624,6 @@ public class OpenDoPEHandler {
 			long duration = System.currentTimeMillis() - startTime;
 			conditionTimingTotal += duration;
 			// on a big XML, these might take around 250ms
-			
 			if (log.isDebugEnabled() 
 					&& duration>750) {
 				conditionTiming.append(c.toString(conditionsMap, xpathsMap) + "," + duration + "\n");				
@@ -1034,13 +1083,13 @@ public class OpenDoPEHandler {
 		
 		// deep traverse to fix binding
 		DeepTraversor dt = new DeepTraversor();
-		dt.xpathBase = xpathBase;
+		dt.setXPathBase(xpathBase);
 		for (int i = 0; i < repeated.size(); i++) {
 
 			log.info("\n Traversing clone " + i);
 
-			dt.index = i;
-			new TraversalUtil(repeated.get(i), dt);
+			dt.setIndex(i);
+			new TraversalUtil(repeated.get(i), (DeepTraversor)dt);
 		}
 		log.info(".. deep traversals done \n\n");
 		
@@ -1227,13 +1276,18 @@ public class OpenDoPEHandler {
 		final String emptyRepeatValue = BINDING_RESULT_RPTD + "=" + stripPatternMatcher.group(2) + stripPatternMatcher.group(3);
 		tag.setVal(emptyRepeatValue);
 	}
+	
 
 	class DeepTraversor extends CallbackImpl {
 
-		// private static Logger log = LoggerFactory.getLogger(DeepTraversor.class);
-
 		int index = 0;
+		public void setIndex(int index) {
+			this.index = index;
+		}
 		String xpathBase = null;
+		public void setXPathBase(String xpathBase) {
+			this.xpathBase = xpathBase;
+		}
 
 		@Override
 		public List<Object> apply(Object o) {
@@ -1258,7 +1312,7 @@ public class OpenDoPEHandler {
 		}
 
 	}
-
+	
 	private void processDescendantBindings(Object sdt, String xpathBase,
 			int index) {
 

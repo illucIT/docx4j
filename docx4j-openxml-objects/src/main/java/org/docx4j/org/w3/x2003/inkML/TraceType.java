@@ -1,6 +1,7 @@
 
 package org.docx4j.org.w3.x2003.inkML;
 
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import jakarta.xml.bind.Unmarshaller;
 import jakarta.xml.bind.annotation.XmlAccessType;
@@ -49,8 +50,8 @@ import org.jvnet.jaxb2_commons.ppp.Child;
  *       &lt;attribute name="priorRef" type="{http://www.w3.org/2001/XMLSchema}anyURI" /&gt;
  *       &lt;attribute name="contextRef" type="{http://www.w3.org/2001/XMLSchema}anyURI" /&gt;
  *       &lt;attribute name="brushRef" type="{http://www.w3.org/2001/XMLSchema}anyURI" /&gt;
- *       &lt;attribute name="duration" type="{http://www.w3.org/2001/XMLSchema}integer" /&gt;
- *       &lt;attribute name="timeOffset" type="{http://www.w3.org/2001/XMLSchema}integer" /&gt;
+ *       &lt;attribute name="duration" type="{http://www.w3.org/2001/XMLSchema}decimal" /&gt;
+ *       &lt;attribute name="timeOffset" type="{http://www.w3.org/2001/XMLSchema}decimal" /&gt;
  *     &lt;/extension&gt;
  *   &lt;/simpleContent&gt;
  * &lt;/complexType&gt;
@@ -86,9 +87,9 @@ public class TraceType implements Child
     @XmlSchemaType(name = "anyURI")
     protected String brushRef;
     @XmlAttribute(name = "duration")
-    protected BigInteger duration;
+    protected BigDecimal duration;
     @XmlAttribute(name = "timeOffset")
-    protected BigInteger timeOffset;
+    protected BigDecimal timeOffset;
     @XmlTransient
     private Object parent;
 
@@ -273,10 +274,10 @@ public class TraceType implements Child
      * 
      * @return
      *     possible object is
-     *     {@link BigInteger }
+     *     {@link BigDecimal }
      *     
      */
-    public BigInteger getDuration() {
+    public BigDecimal getDuration() {
         return duration;
     }
 
@@ -285,10 +286,10 @@ public class TraceType implements Child
      * 
      * @param value
      *     allowed object is
-     *     {@link BigInteger }
+     *     {@link BigDecimal }
      *     
      */
-    public void setDuration(BigInteger value) {
+    public void setDuration(BigDecimal value) {
         this.duration = value;
     }
 
@@ -297,10 +298,10 @@ public class TraceType implements Child
      * 
      * @return
      *     possible object is
-     *     {@link BigInteger }
+     *     {@link BigDecimal }
      *     
      */
-    public BigInteger getTimeOffset() {
+    public BigDecimal getTimeOffset() {
         return timeOffset;
     }
 
@@ -309,10 +310,10 @@ public class TraceType implements Child
      * 
      * @param value
      *     allowed object is
-     *     {@link BigInteger }
+     *     {@link BigDecimal }
      *     
      */
-    public void setTimeOffset(BigInteger value) {
+    public void setTimeOffset(BigDecimal value) {
         this.timeOffset = value;
     }
 

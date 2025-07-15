@@ -52,12 +52,15 @@ public abstract class AbstractSwitch implements SwitchInterface {
 
     Map<String, Integer> styleLevelMap = null;
 
+    /**
+     * Default implementation doesn't need to parse at all.
+     */
     public String parseFieldArgument(String fieldArgument){
         this.fieldArgument = fieldArgument;
         return EMPTY;
     }
 
-    public boolean isStyleSwitch(){
+    public boolean isSelectorSwitch(){
         return false;
     }
 
@@ -116,6 +119,7 @@ public abstract class AbstractSwitch implements SwitchInterface {
         String[] styleLevels = field.split(tSwitchSeparator);
         int level = -1;
         for(int i = 0; i < styleLevels.length; i++){
+//        	log.debug(styleLevels[i]);
             if(i + 1 < styleLevels.length){
                 try{
                     level = Integer.parseInt(styleLevels[i + 1].trim());
@@ -127,13 +131,14 @@ public abstract class AbstractSwitch implements SwitchInterface {
                 }
             } else {
                 styleLevelMap.put(styleLevels[i].trim(), 1);
+//            	log.debug("Added " + styleLevels[i] );
                 break;
             }
             if(level < 1 || level > 9){
                 level = 1;
             }
             styleLevelMap.put(styleLevels[i].trim(), level);
-        	log.debug("Added " + styleLevels[i] );
+//        	log.debug("Added " + styleLevels[i] );
             i++;
         }
 
@@ -147,7 +152,7 @@ public abstract class AbstractSwitch implements SwitchInterface {
      * @param fieldArgument
      * @return empty string in case field argument can not be parsed correctly
      */
-    private String prepareArgument(String fieldArgument){
+    protected String prepareArgument(String fieldArgument){
     	
         String tmp = fieldArgument;
         

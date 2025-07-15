@@ -118,6 +118,8 @@ public class ParaRPr extends RPrAbstract implements Child
     protected CTTrackChange del;
     protected CTTrackChange moveFrom;
     protected CTTrackChange moveTo;
+    
+    protected ParaRPrChange rPrChange;
 	
     @XmlTransient
     private Object parent;
@@ -218,6 +220,30 @@ public class ParaRPr extends RPrAbstract implements Child
         this.moveTo = value;
     }
 
+    /**
+     * Gets the value of the rPrChange property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link CTRPrChange }
+     *     
+     */
+    public ParaRPrChange getRPrChange() {
+        return rPrChange;
+    }
+
+    /**
+     * Sets the value of the rPrChange property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link CTRPrChange }
+     *     
+     */
+    public void setRPrChange(ParaRPrChange value) {
+        this.rPrChange = value;
+    }
+    
 
     /**
      * Gets the parent object in the object tree representing the unmarshalled xml document.

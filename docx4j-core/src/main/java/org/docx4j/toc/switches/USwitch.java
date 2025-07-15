@@ -22,28 +22,55 @@ package org.docx4j.toc.switches;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.docx4j.model.PropertyResolver;
 import org.docx4j.toc.TocEntry;
-import org.docx4j.toc.TocHelper;
 import org.docx4j.wml.PPr;
-import org.docx4j.wml.Style;
 import org.docx4j.wml.PPrBase.OutlineLvl;
+import org.docx4j.wml.Style;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
+ * paragraph oUtline switch
+ * 
  * This switch indicates to consider the outline level set
  * on the paragraph.
  * 
- * That value trumps heading style (eg if outline level is set to
+ * Old (Word 2007?): That value trumps heading style (eg if outline level is set to
  * body text, a heading won't appear in the outline), 
  * EXCEPT where the outline level is set in the heading style definition
  * (which is ignored - the style name is parsed for the level!).
  * 
- * If style X is based on heading style, and style X has an outline level
+ * 2025 07:  Current Word Version 2506 (Build 18925.20076), Office 2013 and Word 2010
+ * (14.0.7194.5000) won't let you set an outline level 
+ * on P with a heading style (tested heading 1).  And if you open a docx eg  
+ * 
+ *    <w:pPr>
+        <w:pStyle w:val="Heading1"/>
+        <w:outlineLvl w:val="4"/>
+      </w:pPr>      
+ * 
+ * it removes the w:outlineLvl setting. So nowadays this conflict is theoretical. 
+ * 
+ * Also, the Word UI won't allow you to build a ToC from arbitrary styles and outline level; 
+ * it is XOR.
+ * 
+ * But if you manually construct such a TOC, then outline level 
+ * trumps style? <w:instrText xml:space="preserve"> TOC \o "1-3" \h \z \t "MyStyle,1" \\u </w:instrText> 
+ * Word seems to get confused by such a TOC definition
+ * (it ignores certain paragraphs which by style should be in the TOC!). 
+ * 
+ * Since I can't readily construct a TOC in which the switches conflict,
+ * it is not easy to determine whether the switches are applied in the
+ * other in which they appear, or by priority.  (But nor does it much matter?) 
+ * 
+ * Old: If style X is based on heading style, and style X has an outline level
  * setting, that setting is considered.
  *
  */
-public class USwitch extends AbstractSwitch {
+public class USwitch extends SelectorSwitch {
 
+	private static Logger log = LoggerFactory.getLogger(USwitch.class);					
+	
     public static final String ID = "\\u";
     private static final int PRIORITY = 8;
     
@@ -57,11 +84,11 @@ public class USwitch extends AbstractSwitch {
     }
 
     @Override
-    public void process(Style s, SwitchProcessor sp) {
+    public void process(Style s, SwitchProcessorInterface sp) {
     	// Not used
     }
 
-    public void process(Style s, SwitchProcessor sp, PPr pPr, OSwitch oSwitch) {
+    public void process(Style s, SwitchProcessorInterface sp, PPr pPr, OSwitch oSwitch) {
     	
     	// TODO, need actual pPr, since it could have an outline level defined on it!
     	
@@ -71,13 +98,16 @@ public class USwitch extends AbstractSwitch {
     	}
     	
     	int level = getOutlineLvl(pPr, sp, s, cutOff); 
+    	if (log.isDebugEnabled()) {
+    		log.debug("outline level " + level);
+    	}
     	
         if( level == 9){
-            sp.proceed(false);
+            sp.setSelected(false);  // this is the only case where a switch can cause a P to be excluded 
         } else {
             TocEntry te = sp.getEntry(); // creates it       	
             te.setEntryLevel(level);
-        	sp.setStyleFound(true);
+        	sp.setSelected(true);
         }
     }
     
@@ -86,13 +116,14 @@ public class USwitch extends AbstractSwitch {
         return PRIORITY;
     }
     
-    public int getOutlineLvl(PPr pPr, SwitchProcessor sp, Style s, int cutOff) {
+    public int getOutlineLvl(PPr pPr, SwitchProcessorInterface sp, Style s, int cutOff) {
         // Heading 1 is lvl 0
         // There are 9 levels, so 9 will be lvl 8
         // So return 9 for normal text
     	OutlineLvl outlineLvl = null;
     	if (pPr!=null) {
     		outlineLvl = pPr.getOutlineLvl();
+//        	log.debug("outline level from ppr" );
     	}
 		
     	// If not direct, look in styles
@@ -104,7 +135,9 @@ public class USwitch extends AbstractSwitch {
     		// is never included. That is suppose this is H3, and 
     		// we have \o "1-2".  
 //			if (s.getStyleId().startsWith("Heading")) {
-		        int hLevel = sp.styleBasedOnHelper.getBasedOnHeading(s);
+		        int hLevel = sp.getStyleBasedOnHelper().getBasedOnHeading(s);
+//	        	log.debug("hlevel " +  hLevel);
+		        
 				if (hLevel>cutOff) {
 					return 9;
 				}
@@ -114,7 +147,7 @@ public class USwitch extends AbstractSwitch {
     		
     		if (outlineLvl==null) { 
     			
-		        PPr effectivePPr = sp.propertyResolver.getEffectivePPr(s.getStyleId());
+		        PPr effectivePPr = sp.getPropertyResolver().getEffectivePPr(s.getStyleId());
 		        	// that takes care of any unexpected outline level found in a heading style,
 		        	// by overwriting it (see fillPPrStack)
 	        	outlineLvl = effectivePPr.getOutlineLvl();

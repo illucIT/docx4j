@@ -26,7 +26,7 @@ module org.docx4j.core {
 //    requires transitive slf4j.api;
     requires transitive stringtemplate;
     requires transitive docx4j_xalan_interpretive;
-    requires transitive xmlgraphics.commons;
+    requires transitive org.apache.xmlgraphics.commons; // v2.11
 	requires error.prone.annotations;
 	requires org.checkerframework.checker.qual;
 //	requires org.eclipse.persistence.moxy;
@@ -37,6 +37,8 @@ module org.docx4j.core {
 	requires org.apache.fontbox;
 	requires qdox;
 	requires jakarta.xml.bind;
+	
+	requires org.apache.pdfbox.io;
     
     exports org.docx4j;
     exports org.docx4j.convert.in;
@@ -75,6 +77,7 @@ module org.docx4j.core {
     exports org.docx4j.model.fields;
     exports org.docx4j.model.fields.docproperty;
     exports org.docx4j.model.fields.merge;
+    exports org.docx4j.model.fields.seq;
     exports org.docx4j.model.images;
     exports org.docx4j.model.listnumbering;
     exports org.docx4j.model.properties;

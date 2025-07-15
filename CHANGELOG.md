@@ -2,12 +2,237 @@ CHANGELOG
 =========
 
 
-Version 11.4.8
-==============
-￼
+Version 11.5.4 (minor release) 
+===============
+
 Release date
 ------------
-￼
+
+14 July 2025
+
+
+Contributors to this release
+----------------------------
+
+Jason Harrop
+
+
+Changes in Version 11.5.4
+--------------------------
+
+Support for Table of Figures (TOC C switch and SEQ field)
+
+Fix various issues (535, 576, 619, 624)
+
+
+
+Version 11.5.3  
+===============
+
+Release date
+------------
+
+7 May 2025
+
+
+Contributors to this release
+----------------------------
+
+Ben Howell-Thomas
+
+Jason Harrop
+
+Nikolay Vorobev
+
+
+Changes in Version 11.5.3
+--------------------------
+
+Migrate to FontBox 3 and use FOP 2.11  
+
+OpenDoPE StAX option
+
+Some bug fixes
+
+
+Version 11.5.2   (fixes regression in 11.5.1) 
+===============
+
+Release date
+------------
+
+24 January 2025
+
+Contributors to this release
+----------------------------
+
+Jason Harrop
+
+Changes in Version 11.5.2
+--------------------------
+
+Fixes a StackOverflow error caused by PropertyResolver constructor indirectly calling itself, triggered by documents in which the Normal style's hierarchy includes numbering.
+
+Fix for #603: getRPrChange in org.docx4j.wml.ParaRPr
+
+
+Version 11.5.1  (recommended update on account of w16sdtfl)
+===============
+
+Release date
+------------
+
+28 Nov 2024
+
+
+Contributors to this release
+----------------------------
+
+arunvc (#596 - handle whitespace in font name)
+
+balajiasokkumar  (#601 - w16sdtfl)
+
+devindan (#591 - Chinese numbering)
+
+Jason Harrop
+
+Changes in Version 11.5.1
+--------------------------
+
+Add xmlns:w16sdtfl="http://schemas.microsoft.com/office/word/2024/wordml/sdtformatlock".  w16sdtfl has started to show up in Word releases, despite not yet being specified in [MS-DOCX].  Word writes the w16sdtfl namespace prefix to @mc:Ignorable in the MDP, so Word requires the namespace to also be declared.
+
+AcceptChanges: Mimic Word's table deletion behaviour
+
+Numbering - fix NumStyleLink handling
+Take NDP into account in applying indent
+
+Avoid "Premature end of file" when using Binder with MOXy JAXB (and docx has no AlternateContent).
+
+Bump commons-compress from 1.26.1 to 1.27.1
+
+new interface PackageTransformer
+
+Fix Chart*Parts constructor to be consistent with other Parts
+
+
+Version 11.5.0  (Jakarta XML Binding 4.0)
+===============
+
+Release date
+------------
+
+21 July 2024
+
+
+Contributors to this release
+----------------------------
+
+Jason Harrop
+
+shushu888
+
+sveale
+
+
+Changes in Version 11.5.0
+--------------------------
+
+Jakarta XML Binding 4.0 implementation (compare 11.4.x, which used the 3.0 API). Both JAXB implementations (reference/glassfish, and MOXy) are providers of jakarta.xml.bind.JAXBContextFactory, so each can be automagically discovered and loaded using service-provider loading facilities as described in the spec.  The dep change from 3.0 to 4.0 API does not change docx4j at all, but makes integration easier with other jars which expect the 4.0 API (for example, Spring Boot 3.3.0).
+
+Bump certain deps
+
+New property docx4j...ObfuscatedFontPart.deleteFileOnFinalize which can be set to false to prevent temporary font files from being deleted in finalize
+
+
+Version 11.4.11  (recommended update on account of w16du)
+===============
+
+Release date
+------------
+
+5 March 2024
+
+
+Contributors to this release
+----------------------------
+
+Jason Harrop
+
+Changes in Version 11.4.11
+--------------------------
+
+Bump dependencies to address upstream security advisories in commons-compress and batik (used in export-fo).
+
+Bump certain other deps
+
+
+
+Version 11.4.10  (recommended update on account of w16du)
+===============
+
+Release date
+------------
+
+27 Feb 2024
+
+
+Contributors to this release
+----------------------------
+
+Jason Harrop
+
+ameramayreh  Amer Amayreh
+
+h-huss
+
+
+Changes in Version 11.4.10
+--------------------------
+
+http://schemas.microsoft.com/office/word/2023/wordml/word16du is new in [MS-DOCX] v19.0 of June 2023 and has now started to show up in Word releases.  See further  https://msopenspecs.azureedge.net/files/MS-DOCX/%5bMS-DOCX%5d-230616.pdf  Word writes the w16du namespace prefix to @mc:Ignorable in the MDP, so Word requires the namespace to also be declared.
+
+Improve load/save performance
+
+Bump dependencies
+
+export--fo: don't require user to set up FOUserAgent
+
+Miscellaneous small fixes
+
+
+Version 11.4.9
+==============
+
+Release date
+------------
+
+15 Jan 2023
+
+
+Contributors to this release
+----------------------------
+
+Jason Harrop
+
+mayoATC
+
+Changes in Version 11.4.9
+-------------------------
+
+Fixes #529 Converting multiple AltChunks may corrupt content list
+
+Allow a docx containing a broken image (rel target=null case) to be loaded and saved.
+
+pptx4j: Add various packages (primarily org.docx4j.com.microsoft.schemas.office.drawing sub packages) already present in docx4j Context.jc to jcPML
+
+
+
+Version 11.4.8
+==============
+
+Release date
+------------
+
 9 Sept 2022
 
 Changes in Version 11.4.8
@@ -27,10 +252,10 @@ Some other minor changes; please see https://github.com/plutext/docx4j/commits/V
 
 Version 11.4.7
 ==============
-￼
+
 Release date
 ------------
-￼
+
 21 May 2022
 
 Changes in Version 11.4.7 
@@ -47,21 +272,20 @@ Bump MBassador to 1.3.2; see EventMonitoringDemo sample for how to monitor docx4
 
 Version 11.4.6
 ==============
-￼
+
 Release date
 ------------
-￼
+
 16 April 2022
-￼
-￼
+
+
 Contributors to this release
 ----------------------------
-￼
+
 Jason Harrop
 
 Thor Åge Eldby
-￼
-￼
+
 Changes in Version 11.4.6 
 -------------------------
 
@@ -76,19 +300,19 @@ Issue 501: Correct encoding issue when writing version comment for non UTF-8 loc
 
 Version 11.4.5  (jakarta.xml.bind; parity with 8.3.4)
 ==============
-￼
+
 Release date
 ------------
-￼
+
 7 March 2022
-￼
-￼
+
+
 Contributors to this release
 ----------------------------
-￼
+
 Jason Harrop
-￼
-￼
+
+
 Changes in Version 11.4.5 
 -------------------------
 

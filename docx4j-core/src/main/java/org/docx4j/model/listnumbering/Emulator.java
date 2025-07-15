@@ -167,14 +167,15 @@ public class Emulator {
     		return null;
     	}
 
+//    	org.docx4j.openpackaging.parts.WordprocessingML.StyleDefinitionsPart stylesPart =
+//        		wmlPackage.getMainDocumentPart().getStyleDefinitionsPart();
+//    	numberingPart.setStyleDefinitionsPart(stylesPart);
+    	
     	Emulator em = numberingPart.getEmulator();
     	
     	// Object to hold results
     	ResultTriple triple = em.new ResultTriple();    	
-    	
-    	org.docx4j.openpackaging.parts.WordprocessingML.StyleDefinitionsPart stylesPart =
-    		wmlPackage.getMainDocumentPart().getStyleDefinitionsPart();
-    	
+    	    	
     	PropertyResolver propertyResolver = wmlPackage.getMainDocumentPart().getPropertyResolver();
     	    	
     	// If numId is not provided explicitly, 
@@ -310,7 +311,8 @@ public class Emulator {
     		String numId, String levelId) {
     	
     	// TODO refactor.  Remove duplicated code.
-    	
+    	// 2024:  indent in style should trump indent in style's numbering definition
+    	// (on an attribute by attribute basis) 
     	
     	org.docx4j.openpackaging.parts.WordprocessingML.NumberingDefinitionsPart numberingPart =
     		wmlPackage.getMainDocumentPart().getNumberingDefinitionsPart();
@@ -505,6 +507,7 @@ public class Emulator {
     	 */
     	@Deprecated // consider whether to add getPpr and access via that.  
 		public Ind getIndent() {
+    		// set from getLvl().getPPr().getInd() 
 			return ind;
 		}
 		

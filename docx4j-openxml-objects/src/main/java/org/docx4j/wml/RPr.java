@@ -110,10 +110,34 @@ public class RPr extends RPrAbstract
     implements Child
 {
 
+    protected CTRPrChange rPrChange;
 
     @XmlTransient
     private Object parent;
 
+    /**
+     * Gets the value of the rPrChange property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link CTRPrChange }
+     *     
+     */
+    public CTRPrChange getRPrChange() {
+        return rPrChange;
+    }
+
+    /**
+     * Sets the value of the rPrChange property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link CTRPrChange }
+     *     
+     */
+    public void setRPrChange(CTRPrChange value) {
+        this.rPrChange = value;
+    }
 
     /**
      * Gets the parent object in the object tree representing the unmarshalled xml document.

@@ -264,6 +264,10 @@ public class TocGenerator {
         		 sdtContent, 
         		 instruction,  leader, skipPageNumbering);
         
+        if (log.isDebugEnabled()) {
+        	log.debug(XmlUtils.marshaltoString(sdt));
+        }
+        
         return sdt;
         
     }

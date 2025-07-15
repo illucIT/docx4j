@@ -31,7 +31,7 @@ public  class CommentFinder extends CallbackImpl {
 	@Override
     public List<Object> apply(Object o) {
 
-        if (o instanceof jakarta.xml.bind.JAXBElement
+        if (o instanceof jakarta.xml.bind.JAXBElement /* note this should never happen since it will arrive unwrapped */ 
                 && (((JAXBElement)o).getName().getLocalPart().equals("commentReference")
                 		|| ((JAXBElement)o).getName().getLocalPart().equals("commentRangeStart")
                 		|| ((JAXBElement)o).getName().getLocalPart().equals("commentRangeEnd")	                            		
@@ -39,7 +39,8 @@ public  class CommentFinder extends CallbackImpl {
 //        		log.debug(((JAXBElement)o).getName().getLocalPart());
                 commentElements.add( (Child)XmlUtils.unwrap(o) );
             } 
-        else if (o instanceof CommentReference || 
+        else if ( /* usual case */
+        	o instanceof CommentReference || 
             o instanceof CommentRangeStart || 
             o instanceof CommentRangeEnd) {
 //        	log.debug(o.getClass().getName());

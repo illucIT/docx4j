@@ -88,7 +88,6 @@ public abstract class AbstractWmlConversionContext extends AbstractConversionCon
 		if (!(ret instanceof WordprocessingMLPackage)) {
 			throw new IllegalArgumentException("The opcPackage isn't a WordprocessingMLPackage, it is a " + ret.getClass().getName());
 		}
-		resolveLinkedAbstractNum((WordprocessingMLPackage)ret);
 		return ret;
 	}
 
@@ -100,16 +99,6 @@ public abstract class AbstractWmlConversionContext extends AbstractConversionCon
 		return getWriterRegistry().createTransformStates();
 	}
 	
-	protected void resolveLinkedAbstractNum(WordprocessingMLPackage wmlPkg) {
-		
-		if (wmlPkg.getMainDocumentPart().getStyleDefinitionsPart(false)!=null
-				&& wmlPkg.getMainDocumentPart().getNumberingDefinitionsPart()!=null) {
-			
-			 wmlPkg.getMainDocumentPart().getNumberingDefinitionsPart().resolveLinkedAbstractNum(
-					 wmlPkg.getMainDocumentPart().getStyleDefinitionsPart(false));
-		}
-	}
-
 	protected StyleTree initializeStyleTree() {
 		//catching and swallowing an exception here isn't good,
 		//that would cause later on a NPE

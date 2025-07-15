@@ -24,6 +24,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import javax.xml.stream.XMLStreamException;
+
 import org.docx4j.Docx4jProperties;
 import org.docx4j.TraversalUtil;
 import org.docx4j.XmlUtils;
@@ -43,6 +45,8 @@ import org.docx4j.wml.CTDataBinding;
 import org.opendope.xpaths.Xpaths;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import jakarta.xml.bind.JAXBException;
 
 public class BindingHandler {
 	
@@ -149,7 +153,7 @@ public class BindingHandler {
 		
 	}
 		
-	protected AtomicInteger initBookmarkIdStart() {
+	protected AtomicInteger initBookmarkIdStart() throws Docx4JException {
 		
 		// The efficient case, where this value is set by user,
 		// from previous step
@@ -159,16 +163,33 @@ public class BindingHandler {
 		log.warn("Recalculating starting value for new bookmarks.  For efficiency, you should set this in your code.");
 		int highestId = 0;
 		
-		RangeFinder rt = new RangeFinder("CTBookmark", "CTMarkupRange");
-		new TraversalUtil(wordMLPackage.getMainDocumentPart().getContent(), rt);
-		
-		for (CTBookmark bm : rt.getStarts()) {
+		if (wordMLPackage.getMainDocumentPart().isUnmarshalled()
+				 || /* don't want to use StAX */ !Docx4jProperties.getProperty("docx4j.model.datastorage.BindingHandler.Implementation", "BindingTraverserXSLT").equals("BindingTraverserStAX"))  {
 			
-			BigInteger id = bm.getId();
-			if (id!=null && id.intValue()>highestId) {
-				highestId = id.intValue();
+			log.debug( " MDP not using StAX.");
+		
+			RangeFinder rt = new RangeFinder();
+			new TraversalUtil(wordMLPackage.getMainDocumentPart().getContent(), rt);
+			
+			for (CTBookmark bm : rt.getStarts()) {
+				
+				BigInteger id = bm.getId();
+				if (id!=null && id.intValue()>highestId) {
+					highestId = id.intValue();
+				}
 			}
+			
+		} else {
+			log.debug( " MDP not unmarshalled so can usefully use StAX.");
+			BookmarkHandlerStAX bh = new BookmarkHandlerStAX(); 
+			try {
+				wordMLPackage.getMainDocumentPart().pipe(bh, null);
+			} catch (Exception e) {
+				throw new Docx4JException(e.getMessage(), e);
+			}
+			highestId = bh.getHighestId();
 		}
+
 		return new AtomicInteger(highestId+1);
 	}	
 	
@@ -274,12 +295,24 @@ public class BindingHandler {
 			
 			BindingTraverserInterface traverser = null;
 			
-			if ( Docx4jProperties.getProperty("docx4j.model.datastorage.BindingHandler.Implementation", "BindingTraverserXSLT")
+			if (part.isUnmarshalled()) {
+				log.debug("Part already unmarshalled, so BindingTraverserStAX won't speed things up.");
+			} else {
+				log.info("Part not unmarshalled, so BindingTraverserStAX could speed things up.");				
+			}
+			
+			
+			if ( /* Non XSLT */ Docx4jProperties.getProperty("docx4j.model.datastorage.BindingHandler.Implementation", "BindingTraverserXSLT")
 					.equals("BindingTraverserNonXSLT") ) {
 				// Use the non-XSLT approach.  This is faster, but doesn't have feature parity.
 				log.info("Using BindingTraverserNonXSLT, which is faster, but missing some features");
 				traverser = new BindingTraverserNonXSLT();
-			} else {
+			} else if ( /* StAX */ Docx4jProperties.getProperty("docx4j.model.datastorage.BindingHandler.Implementation", "BindingTraverserXSLT")
+					.equals("BindingTraverserStAX") ) {
+				// Use StAX + JAXB.  This is potentially faster (provided the MDP has not been unmarshalled already), but doesn't have feature parity.
+				log.info("Using BindingTraverserStAX");
+				traverser = new BindingTraverserStAX();
+			} else { /* XSLT */
 				// Slower, fully featured. The default.
 				log.info("Using BindingTraverserXSLT, which is slower, but fully featured");
 				traverser = new BindingTraverserXSLT();
@@ -288,9 +321,20 @@ public class BindingHandler {
 			
 			traverser.setStartingIdForNewBookmarks(initBookmarkIdStart());
 			
-				part.setJaxbElement(
-						traverser.traverseToBind(part, wordMLPackage, xpathsMap) );
-			
+			if (traverser instanceof BindingTraverserStAX) {
+				
+				((BindingTraverserStAX)traverser).streamToBind(part, wordMLPackage, xpathsMap);
+				
+			} else /* the JAXB approaches */ {
+				
+				if ( ((JaxbXmlPart)part).isUnmarshalled() ) {
+				
+					part.setJaxbElement(
+							traverser.traverseToBind(part, wordMLPackage, xpathsMap) );
+				} else {
+					traverser.traverseToBind(part, wordMLPackage, xpathsMap);
+				}
+			}			
 			bookmarkId = traverser.getNextBookmarkId();
 					
 		}

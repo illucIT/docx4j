@@ -1,6 +1,7 @@
 
 package org.docx4j.org.w3.x2003.inkML;
 
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import jakarta.xml.bind.Unmarshaller;
 import jakarta.xml.bind.annotation.XmlAccessType;
@@ -31,7 +32,7 @@ import org.jvnet.jaxb2_commons.ppp.Child;
  *       &lt;attribute name="time" type="{http://www.w3.org/2001/XMLSchema}unsignedLong" /&gt;
  *       &lt;attribute name="timestampRef" type="{http://www.w3.org/2001/XMLSchema}anyURI" /&gt;
  *       &lt;attribute name="timeString" type="{http://www.w3.org/2001/XMLSchema}dateTime" /&gt;
- *       &lt;attribute name="timeOffset" type="{http://www.w3.org/2001/XMLSchema}unsignedLong" default="0" /&gt;
+ *       &lt;attribute name="timeOffset" type="{http://www.w3.org/2001/XMLSchema}decimal" default="0" /&gt;
  *     &lt;/restriction&gt;
  *   &lt;/complexContent&gt;
  * &lt;/complexType&gt;
@@ -59,8 +60,7 @@ public class TimestampType implements Child
     @XmlSchemaType(name = "dateTime")
     protected XMLGregorianCalendar timeString;
     @XmlAttribute(name = "timeOffset")
-    @XmlSchemaType(name = "unsignedLong")
-    protected BigInteger timeOffset;
+    protected BigDecimal timeOffset;
     @XmlTransient
     private Object parent;
 
@@ -165,12 +165,12 @@ public class TimestampType implements Child
      * 
      * @return
      *     possible object is
-     *     {@link BigInteger }
+     *     {@link BigDecimal }
      *     
      */
-    public BigInteger getTimeOffset() {
+    public BigDecimal getTimeOffset() {
         if (timeOffset == null) {
-            return new BigInteger("0");
+            return new BigDecimal("0");
         } else {
             return timeOffset;
         }
@@ -181,10 +181,10 @@ public class TimestampType implements Child
      * 
      * @param value
      *     allowed object is
-     *     {@link BigInteger }
+     *     {@link BigDecimal }
      *     
      */
-    public void setTimeOffset(BigInteger value) {
+    public void setTimeOffset(BigDecimal value) {
         this.timeOffset = value;
     }
 

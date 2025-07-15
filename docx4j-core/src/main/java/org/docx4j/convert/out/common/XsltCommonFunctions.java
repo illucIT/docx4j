@@ -400,13 +400,29 @@ public class XsltCommonFunctions {
 	public static void logDebug(AbstractConversionContext context, String message) {
 		context.getLog().debug(message);
 	}	
+
+	public static void logDebug(AbstractConversionContext context, NodeIterator ni, String message) {
+		
+		context.getLog().debug(message);
+		Node n;
+        while ((n = ni.nextNode()) != null) {
+    		context.getLog().debug( XmlUtils.w3CDomNodeToString(n));
+        }		
+	}	
 	
 	public static void logInfo(AbstractConversionContext context, String message) {
 		context.getLog().info(message);
 	}	
 	
 	public static void logWarn(AbstractConversionContext context, String message) {
+		
+//		if (message.startsWith("XSLT_")) {
+//			(new Throwable()).printStackTrace();
+//		}
+		
 		context.getLog().warn(message);
 	}
+	
+	
 	
 }

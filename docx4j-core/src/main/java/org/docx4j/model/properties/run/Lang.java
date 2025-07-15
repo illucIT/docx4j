@@ -65,14 +65,18 @@ public class Lang extends AbstractRunProperty {
 		if (this.getObject()==null) return;
 		
 		String val = ((CTLanguage)this.getObject()).getVal();
-		
 		if (val!=null) {
 
-			String lang = val.substring(0, val.indexOf("-"));
-			String country = val.substring(val.indexOf("-")+1);
-			
+			int pos = val.indexOf("-");
+			String lang;
+			if (pos>=0) {
+				lang = val.substring(0, pos);
+				String country = val.substring(pos+1);
+				foElement.setAttribute("country", country );
+			} else {
+				lang = val;				
+			}
 			foElement.setAttribute(FO_NAME, lang );
-			foElement.setAttribute("country", country );
 		}
 	}
 

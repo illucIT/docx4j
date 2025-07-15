@@ -392,7 +392,10 @@ public class XsltFOFunctions {
 			Element foListBlock = null;
 			boolean indentHandledByNumbering = false;
 			// Is it a list item?
-			if (pPr!=null 
+			if (sdt) { 
+				// Don't convert an SDT into an extra fo:list-block!
+				document.appendChild(foBlockElement);
+			} else if (pPr!=null 
 					&& pPr.getNumPr()!=null 
 					&& pPr.getNumPr().getNumId()!=null
 					&& pPr.getNumPr().getNumId().getVal().longValue()!=0 //zero means no numbering
@@ -635,8 +638,10 @@ public class XsltFOFunctions {
 			}
 			
 			// Indent (setting provisional-distance-between-starts)
-			// Indent on direct pPr trumps indent in pPr in numbering, which trumps indent
-			// specified in a style.  Well, not exactly, components which aren't set in
+			// Indent on direct pPr (trumps indent specified in
+			// direct numbering??) which trumps indent in pPr in style, 
+			// which trumps indent specified in a style's numbering.  
+			// Well, not exactly, components which aren't set in
 			// the direct formatting will be contributed by the numbering's indent settings
 			Indent indent = new Indent(pPrDirect.getInd(), triple.getIndent());
 			if (indent.isHanging() ) {

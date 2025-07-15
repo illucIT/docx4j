@@ -139,16 +139,8 @@ public final class RelationshipsPart extends JaxbXmlPart<Relationships> {
 		
 	}
 	
-	/**
-	 * @return
-	 * @throws InvalidFormatException
-	 * @since 3.2.0, at which time related constructor was made private
-	 */
-	public static RelationshipsPart createPackageRels() throws InvalidFormatException {
-		RelationshipsPart rp = new RelationshipsPart(new PartName("/_rels/.rels"));
-		return rp;
-	}
-	private RelationshipsPart(PartName partname) throws InvalidFormatException {
+
+	public RelationshipsPart(PartName partname) throws InvalidFormatException {
 		super(partname);
 		init();
 		
@@ -167,7 +159,16 @@ public final class RelationshipsPart extends JaxbXmlPart<Relationships> {
 		setJAXBContext(Context.jcRelationships);				
 	}
 	
-
+	/**
+	 * @return
+	 * @throws InvalidFormatException
+	 * @since 3.2.0, at which time related constructor was made private
+	 */
+	public static RelationshipsPart createPackageRels() throws InvalidFormatException {
+		RelationshipsPart rp = new RelationshipsPart(new PartName("/_rels/.rels"));
+		return rp;
+	}
+	
 	@Override
 	public PartName getPartName() {
 		

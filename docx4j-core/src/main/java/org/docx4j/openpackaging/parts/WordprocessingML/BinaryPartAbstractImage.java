@@ -306,16 +306,19 @@ public abstract class BinaryPartAbstractImage extends BinaryPart {
 		// Also reported on Win XP, but in my testing, the files were deleting OK anyway.
 		fos = null;
 		fis = null;
-		if (Docx4jProperties.getProperty("docx4j.openpackaging.parts.WordprocessingML.BinaryPartAbstractImage.TempFiles.ForceGC", true)) {
-			System.gc();
+		if (tmpImageFile.delete()) {
+			log.debug(".. deleted " + tmpImageFile.getAbsolutePath());
 		}
-        if (tmpImageFile.delete()) {
-            log.debug(".. deleted " + tmpImageFile.getAbsolutePath());
-		} else {
-			log.warn("Couldn't delete tmp file " + tmpImageFile.getAbsolutePath());
-			tmpImageFile.deleteOnExit();
-			// If that doesn't work, see "Clean Up Your Mess: Managing Temp Files in Java Apps"
-			// at devx.com
+		if (Docx4jProperties.getProperty("docx4j.openpackaging.parts.WordprocessingML.BinaryPartAbstractImage.TempFiles.ForceGC", true) && tmpImageFile.exists()) {
+			System.gc();
+			if (tmpImageFile.delete()) {
+				log.debug(".. GC then deleted " + tmpImageFile.getAbsolutePath());
+			} else {
+				log.warn("Couldn't delete tmp file " + tmpImageFile.getAbsolutePath());
+				tmpImageFile.deleteOnExit();
+				// If that doesn't work, see "Clean Up Your Mess: Managing Temp Files in Java Apps"
+				// at devx.com
+			}
 		}
 		
 		return imagePart;

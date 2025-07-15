@@ -6,9 +6,16 @@ import javax.xml.stream.XMLStreamWriter;
 import javax.xml.stream.events.XMLEvent;
 
 import org.docx4j.openpackaging.exceptions.LocationAwareXMLStreamException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+/**
+ * @author jharrop
+ * @since 11.5.3
+ */
 public abstract class StAXHandlerAbstract implements StAXHandlerInterface {
 	
+	private static Logger log = LoggerFactory.getLogger(StAXHandlerAbstract.class);		
 	
 	/**
 	 * Implement this method; for an example, see VariableReplaceStAX sample
@@ -58,7 +65,7 @@ public abstract class StAXHandlerAbstract implements StAXHandlerInterface {
 		
 			case XMLEvent.START_ELEMENT:
 				final String localName = xmlr.getLocalName();
-	//			System.out.println(localName + " " + xmlr.getNamespaceURI() );
+//				System.out.println(localName + " " + xmlr.getNamespaceURI() );
 				if (xmlr.getNamespaceURI()==null) {
 					writer.writeStartElement(localName);												
 				} else {
@@ -91,6 +98,9 @@ public abstract class StAXHandlerAbstract implements StAXHandlerInterface {
 	            
 			case XMLEvent.END_ELEMENT:
 				writer.writeEndElement();
+				if (log.isDebugEnabled()) {
+					log.debug("/"+ xmlr.getLocalName()  );
+				}
 				break;
 			case XMLEvent.SPACE:
 				break;

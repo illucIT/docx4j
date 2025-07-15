@@ -118,7 +118,6 @@ public abstract class RPrAbstract
     protected CTStylisticSets stylisticSets;
     @XmlElement(namespace = "http://schemas.microsoft.com/office/word/2010/wordml")
     protected CTOnOff cntxtAlts;
-    protected CTRPrChange rPrChange;
 
     /**
      * Gets the value of the rStyle property.
@@ -1344,29 +1343,6 @@ public abstract class RPrAbstract
         this.cntxtAlts = value;
     }    
     
-    /**
-     * Gets the value of the rPrChange property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link CTRPrChange }
-     *     
-     */
-    public CTRPrChange getRPrChange() {
-        return rPrChange;
-    }
-
-    /**
-     * Sets the value of the rPrChange property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link CTRPrChange }
-     *     
-     */
-    public void setRPrChange(CTRPrChange value) {
-        this.rPrChange = value;
-    }
 
 
 }

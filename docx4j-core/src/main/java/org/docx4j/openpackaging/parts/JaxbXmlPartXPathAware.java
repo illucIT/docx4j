@@ -434,6 +434,7 @@ implements XPathEnabled<E> {
 							} else {
 								// continue with a new is
 								log.debug("MOXy: no, looks ok");
+								is = is2;
 							}
 						
 						}
@@ -593,6 +594,10 @@ implements XPathEnabled<E> {
 					XmlUtils.transform(doc, mcPreprocessorXslt, null, result);
 					
 					doc = (org.w3c.dom.Document)result.getNode();
+					
+					if (log.isDebugEnabled()) {
+						XmlUtils.w3CDomNodeToOutputStream(doc, System.out);
+					}
 					
 					try {
 						// mimic docx4j 2.7.0 and earlier behaviour; this will 

@@ -29,10 +29,10 @@ public class Tree<T> {
     
     /**
      * Quick access to any node in the tree.
-     * @param name
+     * @param styleId
      * @return
      */
-    public Node<T> get(String name) {
+    public Node<T> get(String styleId) {
     	
 //    	if (log.isDebugEnabled()) {
 //    		Node<T> result = (Node<T>)nodes.get(name);
@@ -41,7 +41,7 @@ public class Tree<T> {
 //    		} 
 //    		return result;
 //    	}
-    	return (Node<T>)nodes.get(name);
+    	return (Node<T>)nodes.get(styleId);
     	
     }
  
@@ -59,7 +59,7 @@ public class Tree<T> {
      */
     public void setRootElement(Node<T> rootElement) {
         this.rootElement = rootElement;
-    	nodes.put(rootElement.name, rootElement);	        
+    	nodes.put(rootElement.styleId, rootElement);	        
     }
      
     /**
@@ -82,7 +82,7 @@ public class Tree<T> {
     	
     	StringBuffer sb = new StringBuffer();
     	for (Node<T> n : toList() ) {
-    		sb.append(n.name + "\n");	    		
+    		sb.append(n.styleId + "\n");	    		
     	}
     	
         return sb.toString();
@@ -122,4 +122,5 @@ public class Tree<T> {
     	}
         return list;
     }
+    
 }	    
